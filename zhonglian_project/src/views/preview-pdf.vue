@@ -8,12 +8,13 @@
     </div>
     <div class="section">
         <div class="pdf-file">
-            <pdf 
-                ref="pdf"
-                :src="path"
-            >
-            </pdf>
-            <!-- <pdf  v-for="i in numPages" :key="i"  :src="url" :page="i"></pdf>	 -->
+            <pdf  
+                ref="printContent"
+                v-for="i in numPages" 
+                :key="i"  
+                :src="path" 
+                :page="i">
+            </pdf>	
         </div>
     </div>
   </div>
@@ -28,18 +29,25 @@ export default {
     components: { pdf }, // 引入pdf组件
     data() {
         return {
-            numPages: 1,
-            path: this.$route.query.url,//pdf的地址，例如：/testFile.pdf
+            numPages: undefined,
+            path: "",
+            // path: this.$route.query.url,//pdf的地址，例如：/testFile.pdf
         };
+    },
+    mounted() {
+        let file = this.$route.query.url;
+        this.path = pdf.createLoadingTask(file);
+        console.log(file)
+        console.log('asdfasdfsfasf',this.path)
+        this.path.promise.then(pdf => {
+            this.numPages = pdf.numPages
+        })
     },
     methods: {
         // 返回上级
         goBack() {
             this.$router.go(-1);
         },
-        beforeMount() {
-            console.log(this.numPages)   
-        }
     },
 };
 </script>

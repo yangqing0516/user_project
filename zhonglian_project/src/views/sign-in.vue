@@ -113,8 +113,9 @@ export default {
             }
             userSignIn(data).then(res=>{
                 let data = res.data;
-                if (data.code == 200) {
+                if (data.success) {
                     this.isVote = false;
+                    this.onaxios();
                 }
             })
         },
