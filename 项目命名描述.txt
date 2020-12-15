@@ -1,0 +1,2 @@
+zhonglian_project   中电联投票系统
+	框架：Vue+Mint
