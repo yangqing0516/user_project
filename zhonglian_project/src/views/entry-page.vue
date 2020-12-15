@@ -57,12 +57,12 @@ export default {
         }
     },
     mounted(){
-        // let url = window.location.href;
-        // console.log('url地址----', url)
-        // let id = url.split("sx_id=")[1];
-        // console.log('事项id-----', id)
-        // localStorage.setItem('sx_id', id)
-        localStorage.setItem('sx_id', "1333344778143465474")
+        let url = window.location.href;
+        console.log('url地址----', url)
+        let id = url.split("sx_id=")[1];
+        console.log('事项id-----', id)
+        localStorage.setItem('sx_id', id)
+        // localStorage.setItem('sx_id', "1333344778143465474")
         this.onaxios();
     },
     methods: {
@@ -70,11 +70,11 @@ export default {
             let data = {
                 id: localStorage.getItem('sx_id')
             }
-            console.log('参数--',data)
+            // console.log('参数--',data)
             getEnterInfo(data).then(res=>{
-                console.log('接收请求--',res)
+                // console.log('接收请求--',res)
                 let data = res.data;
-                console.log('具体参数--',data)
+                // console.log('具体参数--',data)
                 if (data.code == 200) {
                     this.enterInfo = data.result;
                     // 模拟未开始

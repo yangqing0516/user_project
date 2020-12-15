@@ -127,7 +127,7 @@ export default {
             }
             mobileVerification(data).then(res=>{
                 let result = res.data;
-                console.log(result)
+                // console.log(result)
                 if (result.success) {
                     localStorage.setItem('userId', result.result.id);
                     this.$router.push({
