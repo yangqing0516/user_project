@@ -112,10 +112,11 @@ export default {
                 yh_id: this.$route.query.userId
             }
             userSignIn(data).then(res=>{
+                console.log(res)
                 let data = res.data;
                 if (data.success) {
                     this.isVote = false;
-                    this.onaxios();
+                    this.isSignIn();
                 }
             })
         },
