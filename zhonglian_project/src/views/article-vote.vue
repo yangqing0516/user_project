@@ -1,13 +1,12 @@
 <template>
     <div class="article-vote wrapper">
-         <div class="header" @click="onBack">
-            <img src="../assets/home.png" alt="">
+         <div class="header">
+            <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
+            <van-button round block type="info" color="#E1362E" native-type="submit" :disabled="submitItemFlag" @click="onSubmit">提交该项</van-button>
         </div>
         <div class="section">
             <div class="title">
-                <!-- <span>{{titleInfo.tpTplxId==1?'报告类':''}}{{titleInfo.tpnrXh}}、</span> -->
-                <span>{{titleInfo.tpnrXh}}、</span>
-                <h3>{{titleInfo.tpnrMc}}</h3>
+                <h3>{{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}</h3>
                 <button @click="viewFile">查看附件</button>
             </div>
             <ul>
@@ -26,7 +25,7 @@
             <div class="vote-option">
                 <van-radio-group v-model="radio" :disabled="ytj">
                     <van-cell-group >
-                        <van-cell title="赞成" clickable @click="radio = '1'">
+                        <!-- <van-cell title="赞成" clickable @click="radio = '1'">
                             <template #right-icon>
                                 <van-radio name="1" checked-color="#E1362E"/>
                             </template>
@@ -40,17 +39,32 @@
                             <template #right-icon>
                                 <van-radio name="3" checked-color="#E1362E"/>
                             </template>
+                        </van-cell> -->
+                        <van-cell title="赞成" clickable>
+                            <template #right-icon>
+                                <van-radio name="1" checked-color="#E1362E"/>
+                            </template>
+                        </van-cell>
+                        <van-cell title="反对" clickable>
+                            <template #right-icon>
+                                <van-radio name="2" checked-color="#E1362E"/>
+                            </template>
+                        </van-cell>
+                        <van-cell title="弃权" clickable>
+                            <template #right-icon>
+                                <van-radio name="3" checked-color="#E1362E"/>
+                            </template>
                         </van-cell>
                     </van-cell-group>
                 </van-radio-group>
             </div>
         </div>
-        <!--  v-show="isFooter" -->
         <div class="footer">
-            <van-button color="#E1362E" plain @click="saveForm" v-show="isNext">保存并下一步</van-button>
-            <van-button round block type="info" @click="submitVote" v-show="submited" color="#E1362E" native-type="submit">提交该项投票</van-button>
+            <van-button color="#E1362E" plain v-show="preItem" @click="preItemClick" :disabled="preItemFlag">上一项</van-button>
+            <van-button color="#E1362E" plain v-show="isSubmited" @click="nextStep">下一项</van-button> 
+            <van-button color="#E1362E" plain @click="saveForm" v-show="isNext">保存并下一项</van-button>
             <van-button color="#E1362E" plain @click="saveInfo" v-show="save">保存</van-button>
-            <van-button color="#E1362E" plain v-show="isSubmited" @click="nextStep">下一条</van-button>
+            <van-button round block type="info" color="#E1362E" v-show="submitAll" @click="oneClickSubmit" :disabled="submitAllFlag">一键提交</van-button>
         </div>
     </div>
 </template>
@@ -60,7 +74,10 @@
         getContentReport,
         getEnterInfo,
         voteSave,
-        submitVoteContent
+        submitVoteContent,
+        getContentStatus,
+        submitAllVote,
+        reportReturnUp // 报告类返回上一项
     } from '@/api/index';
     export default {
         name: 'article-vote',
@@ -69,82 +86,217 @@
                 radio: '1', 
                 endTime: "",
                 titleInfo: {},
+                nextData: [],
+                preData:[],
                 isNext: true,
+                // 上一项
+                preItem: true,
+                // 上一项按钮禁用
+                preItemFlag: true,
                 save: false,
                 isSubmited: false,
-                submited: true,
+                // 是否提交全部
+                submitAll: false,
+                // 当前项是否提交过
+                submitItemFlag: false,
                 ytj: false,
+                // 所有事项列表
                 allData: [],
-                isFooter: true,
+                // 一键提交按钮状态
+                submitAllFlag: false,
+                // 所有数据
+                allData:[]
             }
         },
         mounted(){
-            this.onaxios();
-            this.getEndTime();
+            this.endTime = localStorage.getItem('endTime')
+            // this.onaxios();
+            this.allSubmitFlag();
         },
         methods: {
-            // 获取截止时间
-            getEndTime(){
+            // 查看是够可以进行一键提交
+            allSubmitFlag(){
                 let data = {
-                    id: localStorage.getItem('sx_id')
+                    sx_id: localStorage.getItem('sx_id'),
+                    yh_id: localStorage.getItem('userId')
                 }
-                getEnterInfo(data).then(res=>{
+                getContentStatus(data).then(res=>{
                     let data = res.data;
-                    if (data.code == 200) {
-                        this.endTime = data.result.tpsxJzsj.slice(0,10);
+                    if (data.success) {
+                        this.onaxios()
+                        this.dataList = data.result;
                     }
                 })
             },
+            // 获取数据
             onaxios(){
-                // console.log('ok')
                 let data = {
                     id: this.$route.query.cid,
-                    yh_id: this.$route.query.userId
+                    yh_id: localStorage.getItem('userId')
                 }
-                // console.log('axios----', data)
                 getContentReport(data).then(res=>{
                     let data = res.data;
                     if (data.code == 200) {
                         this.allData = data.result;
                         this.titleInfo = data.result[0];
-                        // console.log('数据数据',this.titleInfo)
+                        this.preData = data.result[3];
+                        // 判断是否显示【上一项】按钮
+                        if (this.titleInfo.tpnrXh != 1) {
+                            this.preItemFlag = false;
+                        } 
+                        // 获取初始值，判断是否保存过，如果没有保存过，默认为【赞成】意见
                         let yj = data.result[1][0].tpjg_tpyj;
                         if (!yj) {
                             this.radio = '1';
                         } else {
                             this.radio = data.result[1][0].tpjg_tpyj;
                         }
-                        
-                        if (!data.result[2].length) {
-                            this.save = true;
-                            this.isNext = false;
-                        }
-                        if (data.result[1][0].tpyh_tpnrzt == 'Y') {
-                            this.isNext = false;
-                            this.save = false;
-                            this.submited = false;
-                            this.isSubmited = true;
-                            this.ytj = true;
-                        } else {
-                            this.ytj = false;
-                            this.isNext = true;
-                            this.submited = true;
-                            this.saveInfo = false;
+
+                        this.nextData = data.result[2];
+                        let allDataResult = this.dataList.every(item=>{
+                            return item.tpyh_tpnrzt == 'Y';
+                        })
+                        if(!this.nextData.length&&this.titleInfo.tpnrXh == this.dataList.length){
                             this.isSubmited = false;
+                            // 如果已经全部提交并且是最后一条则隐藏，否则在最后一条数据显示
+                            if (allDataResult) {
+                                this.submitAll = true;
+                                this.submitAllFlag = true;
+                                this.isNext = false;
+                                this.ytj = true;
+                                this.submitItemFlag = true;
+                            } else {
+                                this.save = true;
+                                this.isNext = false;
+                                this.submitAll = true;
+                            }
+                            let itemFlag = data.result[1][0].tpyh_tpnrzt;
+                            if (itemFlag == 'Y') {
+                                // 选项状态
+                                this.ytj = true;
+                                this.submitItemFlag = true;
+                            } else {
+                                this.ytj = false;
+                                this.submitItemFlag = false;
+                            }
+                        } else {
+                            this.submitAll = false;
+                            // 当前项是否提交过
+                            let itemFlag = data.result[1][0].tpyh_tpnrzt;
+                            if (itemFlag == 'Y') {
+                                // 保存并下一项
+                                this.isNext = false;
+                                // 提交该项
+                                this.submitItemFlag = true;
+                                // 下一项
+                                this.isSubmited = true;
+                                // 选项状态
+                                this.ytj = true;
+                                // this.save = true;
+                            } else {
+                                this.isNext = true;
+                                this.submitItemFlag = false;
+                                this.isSubmited = false;
+                                this.ytj = false;
+                                this.save = false;
+                            }
+                        }
+                        // // 判断下一项的数据是够存在，如果不存在的话显示保存按钮，存在显示保存并下一项
+                        // if (!data.result[2].length) {
+                        //     this.save = true;
+                        //     this.isNext = false;
+                        // }
+
+                        // // 判断当前事项是否提交过，如果提交过禁用按钮，否正常操作
+                        // if (data.result[1][0].tpyh_tpnrzt == 'Y') {
+                        //     this.submitItemFlag = true;
+                        //     this.isSubmited = true;
+                        //     this.isNext = false;
+                        //     this.ytj = true;
+                        //     this.save = false;
+                        // } else {
+                        //     this.submitItemFlag = false;
+                        //     this.isSubmited = false;
+                        //     this.isNext = true;
+                        //     this.ytj = false;
+                        //     this.saveInfo = false;
+                        // }
+                    }
+                })
+            },
+            // 查看上一项
+            preItemClick(){
+                console.log('23232',this.preData)
+                if (this.preData[0].tpTplxId == 1) {
+                    // this.$router.push({
+                    //     path: "/article-vote",
+                    //     query: {
+                    //         cid: this.preData[0].id
+                    //     }
+                    // })
+
+                    let path = this.$router.history.current.path;
+                    this.titleInfo = this.preData[0];
+                    this.$router.replace({
+                        path,
+                        query: {
+                            // 下一项的内容id
+                            cid: this.preData[0].id
+                        }
+                    })
+                    this.onaxios();
+                } else {
+                    this.$router.push({
+                        path: "/person-vote",
+                        query: {
+                            cid: this.preData[0].id
+                        }
+                    })
+                }
+            },
+            // 保存并下一项
+            saveForm(){
+                let data = {
+                    // 识别码
+                    sbm: localStorage.getItem('sbm'),
+                    // 用户id
+                    tpyhid: localStorage.getItem('userId'),
+                    // 投票结果
+                    tpjg: this.radio,
+                    // 内容id
+                    tpnrid: this.$route.query.cid,
+                }
+                voteSave(data).then(res=>{
+                    if (res.data.success) {
+                        if (this.allData[2]) {
+                            let nextData = this.allData[2][0];
+                            if (nextData.tpTplxId == 2) {
+                                this.$router.replace({
+                                    path: '/person-vote',
+                                    query: {
+                                        // 下一项的内容id
+                                        cid: nextData.id
+                                    }
+                                });
+                            } else {
+                                let path = this.$router.history.current.path;
+                                this.titleInfo = nextData;
+                                this.$router.replace({
+                                    path,
+                                    query: {
+                                        // 下一项的内容id
+                                        cid: nextData.id
+                                    }
+                                })
+                                this.onaxios();
+                            }
                         }
                     }
                 })
             },
             // 退回首页
             onBack(){
-                this.$router.push({
-                    path: '/sign-in',
-                    query: {
-                        userId: this.$route.query.userId,
-                        // 事项id
-                        id: this.$route.query.sx_id
-                    }
-                })
+                this.$router.push('/sign-in')
             },
             // 查附件
             viewFile(){
@@ -157,51 +309,6 @@
                     }
                 })
             },
-            // 保存并下一步
-            saveForm(){
-                let data = {
-                    // 识别码
-                    sbm: localStorage.getItem('sbm'),
-                    // 投票结果
-                    tpjg: this.radio,
-                    // 内容id
-                    tpnrid: this.$route.query.cid,
-                    // 用户id
-                    tpyhid: this.$route.query.userId
-                }
-                voteSave(data).then(res=>{
-                    if (res.data.success) {
-                        if (this.allData[2]) {
-                            let nextData = this.allData[2][0];
-                            if (nextData.tpTplxId == 2) {
-                                this.$router.push({
-                                    path: '/person-vote',
-                                    query: {
-                                        cid: nextData.id,
-                                        userId: localStorage.getItem('userId'),
-                                        sbm: localStorage.getItem('sbm'),
-                                        sx_id: localStorage.getItem('sx_id')
-                                    }
-                                });
-                            } else {
-                                // this.onaxios();
-                                let path = this.$router.history.current.path;
-                                this.titleInfo = nextData;
-                                this.$router.push({
-                                    path,
-                                    query: {
-                                        cid: nextData.id,
-                                        userId: localStorage.getItem('userId'),
-                                        sbm: localStorage.getItem('sbm'),
-                                        sx_id: localStorage.getItem('sx_id')
-                                    }
-                                })
-                                this.onaxios();
-                            }
-                        }
-                    }
-                })
-            },
             // 直接保存
             saveInfo(){
                 let data = {
@@ -210,12 +317,12 @@
                     // 内容id
                     tpnrid: this.$route.query.cid,
                     // 用户id
-                    tpyhid: this.$route.query.userId
+                    tpyhid: localStorage.getItem('userId')
                 }
                 voteSave(data).then(res=>{
                     if (res.data.success) {
-                        this.onaxios();
                         this.$toast.success('保存成功');
+                        this.$router.push('/sign-in');
                     } else {
                         this.$toast.fail(res.data.message);
                     }
@@ -225,43 +332,27 @@
                 let nextData = this.allData[2][0];
                 console.log(nextData)
                 if (nextData.tpTplxId == 2) {
-                    this.$router.push({
+                    this.$router.replace({
                         path: '/person-vote',
                         query: {
-                            userId: this.$route.query.userId,
-                            cid: nextData.id,
-                            sbm: localStorage.getItem('sbm'),
-                            sx_id: this.$route.query.sx_id
+                            cid: nextData.id
                         }
                     });
                 } else {
                     // 报告类
                     let path = this.$router.history.current.path;
                     this.titleInfo = nextData;
-                    this.$router.push({
+                    this.$router.replace({
                         path,
                         query: {
-                            cid: nextData.id,
-                            userId: localStorage.getItem('userId'),
-                            sbm: localStorage.getItem('sbm'),
-                            sx_id: localStorage.getItem('sx_id')
+                            cid: nextData.id
                         }
                     })
                     this.onaxios();
-                    // this.titleInfo = nextData;
-                    // this.$router.push({
-                    //     path: '/article-vote',
-                    //     query: {
-                    //         userId: localStorage.getItem('userId'),
-                    //         cid: nextData.id,
-                    //         sbm: localStorage.getItem('sbm'),
-                    //         sx_id: localStorage.getItem('sx_id')
-                    //     }
-                    // });
                 }
             },
             // 提交
-            submitVote(){
+            onSubmit(){
                 // console.log(this.voteList)
                 let data = {
                     sbm: localStorage.getItem('sbm'),
@@ -269,24 +360,52 @@
                     // 内容id
                     tpnrid: this.$route.query.cid,
                     // 用户id
-                    tpyhid: this.$route.query.userId
+                    tpyhid: localStorage.getItem('userId')
                 }
                 
                 submitVoteContent(data).then(res=>{
                     if (res.data.success) {
-                        if (this.allData[2]&&this.allData[2].length) {
-                            this.ytj = true;
-                            this.isNext = false;
-                            this.save = false;
-                            this.submit = false;
-                            this.isSubmited = true;
-                        } else {
-                            this.ytj = true;
-                            this.isFooter = false;
-                        }
+                        this.ytj = true;
+                        this.isNext = false;
+                        this.save = false;
+                        this.isSubmited = true;
+                        this.submitItemFlag = true;
+                        // if (this.allData[2]&&this.allData[2].length) {
+                        //     this.ytj = true;
+                        //     this.isNext = false;
+                        //     this.save = false;
+                        //     this.isSubmited = true;
+                        // } else {
+                        //     this.ytj = true;
+                        // }
                     } else {
                         this.$toast.fail(res.data.message)
                     }
+                })
+            },
+            // 一键提交
+            oneClickSubmit(){
+                this.$dialog.confirm({
+                    // title: '标题',
+                    message: '确认要全部提交吗？',
+                })
+                .then(() => {
+                    let data = {
+                        sbm: localStorage.getItem('sbm'),
+                        tpsxid: localStorage.getItem('sx_id'),
+                        tpyhid: localStorage.getItem('userId')
+                    }
+                    submitAllVote(data).then(res=>{
+                        let data = res.data;
+                        if (data.success) {
+                            this.$toast.success('提交成功');
+                            this.onaxios();
+                            this.$router.push('/sign-in');
+                        }
+                    })
+                })
+                .catch(() => {
+                    // on cancel
                 })
             }
         }
@@ -340,12 +459,17 @@
     height: .9rem;
     display: flex;
     align-items: center;
-    padding-left: .3rem;
-    justify-content: flex-start;
+    padding:0 .3rem;
+    justify-content: space-between;
     background: #fff;
-    img {
+    /* img {
         width: .41rem;
         height: .38rem;
+    } */
+    button {
+        width: 1.6rem;
+        height: .6rem;
+        border-radius: .3rem;
     }
 }
 

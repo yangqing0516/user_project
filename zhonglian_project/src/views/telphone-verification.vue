@@ -109,7 +109,7 @@ export default {
         onaxios(){
             let data = {
                 sbm: localStorage.getItem('sbm'),
-                sx_id: this.$route.query.id,
+                sx_id: localStorage.getItem('sx_id'),
             }
             userList(data).then(res=>{
                 let data = res.data;
@@ -131,11 +131,7 @@ export default {
                 if (result.success) {
                     localStorage.setItem('userId', result.result.id);
                     this.$router.push({
-                        path:'/sign-in',
-                        query: {
-                            id: localStorage.getItem('sx_id'),
-                            userId: result.result.id
-                        }
+                        path:'/sign-in'
                     });
                 } else {
                     this.$toast.fail(result.message);
@@ -176,7 +172,7 @@ export default {
             this.$router.push({
                 path: '/vote-verification',
                 query: {
-                    id: this.$route.query.id
+                    id: localStorage.getItem('sx_id')
                 }
             })
         },

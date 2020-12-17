@@ -22,9 +22,6 @@
 
 <script>
 import pdf from "vue-pdf"; // 引入pdf组件
-import {
-    viewFile
-} from '@/api/index';
 export default {
     components: { pdf }, // 引入pdf组件
     data() {

@@ -49,7 +49,7 @@
 
 <script>
 
-import {  getContentStatus, userSignIn, userList, submitAll } from '@/api/index';
+import {  getContentStatus, userSignIn, userList, submitAllVote } from '@/api/index';
 export default {
     name: "sign-in",
     data(){
@@ -87,7 +87,7 @@ export default {
         onaxios(){
             let data = {
                 sx_id: localStorage.getItem('sx_id'),
-                yh_id: this.$route.query.userId
+                yh_id: localStorage.getItem('userId')
             }
             getContentStatus(data).then(res=>{
                 let data = res.data;
@@ -109,7 +109,7 @@ export default {
         onSign(){
             this.isSign = true;
             let data = {
-                yh_id: this.$route.query.userId
+                yh_id: localStorage.getItem('userId')
             }
             userSignIn(data).then(res=>{
                 console.log(res)
@@ -128,26 +128,20 @@ export default {
         onStartVote(item){
             // tp_tplx_id 2-->人员类  1-->报告类
             // 人员类
-            
             if (this.tpyhQd == 'Y') {
+                // cid  内容id
                 if (item.tp_tplx_id == 2) {
                     this.$router.push({
                         path: '/person-vote',
                         query: {
-                            userId: localStorage.getItem('userId'),
-                            cid: item.id,
-                            sbm: this.$route.query.sbm,
-                            sx_id: this.$route.query.id
+                            cid: item.id
                         }
                     });
                 } else { 
                     this.$router.push({
                         path: '/article-vote',
                         query: {
-                            cid: item.id,
-                            userId: localStorage.getItem('userId'),
-                            sbm: this.$route.query.sbm,
-                            sx_id: this.$route.query.id
+                            cid: item.id
                         }
                     });
                 }
@@ -170,7 +164,7 @@ export default {
                     tpsxid: localStorage.getItem('sx_id'),
                     tpyhid: localStorage.getItem('userId')
                 }
-                submitAll(data).then(res=>{
+                submitAllVote(data).then(res=>{
                     let data = res.data;
                     if (data.success) {
                         this.$toast.success('提交成功');
@@ -186,16 +180,14 @@ export default {
         startVote(){
             let tp_tplx_id = this.specialList[0].tp_tplx_id;
             let tp_tpnr_id = this.specialList[0].tp_tpnr_id;
-            console.log('数据list',this.specialList)
-            console.log('第一条数据的id',this.specialList[0])
             if (tp_tplx_id == 2) {
                 this.$router.push({
                     path: '/person-vote',
                     query: {
                         cid: tp_tpnr_id,
-                        userId: this.$route.query.userId,
-                        sbm: this.$route.query.sbm,
-                        sx_id: this.$route.query.id
+                        userId: localStorage.getItem('userId'),
+                        sbm: localStorage.getItem('sbm'),
+                        sx_id: localStorage.getItem('sx_id')
                     }
                 });
             } else { // 报告类
@@ -203,9 +195,9 @@ export default {
                     path: '/article-vote',
                     query: {
                         cid: tp_tpnr_id,
-                        userId: this.$route.query.userId,
-                        sbm: this.$route.query.sbm,
-                        sx_id: this.$route.query.id
+                        userId: localStorage.getItem('userId'),
+                        sbm: localStorage.getItem('sbm'),
+                        sx_id: localStorage.getItem('sx_id')
                     }
                 });
             }

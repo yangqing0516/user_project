@@ -58,11 +58,9 @@ export default {
                         localStorage.setItem('sbm', data.result.tpyhSbm)
                         this.$router.push({
                             path: "/sign-in",
-                            query: {
-                                userId: data.result.id,
-                                tpyhQd: data.result.tpyhQd,
-                                id: this.$route.query.id
-                            }
+                            // query: {
+                            //     tpyhQd: data.result.tpyhQd
+                            // }
                         })
                     }
                 }

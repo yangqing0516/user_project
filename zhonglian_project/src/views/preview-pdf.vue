@@ -22,9 +22,6 @@
 
 <script>
 import pdf from "vue-pdf"; // 引入pdf组件
-import {
-    viewFile
-} from '@/api/index';
 export default {
     components: { pdf }, // 引入pdf组件
     data() {
@@ -37,8 +34,6 @@ export default {
     mounted() {
         let file = this.$route.query.url;
         this.path = pdf.createLoadingTask(file);
-        console.log(file)
-        console.log('asdfasdfsfasf',this.path)
         this.path.promise.then(pdf => {
             this.numPages = pdf.numPages
         })

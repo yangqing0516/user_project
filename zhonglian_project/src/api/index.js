@@ -121,7 +121,7 @@ export function submitVoteContent(params) {
 }
 
 // 14、一键提交
-export function submitAll(params) {
+export function submitAllVote(params) {
     return request({
         url: '/tp/tpTpyhTpsxzt/alltj',
         method: 'get',
@@ -134,5 +134,23 @@ export function viewFile(params) {
     return request({
         url: `/sys/common/static/${params.file}`,
         method: 'get'
+    })
+}
+
+// 人员类----返回上一项
+export function personReturnUp(params) {
+    return request({
+        url: "/tp/tpTpnrRy/queryByNyIdUp",
+        method: 'get',
+        params
+    })
+}
+
+// 报告类 ---- 返回上一项
+export function reportReturnUp(params) {
+    return request({
+        url: "/tp/tpTpnrBg/queryByNyIdUp",
+        method: 'get',
+        params
     })
 }

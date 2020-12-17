@@ -77,6 +77,7 @@ export default {
                 // console.log('具体参数--',data)
                 if (data.code == 200) {
                     this.enterInfo = data.result;
+                    localStorage.setItem('endTime', data.result.tpsxJzsj.slice(0,10))
                     // 模拟未开始
                     // let nowTime = '2020-1-06 13:56:07';
                     // 进行中
@@ -97,12 +98,7 @@ export default {
         },
         // 立即进入
         enterNow(){
-            this.$router.push({
-                path: '/telphone-verification',
-                query: {
-                    id: localStorage.getItem('sx_id')
-                }
-            })
+            this.$router.push('/telphone-verification')
         },
         // 时间格式化
         add0(m) {
