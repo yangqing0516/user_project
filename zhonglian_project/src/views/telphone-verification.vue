@@ -127,7 +127,6 @@ export default {
             }
             mobileVerification(data).then(res=>{
                 let result = res.data;
-                // console.log(result)
                 if (result.success) {
                     localStorage.setItem('userId', result.result.id);
                     this.$router.push({
@@ -169,12 +168,7 @@ export default {
         },
         // 进入投票识别码验证
         onVote(){
-            this.$router.push({
-                path: '/vote-verification',
-                query: {
-                    id: localStorage.getItem('sx_id')
-                }
-            })
+            this.$router.push('/vote-verification')
         },
         timeDown(){
             const TIME_COUNT = 60;

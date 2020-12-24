@@ -171,6 +171,7 @@
                                 this.ytj = true;
                                 this.submitItemFlag = true;
                             } else {
+                                // this.save = true;
                                 this.ytj = false;
                                 this.submitItemFlag = false;
                             }

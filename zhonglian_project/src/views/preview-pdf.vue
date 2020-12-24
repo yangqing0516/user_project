@@ -1,11 +1,14 @@
 <template>
   <div class="container view-pdf wrapper">
     <!--预览-->
-    <div class="goback1">
+    <!-- <div class="goback1">
         <div class="goBtn">
             <van-nav-bar title="附件查看" left-arrow @click-left="goBack" />
         </div>
-    </div>
+    </div> -->
+     <div class="header">
+            <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
+        </div>
     <div class="section">
         <div class="pdf-file">
             <pdf  
@@ -39,10 +42,10 @@ export default {
         })
     },
     methods: {
-        // 返回上级
-        goBack() {
-            this.$router.go(-1);
-        },
+        // 退回首页
+        onBack(){
+            this.$router.push('/sign-in')
+        }
     },
 };
 </script>
@@ -73,7 +76,24 @@ export default {
         width: 100%;
     }
 } */
-
+.header {
+    width: 100%;
+    height: .9rem;
+    display: flex;
+    align-items: center;
+    padding:0 .3rem;
+    justify-content: space-between;
+    background: #fff;
+    /* img {
+        width: .41rem;
+        height: .38rem;
+    } */
+    button {
+        width: 1.6rem;
+        height: .6rem;
+        border-radius: .3rem;
+    }
+}
 .view-pdf {
   display: flex;
   flex-direction: column;

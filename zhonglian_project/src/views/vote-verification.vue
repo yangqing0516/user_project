@@ -8,15 +8,39 @@
         <!-- 投票识别码验证 -->
         <div class="tel-verification"><h2>投票识别码验证</h2></div>
         <div class="form">
-            <van-form @submit="onSubmit">
-                <!-- 通过 pattern 进行正则校验 -->
+            <!-- <van-form @submit="onSubmit">
                 <van-field
                     clearable
-                    v-model="code"
                     maxlength="6"
-                    type="number"
+                    v-model="code"
+                    name="pattern"
                     placeholder="请输入投票识别码"
-                    :rules="[{ required: true, message: '请填写您的投票识别码！' }]"
+                    :rules="[{require:true, message: '请填写您的投票识别码！' }]"
+                />
+                <div style="margin-top: 1.95rem;" class="btn">
+                    <van-button round block type="info" :disabled="isDisable" color="#E1362E" native-type="submit">验证</van-button>
+                </div>
+            </van-form> -->
+
+
+            <van-form validate-first @submit="onSubmit">
+                <!-- 通过 pattern 进行正则校验 -->
+                <!-- <van-field
+                    clearable
+                    maxlength="6"
+                    v-model="code"
+                    name="pattern"
+                    placeholder="请输入投票识别码"
+                    :rules="[{require:true, message: '请填写您的投票识别码！' }]"
+                /> -->
+
+                <van-field
+                    v-model="code"
+                    clearable
+                    maxlength="5"
+                    name="validator"
+                    placeholder="请输入投票识别码"
+                    :rules="[{ validator, message: '投票识别码有误' }]"
                 />
                 <div style="margin-top: 1.95rem;" class="btn">
                     <van-button round block type="info" :disabled="isDisable" color="#E1362E" native-type="submit">验证</van-button>
@@ -34,38 +58,71 @@ export default {
         return {
             code: '',
             isDisable: true,
-            userInfo: {}
+            userInfo: {},
+            pattern: /^[A-Za-z]+$/,
+            regFlag: false
         }
     },
     watch: {
-        code(val) {
-            if (val.length=='6') {
+        // code(val) {
+        //     if (val.length=='6') {
+        //         this.isDisable = false;
+        //     }
+        // }
+
+        code(val){
+            if (val.length=='5') {
+                console.log('2342432434')
                 this.isDisable = false;
+            } else {
+                this.isDisable = true;
             }
         }
     },
+    mounted() {
+        // this.regFlag = this.validator(this.code);
+    },
     methods: {
-        onSubmit(values) {
-            let data = {
-                sbm: this.code,
-                sx_id: localStorage.getItem('sx_id'),
-            }
-            userList(data).then(res=>{
-                let data = res.data;
-                if (data.code == 200) {
+        validator(val){
+            console.log('val=',val)
+            return /^[A-Za-z]+$/.test(val);
+        },
+        onSubmit(){
+            let regResult = this.validator(this.code);
+            if (regResult) {
+                let data = {
+                    sbm: this.code,
+                    sx_id: localStorage.getItem('sx_id'),
+                }
+                // this.$toast.fail(res.data.message);
+                userList(data).then(res=>{
+                    let data = res.data;
                     if (data.success) {
                         localStorage.setItem('userId', data.result.id);
-                        localStorage.setItem('sbm', data.result.tpyhSbm)
-                        this.$router.push({
-                            path: "/sign-in",
-                            // query: {
-                            //     tpyhQd: data.result.tpyhQd
-                            // }
-                        })
+                        localStorage.setItem('sbm', data.result.tpyhSbm);
+                        this.$router.push("/sign-in")
+                    } else {
+                        this.$toast.fail(data.message);
                     }
-                }
-            })
+                })
+            }
         },
+        // onSubmit(values) {
+        //     let data = {
+        //         sbm: this.code,
+        //         sx_id: localStorage.getItem('sx_id'),
+        //     }
+        //     userList(data).then(res=>{
+        //         let data = res.data;
+        //         if (data.code == 200) {
+        //             if (data.success) {
+        //                 localStorage.setItem('userId', data.result.id);
+        //                 localStorage.setItem('sbm', data.result.tpyhSbm)
+        //                 this.$router.push("/sign-in")
+        //             }
+        //         }
+        //     })
+        // },
         // 进入手机号验证
         onTel(){
             this.$router.push('/telphone-verification')

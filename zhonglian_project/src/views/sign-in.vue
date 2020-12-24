@@ -12,7 +12,7 @@
             </div>
             <div class="special-list">
                 <ul>
-                    <li v-for="(item, index) in specialList" :key="index" @click="onStartVote(item)">
+                    <li v-for="(item, index) in specialList" :key="index" @click="onStartVote(item, index)">
                         <h3>{{index+1}}、{{item.tpnr_mc}}</h3>
                         <div class="status" :class="item.tpyh_tpnrzt==null?'no_vote':item.tpyh_tpnrzt=='N'?'no_submit':'submited'">
                             <!-- <button>{{item.tpyh_tpnrzt=='Y'?'已提交':item.tpyh_tpnrzt=='N'?'未提交':'未投票'}}</button> -->
@@ -71,10 +71,12 @@ export default {
         isSignIn(){
             let data = {
                 sbm: localStorage.getItem('sbm'), 
+                // sbm: 'DDDDD',
                 sx_id: localStorage.getItem('sx_id')
             }
             userList(data).then(res=>{
                 let data = res.data;
+                    console.log('data', data)
                 if (data.success) {
                     this.tpyhQd = data.result.tpyhQd;
                     // 判断是否签到过
@@ -125,32 +127,88 @@ export default {
             this.isSign = false;
         },
         // 列表点击进行投票
-        onStartVote(item){
+        onStartVote(item, nowIndex){
             // tp_tplx_id 2-->人员类  1-->报告类
             // 人员类
-            if (this.tpyhQd == 'Y') {
-                // cid  内容id
-                if (item.tp_tplx_id == 2) {
-                    this.$router.push({
-                        path: '/person-vote',
-                        query: {
-                            cid: item.id
+            if (nowIndex!=0) {
+                if (this.specialList[nowIndex-1].tpyh_tpnrzt!=null) {
+                    if (this.tpyhQd == 'Y') {
+                        // cid  内容id
+                        if (item.tp_tplx_id == 2) {
+                            this.$router.push({
+                                path: '/person-vote',
+                                query: {
+                                    cid: item.id
+                                }
+                            });
+                        } else { 
+                            this.$router.push({
+                                path: '/article-vote',
+                                query: {
+                                    cid: item.id
+                                }
+                            });
                         }
-                    });
-                } else { 
-                    this.$router.push({
-                        path: '/article-vote',
-                        query: {
-                            cid: item.id
-                        }
-                    });
+                    } else {
+                        this.$dialog.alert({
+                            message: '请您先签到',
+                            theme: 'round-button',
+                        }).then(() => {});
+                    }
+                } else {
+                    this.$dialog.alert({
+                        message: '请按序号依次进行投票',
+                        theme: 'round-button',
+                    }).then(() => {});
                 }
             } else {
-                this.$dialog.alert({
-                    message: '请您先签到',
-                    theme: 'round-button',
-                }).then(() => {});
+                if (this.tpyhQd == 'Y') {
+                    // cid  内容id
+                    if (item.tp_tplx_id == 2) {
+                        this.$router.push({
+                            path: '/person-vote',
+                            query: {
+                                cid: item.id
+                            }
+                        });
+                    } else { 
+                        this.$router.push({
+                            path: '/article-vote',
+                            query: {
+                                cid: item.id
+                            }
+                        });
+                    }
+                } else {
+                    this.$dialog.alert({
+                        message: '请您先签到',
+                        theme: 'round-button',
+                    }).then(() => {});
+                }
             }
+            // if (this.tpyhQd == 'Y') {
+            //     // cid  内容id
+            //     if (item.tp_tplx_id == 2) {
+            //         this.$router.push({
+            //             path: '/person-vote',
+            //             query: {
+            //                 cid: item.id
+            //             }
+            //         });
+            //     } else { 
+            //         this.$router.push({
+            //             path: '/article-vote',
+            //             query: {
+            //                 cid: item.id
+            //             }
+            //         });
+            //     }
+            // } else {
+            //     this.$dialog.alert({
+            //         message: '请您先签到',
+            //         theme: 'round-button',
+            //     }).then(() => {});
+            // }
         },
         // 一键提交
         onSubmit(){
