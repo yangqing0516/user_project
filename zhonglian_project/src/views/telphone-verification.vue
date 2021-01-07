@@ -85,7 +85,7 @@ export default {
         // 手机号
         // telphone(val) {
         //     if (this.pattern.test(val)) {
-        //         // this.isCode = false;
+                 // this.isCode = false;
         //     }
         // },
         // 图文码
@@ -269,9 +269,10 @@ export default {
                 }
             }
             .btn {
+                padding: 0 .5rem;
                 button {
                     margin: 0 auto;
-                    width: 6.5rem;
+                    width: 100%;
                     height: 0.8rem;
                     /* background: #D8D8D8; */
                     .van-button__content {

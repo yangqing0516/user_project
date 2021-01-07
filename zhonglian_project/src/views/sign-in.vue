@@ -291,7 +291,7 @@ export default {
             position: relative;
             img {
                 width: 100%;
-                height: auto;
+                height: 2.97rem;
             }
             h2 {
                 position: absolute;
@@ -377,10 +377,10 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 0 .5rem;
         button {
-            width: 6.5rem;
+            width: 100%;
             height: 0.8rem;
-            /* background: #E1362E; */
             border-radius: 0.4rem;
             span {
                 font-size: .3rem;

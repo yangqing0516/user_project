@@ -25,21 +25,6 @@
             <div class="vote-option">
                 <van-radio-group v-model="radio" :disabled="ytj">
                     <van-cell-group >
-                        <!-- <van-cell title="赞成" clickable @click="radio = '1'">
-                            <template #right-icon>
-                                <van-radio name="1" checked-color="#E1362E"/>
-                            </template>
-                        </van-cell>
-                        <van-cell title="反对" clickable @click="radio = '2'">
-                            <template #right-icon>
-                                <van-radio name="2" checked-color="#E1362E"/>
-                            </template>
-                        </van-cell>
-                        <van-cell title="弃权" clickable @click="radio = '3'">
-                            <template #right-icon>
-                                <van-radio name="3" checked-color="#E1362E"/>
-                            </template>
-                        </van-cell> -->
                         <van-cell title="赞成" clickable>
                             <template #right-icon>
                                 <van-radio name="1" checked-color="#E1362E"/>
@@ -77,7 +62,6 @@
         submitVoteContent,
         getContentStatus,
         submitAllVote,
-        reportReturnUp // 报告类返回上一项
     } from '@/api/index';
     export default {
         name: 'article-vote',
@@ -201,13 +185,13 @@
                                 this.save = false;
                             }
                         }
-                        // // 判断下一项的数据是够存在，如果不存在的话显示保存按钮，存在显示保存并下一项
+                        // 判断下一项的数据是够存在，如果不存在的话显示保存按钮，存在显示保存并下一项
                         // if (!data.result[2].length) {
                         //     this.save = true;
                         //     this.isNext = false;
                         // }
 
-                        // // 判断当前事项是否提交过，如果提交过禁用按钮，否正常操作
+                        // 判断当前事项是否提交过，如果提交过禁用按钮，否正常操作
                         // if (data.result[1][0].tpyh_tpnrzt == 'Y') {
                         //     this.submitItemFlag = true;
                         //     this.isSubmited = true;
@@ -263,8 +247,8 @@
                     tpyhid: localStorage.getItem('userId'),
                     // 投票结果
                     tpjg: this.radio,
-                    // 内容id
-                    tpnrid: this.$route.query.cid,
+                    // 内容id--tpnrid
+                    tpnrbgid: this.$route.query.cid,
                 }
                 voteSave(data).then(res=>{
                     if (res.data.success) {
@@ -315,8 +299,8 @@
                     sbm: localStorage.getItem('sbm'),
                     tpjg: this.radio,
                     // 内容id
-                    tpnrid: this.$route.query.cid,
-                    // 用户id
+                    tpnrbgid: this.$route.query.cid,
+                    // 用户id--
                     tpyhid: localStorage.getItem('userId')
                 }
                 voteSave(data).then(res=>{
@@ -358,8 +342,8 @@
                     sbm: localStorage.getItem('sbm'),
                     tpjg: this.radio,
                     // 内容id
-                    tpnrid: this.$route.query.cid,
-                    // 用户id
+                    tpnrbgid: this.$route.query.cid,
+                    // 用户id--
                     tpyhid: localStorage.getItem('userId')
                 }
                 

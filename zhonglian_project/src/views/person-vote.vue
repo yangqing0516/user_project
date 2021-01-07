@@ -56,7 +56,6 @@
     import {  
         getContentPerson, 
         getEnterInfo,
-        reportReturnUp,
         submitAllVote,
         saveVoteResult, // 保存
         submitVoteResult, // 提交

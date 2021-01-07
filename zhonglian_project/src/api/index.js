@@ -129,28 +129,10 @@ export function submitAllVote(params) {
     })
 }
 
-// 附件访问
+// 15、附件访问
 export function viewFile(params) {
     return request({
         url: `/sys/common/static/${params.file}`,
         method: 'get'
-    })
-}
-
-// 人员类----返回上一项
-export function personReturnUp(params) {
-    return request({
-        url: "/tp/tpTpnrRy/queryByNyIdUp",
-        method: 'get',
-        params
-    })
-}
-
-// 报告类 ---- 返回上一项
-export function reportReturnUp(params) {
-    return request({
-        url: "/tp/tpTpnrBg/queryByNyIdUp",
-        method: 'get',
-        params
     })
 }
