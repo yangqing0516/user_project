@@ -17,10 +17,6 @@
                 <li>
                     <span>截止时间：{{endTime}}</span>
                 </li>
-                <!-- <li>
-                    <img src="../assets/participate_in.png" alt="">
-                    <span>3人已参与</span>
-                </li> -->
             </ul>
             <div class="vote-option">
                 <van-radio-group v-model="radio" :disabled="ytj">
@@ -185,26 +181,6 @@
                                 this.save = false;
                             }
                         }
-                        // 判断下一项的数据是够存在，如果不存在的话显示保存按钮，存在显示保存并下一项
-                        // if (!data.result[2].length) {
-                        //     this.save = true;
-                        //     this.isNext = false;
-                        // }
-
-                        // 判断当前事项是否提交过，如果提交过禁用按钮，否正常操作
-                        // if (data.result[1][0].tpyh_tpnrzt == 'Y') {
-                        //     this.submitItemFlag = true;
-                        //     this.isSubmited = true;
-                        //     this.isNext = false;
-                        //     this.ytj = true;
-                        //     this.save = false;
-                        // } else {
-                        //     this.submitItemFlag = false;
-                        //     this.isSubmited = false;
-                        //     this.isNext = true;
-                        //     this.ytj = false;
-                        //     this.saveInfo = false;
-                        // }
                     }
                 })
             },
@@ -212,13 +188,6 @@
             preItemClick(){
                 console.log('23232',this.preData)
                 if (this.preData[0].tpTplxId == 1) {
-                    // this.$router.push({
-                    //     path: "/article-vote",
-                    //     query: {
-                    //         cid: this.preData[0].id
-                    //     }
-                    // })
-
                     let path = this.$router.history.current.path;
                     this.titleInfo = this.preData[0];
                     this.$router.replace({

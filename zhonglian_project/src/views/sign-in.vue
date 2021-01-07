@@ -131,7 +131,7 @@ export default {
             // tp_tplx_id 2-->人员类  1-->报告类
             // 人员类
             if (nowIndex!=0) {
-                if (this.specialList[nowIndex-1].tpyh_tpnrzt!=null) {
+                // if (this.specialList[nowIndex-1].tpyh_tpnrzt!=null) {
                     if (this.tpyhQd == 'Y') {
                         // cid  内容id
                         if (item.tp_tplx_id == 2) {
@@ -155,12 +155,12 @@ export default {
                             theme: 'round-button',
                         }).then(() => {});
                     }
-                } else {
-                    this.$dialog.alert({
-                        message: '请按序号依次进行投票',
-                        theme: 'round-button',
-                    }).then(() => {});
-                }
+                // } else {
+                //     this.$dialog.alert({
+                //         message: '请按序号依次进行投票',
+                //         theme: 'round-button',
+                //     }).then(() => {});
+                // }
             } else {
                 if (this.tpyhQd == 'Y') {
                     // cid  内容id
