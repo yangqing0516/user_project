@@ -119,6 +119,7 @@
                     if (data.code == 200) {
                         this.allData = data.result;
                         this.titleInfo = data.result[0];
+                        console.log('标题信息', this.titleInfo)
                         this.preData = data.result[3];
                         // 判断是否显示【上一项】按钮
                         if (this.titleInfo.tpnrXh != 1) {

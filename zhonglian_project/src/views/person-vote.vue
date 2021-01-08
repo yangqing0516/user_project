@@ -264,7 +264,8 @@
                     sbm: localStorage.getItem('sbm'),
                     tpjgs: tpjgsArr.join(','),
                     // 内容id
-                    tpnrid: this.voteList[0].tp_tpnr_id,
+                    // tpnrid: this.voteList[0].tp_tpnr_id,
+                    tpnrid: this.$route.query.cid,
                     // 用户id
                     tpyhid: localStorage.getItem('userId')
                 }
