@@ -163,7 +163,6 @@ export default {
                 // }
             } else {
                 if (this.tpyhQd == 'Y') {
-                    // cid  内容id
                     if (item.tp_tplx_id == 2) {
                         this.$router.push({
                             path: '/person-vote',

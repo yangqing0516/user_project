@@ -57,12 +57,12 @@ export default {
         }
     },
     mounted(){
-        // let url = window.location.href;
-        // console.log('url地址----', url)
-        // let id = url.split("sx_id=")[1];
-        // console.log('事项id-----', id)
-        // localStorage.setItem('sx_id', id)
-        localStorage.setItem('sx_id', "1333344778143465474");
+        let url = window.location.href;
+        console.log('url地址----', url)
+        let id = url.split("sx_id=")[1];
+        console.log('事项id-----', id)
+        localStorage.setItem('sx_id', id)
+        // localStorage.setItem('sx_id', "1333344778143465474");
         this.onaxios();
     },
     methods: {

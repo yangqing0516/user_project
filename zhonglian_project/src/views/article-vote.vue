@@ -19,7 +19,23 @@
                 </li>
             </ul>
             <div class="vote-option">
-                <van-radio-group v-model="radio" :disabled="ytj">
+                <ul>
+                    <li v-for="(item, index) in voteList" :key="index">
+                        <p>
+                            <em>{{item.bg_xh}}、{{item.bg_mc}}</em>
+                        </p>
+                        <van-field name="radio">
+                            <template #right-icon>
+                                <van-radio-group :disabled="ytj" checked-color="#E1362E" v-model="item.tpjg_tpyj" direction="horizontal">
+                                    <van-radio name="1">赞成</van-radio>
+                                    <van-radio name="2">反对</van-radio>
+                                    <van-radio name="3">弃权</van-radio>
+                                </van-radio-group>
+                            </template>
+                        </van-field>
+                    </li>
+                </ul>
+                <!-- <van-radio-group v-model="radio" :disabled="ytj">
                     <van-cell-group >
                         <van-cell title="赞成" clickable>
                             <template #right-icon>
@@ -37,7 +53,7 @@
                             </template>
                         </van-cell>
                     </van-cell-group>
-                </van-radio-group>
+                </van-radio-group> -->
             </div>
         </div>
         <div class="footer">
@@ -67,6 +83,7 @@
                 endTime: "",
                 titleInfo: {},
                 nextData: [],
+                voteList: [],
                 preData:[],
                 isNext: true,
                 // 上一项
@@ -119,8 +136,15 @@
                     if (data.code == 200) {
                         this.allData = data.result;
                         this.titleInfo = data.result[0];
-                        console.log('标题信息', this.titleInfo)
+                        this.voteList = data.result[1];
                         this.preData = data.result[3];
+                        this.nextData = data.result[2];
+                        // 设置初始值
+                        this.voteList.map(item=>{
+                            if (!item.tpjg_tpyj) {
+                                item.tpjg_tpyj = '1';   
+                            }
+                        })
                         // 判断是否显示【上一项】按钮
                         if (this.titleInfo.tpnrXh != 1) {
                             this.preItemFlag = false;
@@ -133,7 +157,6 @@
                             this.radio = data.result[1][0].tpjg_tpyj;
                         }
 
-                        this.nextData = data.result[2];
                         let allDataResult = this.dataList.every(item=>{
                             return item.tpyh_tpnrzt == 'Y';
                         })
@@ -210,20 +233,27 @@
             },
             // 保存并下一项
             saveForm(){
+                let tpjgsArr = [];
+                let nextData = this.allData[2][0];
+                // let newNextData = this.nextData;
+                // console.log('nextData = ',nextData)
+                // console.log('newNextData = ',newNextData)
+                this.voteList.map(item => {
+                    tpjgsArr.push(item.tpjg_tpyj)
+                })
                 let data = {
                     // 识别码
                     sbm: localStorage.getItem('sbm'),
                     // 用户id
                     tpyhid: localStorage.getItem('userId'),
                     // 投票结果
-                    tpjg: this.radio,
-                    // 内容id--tpnrid
-                    tpnrbgid: this.$route.query.cid,
+                    tpjgs: tpjgsArr.join(','),
+                    // 内容id--tpnrbgid
+                    tpnrid: this.$route.query.cid,
                 }
                 voteSave(data).then(res=>{
                     if (res.data.success) {
                         if (this.allData[2]) {
-                            let nextData = this.allData[2][0];
                             if (nextData.tpTplxId == 2) {
                                 this.$router.replace({
                                     path: '/person-vote',
@@ -265,11 +295,15 @@
             },
             // 直接保存
             saveInfo(){
+                let tpjgsArr = [];
+                this.voteList.map(item => {
+                    tpjgsArr.push(item.tpjg_tpyj)
+                })
                 let data = {
                     sbm: localStorage.getItem('sbm'),
-                    tpjg: this.radio,
+                    tpjgs: tpjgsArr.join(','),
                     // 内容id
-                    tpnrbgid: this.$route.query.cid,
+                    tpnrid: this.$route.query.cid,
                     // 用户id--
                     tpyhid: localStorage.getItem('userId')
                 }
@@ -307,35 +341,45 @@
             },
             // 提交
             onSubmit(){
-                // console.log(this.voteList)
+                let tpjgsArr = [];
+                let first = 1, firstArr = [];
+                let second = 2, secondArr = [];
+                let third = 3, thirdArr = [];
+                this.voteList.map(item=>{
+                    tpjgsArr.push(item.tpjg_tpyj);
+                    if (item.tpjg_tpyj == 1) {
+                        firstArr.push(item)
+                    } else if (item.tpjg_tpyj == 2){
+                        secondArr.push(item)
+                    } else if (item.tpjg_tpyj == 3){
+                        thirdArr.push(item)
+                    }
+                })
                 let data = {
+                    // 识别码
                     sbm: localStorage.getItem('sbm'),
-                    tpjg: this.radio,
+                    // 投票结果
+                    tpjgs: tpjgsArr.join(','),
                     // 内容id
-                    tpnrbgid: this.$route.query.cid,
+                    tpnrid: this.$route.query.cid,
                     // 用户id--
                     tpyhid: localStorage.getItem('userId')
                 }
-                
-                submitVoteContent(data).then(res=>{
-                    if (res.data.success) {
-                        this.ytj = true;
-                        this.isNext = false;
-                        this.save = false;
-                        this.isSubmited = true;
-                        this.submitItemFlag = true;
-                        // if (this.allData[2]&&this.allData[2].length) {
-                        //     this.ytj = true;
-                        //     this.isNext = false;
-                        //     this.save = false;
-                        //     this.isSubmited = true;
-                        // } else {
-                        //     this.ytj = true;
-                        // }
-                    } else {
-                        this.$toast.fail(res.data.message)
-                    }
-                })
+                this.$dialog.confirm({
+                    message: `赞成数:${firstArr.length}<br/>反对数:${secondArr.length}<br/>弃权数:${thirdArr.length}`,
+                }).then(() => {
+                    submitVoteContent(data).then(res=>{
+                        if (res.data.success) {
+                            this.ytj = true;
+                            this.isNext = false;
+                            this.save = false;
+                            this.isSubmited = true;
+                            this.submitItemFlag = true;
+                        } else {
+                            this.$toast.fail(res.data.message)
+                        }
+                    })
+                }).catch(() => {});
             },
             // 一键提交
             oneClickSubmit(){
@@ -366,7 +410,7 @@
     }
 </script>
 <style lang="scss">
-.vote-option {
+/* .vote-option {
     margin-top: .3rem;
     .van-cell {
         margin-bottom: .3rem;
@@ -398,7 +442,7 @@
     .van-radio--horizontal,.van-field__label {
         margin-right: 0;;
     }
-}
+} */
 </style>
 <style scoped lang="scss">
 
@@ -407,6 +451,37 @@
     display: flex;
     flex-direction: column;
     background: #F6F6F6;
+}
+.vote-option {
+    ul {
+        display: flex;
+        flex-direction: column;
+        li {
+            height: 1.6rem;
+            background: #fff;
+            margin-bottom: .3rem;
+            p {
+                padding-top: .3rem;
+                padding-left: .3rem;
+                padding-right: .3rem;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                span, em {
+                    color: #111;
+                    font-size: 0.26rem;
+                    font-weight: 400;
+                    line-height: 0.37rem;
+                }
+            }
+            .van-cell {
+                padding: .26rem 0 .3rem;
+                .van-radio--horizontal {
+                    margin-right: .3rem;
+                }
+            }
+        }
+    }
 }
 .header {
     width: 100%;

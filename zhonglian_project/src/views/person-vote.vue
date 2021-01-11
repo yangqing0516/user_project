@@ -122,6 +122,8 @@
                         this.titleInfo = data.result[0];
                         // 列表信息
                         this.voteList = data.result[1];
+                        // 下一项内容
+                        this.nextData = data.result[2];
                         // 上一项内容
                         this.preData = data.result[3];
                         // 设置初始值
@@ -133,7 +135,6 @@
                         if (this.titleInfo.tpnrXh != 1) {
                             this.preItemFlag = false;
                         }
-                        this.nextData = data.result[2];
                         // 查看所有事项是否全部提交
                         let allDataResult = this.dataList.every(item=>{
                             return item.tpyh_tpnrzt == 'Y';
@@ -226,11 +227,24 @@
             // 提交
             onSubmit() {
                 // console.log(this.voteList)
-                let tpjgsArr = [];
                 let nextData = this.nextData[0];
+                let tpjgsArr = [];
+                let first = 1, firstArr = [];
+                let second = 2, secondArr = [];
+                let third = 3, thirdArr = [];
                 this.voteList.map(item=>{
-                    tpjgsArr.push(item.tpjg_tpyj)
+                    tpjgsArr.push(item.tpjg_tpyj);
+                    if (item.tpjg_tpyj == 1) {
+                        firstArr.push(item)
+                    } else if (item.tpjg_tpyj == 2){
+                        secondArr.push(item)
+                    } else if (item.tpjg_tpyj == 3){
+                        thirdArr.push(item)
+                    }
                 })
+                // console.log('赞成人数', firstArr.length)
+                // console.log('反对人数', secondArr.length)
+                // console.log('弃权人数', thirdArr.length)
                 
                 let data = {
                     sbm: localStorage.getItem('sbm'),
@@ -240,18 +254,22 @@
                     // 用户id
                     tpyhid: localStorage.getItem('userId')
                 }
-                submitVoteResult(data).then(res=>{
-                    if (res.data.success) {
-                        this.ytj = true;
-                        this.isNext = false;
-                        this.save = false;
-                        this.isSubmited = true;
-                        this.submitItemFlag = true;
-                        // this.onaxios();
-                    } else {
-                        this.$toast.fail(res.data.message)
-                    }
-                })
+                this.$dialog.confirm({
+                    message: `赞成数:${firstArr.length}<br/>反对数:${secondArr.length}<br/>弃权数:${thirdArr.length}`,
+                }).then(() => {
+                    submitVoteResult(data).then(res=>{
+                        if (res.data.success) {
+                            this.ytj = true;
+                            this.isNext = false;
+                            this.save = false;
+                            this.isSubmited = true;
+                            this.submitItemFlag = true;
+                            // this.onaxios();
+                        } else {
+                            this.$toast.fail(res.data.message)
+                        }
+                    })
+                }).catch(() => {});
             },
             // 保存并下一步
             saveForm(){
@@ -261,7 +279,9 @@
                     tpjgsArr.push(item.tpjg_tpyj)
                 })
                 let data = {
+                    // 识别码
                     sbm: localStorage.getItem('sbm'),
+                    // 投票意见
                     tpjgs: tpjgsArr.join(','),
                     // 内容id
                     // tpnrid: this.voteList[0].tp_tpnr_id,
@@ -297,7 +317,6 @@
             },
             // 保存
             saveInfo(){
-                console.log(this.voteList)
                 let tpjgsArr = [];
                 this.voteList.map(item => {
                     tpjgsArr.push(item.tpjg_tpyj)
