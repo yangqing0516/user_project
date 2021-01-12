@@ -1,2 +1,4 @@
-zhonglian_project   中电联在线投票系统
+﻿zhonglian_project   中电联在线投票系统《第一版》
+zhonglian_project_two  中电联在线投票系统《第二版》
+	区别：样式不一样
 	框架：Vue+Mint

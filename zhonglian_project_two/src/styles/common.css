@@ -1,0 +1,311 @@
+* {
+	margin: 0px;
+	padding: 0px;
+	text-decoration: none;
+	box-sizing: border-box;
+	font-size: 12px;
+	font-weight: 400;
+	font-style: normal;
+	text-size-adjust: 100%;
+	list-style: none;
+}
+
+body,html{
+    overflow-x: hidden;
+}
+
+img,
+div,
+body,
+html,
+ul,
+li,
+a {
+	-webkit-touch-callout: none;
+}
+
+a {
+	color: #333333;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	-webkit-user-select: none;
+	-moz-user-focus: none;
+	-moz-user-select: none;
+
+}
+a:hover{
+	color: #333333;
+}
+
+input,
+button {
+	outline: 0;
+	background: none;
+	border: none;
+}
+
+button {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: transparent;
+
+}
+
+
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+    color: #888888;
+    font-size: .32rem;
+}
+input:-moz-placeholder, textarea:-moz-placeholder {
+    color:#888888;
+    font-size: .32rem;
+}
+input::-moz-placeholder, textarea::-moz-placeholder {
+    color:#888888;
+    font-size: .32rem;
+}
+input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+    color:#888888;
+    font-size: .32rem;
+}
+
+
+body {
+	font-size: 12px;
+	max-width: 650px;
+	margin: 0 auto;
+	font-family: PingFang SC;
+	line-height: normal; 
+}
+input {
+	color: #222222!important;
+	user-select: text;-webkit-user-select:text;
+}
+body,
+html {
+	width: 100%;
+	height: 100%;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+
+@media screen and (min-width: 240px) {
+
+	html {
+
+		font-size: 32px;
+
+	}
+
+}
+
+@media screen and (min-width: 320px) {
+
+	html {
+
+		font-size: 42.66667px;
+
+	}
+
+}
+
+@media screen and (min-width: 360px) {
+
+	html {
+
+		font-size: 48px;
+
+	}
+
+}
+
+@media screen and (min-width: 375px) {
+
+	html {
+
+		font-size: 50px;
+
+	}
+
+}
+
+@media screen and (min-width: 384px) {
+
+	html {
+
+		font-size: 51.2px;
+
+	}
+
+}
+
+@media screen and (min-width: 411px) {
+
+	html {
+
+		font-size: 54.8px;
+
+	}
+
+}
+
+@media screen and (min-width: 414px) {
+
+	html {
+
+		font-size: 55.2px;
+
+	}
+
+}
+
+@media screen and (min-width: 424px) {
+
+	html {
+
+		font-size: 56.53333px;
+
+	}
+
+}
+
+@media screen and (min-width: 480px) {
+
+	html {
+
+		font-size: 64px;
+
+	}
+
+}
+
+@media screen and (min-width: 540px) {
+
+	html {
+
+		font-size: 72px;
+
+	}
+
+}
+
+@media screen and (min-width: 640px) {
+
+	html {
+
+		font-size: 85.33333px;
+
+	}
+
+}
+
+@media screen and (min-width: 720px) {
+
+	html {
+
+		font-size: 96px;
+
+	}
+
+}
+
+@media screen and (min-width: 750px) {
+
+	html {
+
+		font-size: 100px;
+
+	}
+
+}
+
+@media screen and (min-width: 768px) {
+
+	html {
+
+		font-size: 50px;
+
+	}
+
+}
+
+@media screen and (min-width: 800px) {
+
+	html {
+
+		font-size: 50px;
+
+	}
+
+}
+
+@media screen and (min-width: 980px) {
+
+	html {
+
+		font-size: 50px;
+
+	}
+
+}
+
+@media screen and (min-width: 1024px) {
+
+	html {
+
+		font-size: 50px;
+
+	}
+
+}
+
+@media screen and (min-width: 1080px) {
+
+	html {
+
+		font-size: 50px;
+
+	}
+
+}
+
+@media screen and (min-width: 1152px) {
+
+	html {
+
+		font-size: 50px;
+
+	}
+
+}
+
+@media screen and (min-width: 1366px) {
+
+	html {
+
+		font-size: 50px;
+
+	}
+
+}
+
+@media screen and (min-width: 1440px) {
+
+	html {
+
+		font-size: 50px;
+
+	}
+
+}
+
+@media screen and (min-width: 2160px) {
+
+	html {
+
+		font-size: 50px;
+
+	}
+}
