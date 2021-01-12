@@ -1,14 +1,13 @@
 <template>
   <div class="container view-pdf wrapper">
     <!--预览-->
-    <!-- <div class="goback1">
-        <div class="goBtn">
-            <van-nav-bar title="附件查看" left-arrow @click-left="goBack" />
-        </div>
-    </div> -->
-     <div class="header">
-            <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
-        </div>
+    <div class="header">
+        <span @click="returnBack">
+            <img src="../assets/back.png" alt="">
+        </span>
+        <span></span>
+        <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
+    </div>
     <div class="section">
         <div class="pdf-file">
             <pdf  
@@ -26,12 +25,13 @@
 <script>
 import pdf from "vue-pdf"; // 引入pdf组件
 export default {
-    components: { pdf }, // 引入pdf组件
+    components: { 
+        pdf
+    }, // 引入pdf组件
     data() {
         return {
             numPages: undefined,
-            path: "",
-            // path: this.$route.query.url,//pdf的地址，例如：/testFile.pdf
+            path: ""
         };
     },
     mounted() {
@@ -45,6 +45,10 @@ export default {
         // 退回首页
         onBack(){
             this.$router.push('/sign-in')
+        },
+        // 返回
+        returnBack(){
+            this.$router.go(-1);
         }
     },
 };
@@ -88,6 +92,12 @@ export default {
         width: .41rem;
         height: .38rem;
     } */
+    span {
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
     button {
         width: 1.6rem;
         height: .6rem;

@@ -6,9 +6,9 @@
             <van-nav-bar title="附件查看" left-arrow @click-left="goBack" />
         </div>
     </div> -->
-     <div class="header">
-            <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
-        </div>
+    <div class="header">
+        <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
+    </div>
     <div class="section">
         <div class="pdf-file">
             <pdf  

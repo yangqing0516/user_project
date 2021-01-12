@@ -7,7 +7,7 @@
         <div class="section">
             <div class="title">
                 <h3>{{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}</h3>
-                <button @click="viewFile">查看附件</button>
+                <!-- <button @click="viewFile">查看附件</button> -->
             </div>
             <ul>
                 <li>
@@ -33,6 +33,7 @@
                                 </van-radio-group>
                             </template>
                         </van-field>
+                        <button @click="viewFile(item)">查看附件</button>
                     </li>
                 </ul>
                 <!-- <van-radio-group v-model="radio" :disabled="ytj">
@@ -283,9 +284,8 @@
                 this.$router.push('/sign-in')
             },
             // 查附件
-            viewFile(){
-                let url = 'https://tp.cec.org.cn/jeecg-boot/sys/common/static/' + encodeURI(this.allData[1][0].bg_wjlj)
-                // let url = this.allData[1][0].bg_wjlj;
+            viewFile(item){
+                let url = 'https://tp.cec.org.cn/jeecg-boot/sys/common/static/' + encodeURI(item.bg_wjlj)
                 this.$router.push({
                     path: '/preview-pdf',
                     query: {
@@ -411,6 +411,9 @@
     }
 </script>
 <style lang="scss">
+.van-cell::after {
+    border-bottom: 0!important;
+}
 /* .vote-option {
     margin-top: .3rem;
     .van-cell {
@@ -459,7 +462,8 @@
         display: flex;
         flex-direction: column;
         li {
-            height: 1.6rem;
+            // height: 1.6rem;
+            height: 2.2rem;
             background: #fff;
             margin-bottom: .3rem;
             p {
@@ -482,6 +486,21 @@
                     margin-right: .3rem;
                 }
             }
+            button {
+                font-size: 0.24rem;
+                color: #E1362E;
+                line-height: 0.42rem;
+                font-weight: 400;
+                // width: 1.2rem;
+                // height: 0.46rem;
+                text-align: center;
+                line-height: .46rem;
+                border-radius: 0.3rem;
+                width: 100%;
+                text-align: right;
+                padding-right: .3rem;
+                // border: 0.01rem solid #E1362E!important;
+            }
         }
     }
 }
@@ -493,10 +512,6 @@
     padding:0 .3rem;
     justify-content: space-between;
     background: #fff;
-    /* img {
-        width: .41rem;
-        height: .38rem;
-    } */
     button {
         width: 1.6rem;
         height: .6rem;
