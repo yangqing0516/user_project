@@ -29,9 +29,9 @@
                     <tr v-for="(item, index) in voteList" :key="index">
                         <td>{{item.bg_xh}}</td>
                         <td>{{item.bg_mc}}</td>
-                        <td ref="zc" class="zc"><input type="radio" :disabled="ytj" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
-                        <td ref="fd" class="fd"><input type="radio" :disabled="ytj" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
-                        <td ref="qq" class="qq"><input type="radio" :disabled="ytj" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
+                        <td class="zc" @click="changeVal(item,index, 1)"><input type="radio" :disabled="ytj" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
+                        <td class="fd" @click="changeVal(item, index, 2)"><input type="radio" :disabled="ytj" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
+                        <td class="qq" @click="changeVal(item, index, 3)"><input type="radio" :disabled="ytj" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
                     </tr>
                 </tbody>
             </table>
@@ -88,15 +88,14 @@ export default {
     updated(){
         layui.use('form',function(){
             var form = layui.form;
-            console.log('asasdhfksadjfhkasdjf',form)
             form.render();
         });
     },
     mounted(){
-        layui.use('form',function(){
-            var form = layui.form;
-            form.render();
-        });
+        // layui.use('form',function(){
+        //     var form = layui.form;
+        //     form.render();
+        // });
         // this.onaxios();
         this.allSubmitFlag();
     },
@@ -226,13 +225,13 @@ export default {
                 })
             }
         },
+        changeVal(item, index, ind){
+            this.voteList[index].tpjg_tpyj = ind;
+        },
         // 保存并下一项
         saveForm(){
             let tpjgsArr = [];
             let nextData = this.allData[2][0];
-            // let newNextData = this.nextData;
-            // console.log('nextData = ',nextData)
-            // console.log('newNextData = ',newNextData)
             this.voteList.map(item => {
                 tpjgsArr.push(item.tpjg_tpyj)
             })
@@ -316,7 +315,7 @@ export default {
                     query: {
                         cid: nextData.id
                     }
-                })
+                });
                 this.onaxios();
             }
         },
@@ -365,28 +364,78 @@ export default {
         },
         // 一键提交
         oneClickSubmit(){
+            let params = {
+                sbm: localStorage.getItem('sbm'),
+                tpsxid: localStorage.getItem('sx_id'),
+                tpyhid: localStorage.getItem('userId')
+            }
+            let tpjgsArr = [];
+            this.voteList.map(item => {
+                tpjgsArr.push(item.tpjg_tpyj)
+            })
+            let data = {
+                sbm: localStorage.getItem('sbm'),
+                tpjgs: tpjgsArr.join(','),
+                // 内容id
+                tpnrid: this.$route.query.cid,
+                // 用户id--
+                tpyhid: localStorage.getItem('userId')
+            }
             this.$dialog.confirm({
                 // title: '标题',
                 message: '确认要全部提交吗？',
             })
             .then(() => {
-                let data = {
-                    sbm: localStorage.getItem('sbm'),
-                    tpsxid: localStorage.getItem('sx_id'),
-                    tpyhid: localStorage.getItem('userId')
-                }
-                submitAllVote(data).then(res=>{
-                    let data = res.data;
-                    if (data.success) {
-                        this.$toast.success('提交成功');
-                        this.onaxios();
-                        this.$router.push('/sign-in');
+                voteSave(data).then(res=>{
+                    if (res.data.success) {
+                        submitAllVote(params).then(res=>{
+                            let data = res.data;
+                            if (data.success) {
+                                this.$toast.success('提交成功');
+                                this.onaxios();
+                                this.$router.push('/sign-in');
+                            } else {
+                                this.$toast.fail(res.data.message);
+                            }
+                        })
+                    } else {
+                        this.$toast.fail(res.data.message);
                     }
                 })
+                // submitAllVote(params).then(res=>{
+                //     let data = res.data;
+                //     if (data.success) {
+                //         this.$toast.success('提交成功');
+                //         this.onaxios();
+                //         this.$router.push('/sign-in');
+                //     }
+                // })
             })
             .catch(() => {
                 // on cancel
             })
+            // this.$dialog.confirm({
+            //     // title: '标题',
+            //     message: '确认要全部提交吗？',
+            // })
+            // .then(() => {
+            //     let data = {
+            //         sbm: localStorage.getItem('sbm'),
+            //         tpsxid: localStorage.getItem('sx_id'),
+            //         tpyhid: localStorage.getItem('userId')
+            //     }
+            //     submitAllVote(data).then(res=>{
+            //         let data = res.data;
+            //         if (data.success) {
+            //             this.$toast.success('提交成功');
+            //             this.onaxios();
+            //             this.$router.push('/sign-in');
+            //         }
+            //     })
+            // })
+            // .catch(() => {
+            //     // on cancel
+            // })
         }
     }
 };

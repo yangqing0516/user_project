@@ -384,24 +384,52 @@
             },
             // 一键提交
             oneClickSubmit(){
+                let params = {
+                    sbm: localStorage.getItem('sbm'),
+                    tpsxid: localStorage.getItem('sx_id'),
+                    tpyhid: localStorage.getItem('userId')
+                }
+                let tpjgsArr = [];
+                this.voteList.map(item => {
+                    tpjgsArr.push(item.tpjg_tpyj)
+                })
+                let data = {
+                    sbm: localStorage.getItem('sbm'),
+                    tpjgs: tpjgsArr.join(','),
+                    // 内容id
+                    tpnrid: this.$route.query.cid,
+                    // 用户id--
+                    tpyhid: localStorage.getItem('userId')
+                }
                 this.$dialog.confirm({
                     // title: '标题',
                     message: '确认要全部提交吗？',
                 })
                 .then(() => {
-                    let data = {
-                        sbm: localStorage.getItem('sbm'),
-                        tpsxid: localStorage.getItem('sx_id'),
-                        tpyhid: localStorage.getItem('userId')
-                    }
-                    submitAllVote(data).then(res=>{
-                        let data = res.data;
-                        if (data.success) {
-                            this.$toast.success('提交成功');
-                            this.onaxios();
-                            this.$router.push('/sign-in');
+                    voteSave(data).then(res=>{
+                        if (res.data.success) {
+                            submitAllVote(params).then(res=>{
+                                let data = res.data;
+                                if (data.success) {
+                                    this.$toast.success('提交成功');
+                                    this.onaxios();
+                                    this.$router.push('/sign-in');
+                                } else {
+                                    this.$toast.fail(res.data.message);
+                                }
+                            })
+                        } else {
+                            this.$toast.fail(res.data.message);
                         }
                     })
+                    // submitAllVote(params).then(res=>{
+                    //     let data = res.data;
+                    //     if (data.success) {
+                    //         this.$toast.success('提交成功');
+                    //         this.onaxios();
+                    //         this.$router.push('/sign-in');
+                    //     }
+                    // })
                 })
                 .catch(() => {
                     // on cancel
