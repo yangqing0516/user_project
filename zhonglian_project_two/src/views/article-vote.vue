@@ -7,6 +7,7 @@
     </div>
     <div class="section">
         <div class="layui-form">
+            <div class="title">{{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}</div>
             <table class="layui-table">
                 <colgroup>
                     <col />
@@ -28,9 +29,9 @@
                     <tr v-for="(item, index) in voteList" :key="index">
                         <td>{{item.bg_xh}}</td>
                         <td>{{item.bg_mc}}</td>
-                        <td><input type="radio" name="radio" value="赞成" title="赞成" checked=""></td>
-                        <td><input type="radio" name="radio" value="反对" title="反对"></td>
-                        <td><input type="radio" name="radio" value="弃权" title="弃权"></td>
+                        <td ref="zc" class="zc"><input type="radio" :disabled="ytj" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
+                        <td ref="fd" class="fd"><input type="radio" :disabled="ytj" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
+                        <td ref="qq" class="qq"><input type="radio" :disabled="ytj" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
                     </tr>
                 </tbody>
             </table>
@@ -59,6 +60,7 @@ import {
 export default {
     data () {
         return {
+            titleInfo: {},
             radio: '',
             nextData: [],
             voteList: [],
@@ -83,7 +85,18 @@ export default {
             allData:[]
         }
     },
+    updated(){
+        layui.use('form',function(){
+            var form = layui.form;
+            console.log('asasdhfksadjfhkasdjf',form)
+            form.render();
+        });
+    },
     mounted(){
+        layui.use('form',function(){
+            var form = layui.form;
+            form.render();
+        });
         // this.onaxios();
         this.allSubmitFlag();
     },
@@ -112,6 +125,7 @@ export default {
                 id: this.$route.query.cid,
                 yh_id: localStorage.getItem('userId')
             }
+            let isSet = null;
             getContentReport(data).then(res=>{
                 let data = res.data;
                 if (data.code == 200) {
@@ -123,7 +137,7 @@ export default {
                     // 设置初始值
                     this.voteList.map(item=>{
                         if (!item.tpjg_tpyj) {
-                            item.tpjg_tpyj = '1';   
+                            item.tpjg_tpyj = '1';
                         }
                     })
                     // 判断是否显示【上一项】按钮
@@ -283,6 +297,7 @@ export default {
             })
         },
         nextStep(){
+            // console.log(this.allData)
             let nextData = this.allData[2][0];
             console.log(nextData)
             if (nextData.tpTplxId == 2) {
@@ -376,7 +391,69 @@ export default {
     }
 };
 </script>
+<style lang="scss">
+.article-vote {
+    .layui-form-radio {
+        margin: 0;
+        padding-right: 0;
+        i {
+            margin: 0;
+        }
+    }
+    // 赞成
+    .zc {
+        .layui-form-radio i {
+            width: .4rem;
+            height: .4rem;
+            border: .08rem solid#ccc;
+            border-radius: 50%;
+            font-size: inherit;
+        }
+        
+        .layui-form-radioed i {
+            border: .08rem solid #259b24!important;
+        }
+    }
+    // 反对
+    .fd {
 
+        .layui-form-radio {
+            position: relative;
+        }
+        .layui-form-radio i::after {
+            content: "X";
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 22px;
+            width: .5rem;
+            height: .5rem;
+            color: #ccc;
+            // background: red;
+        }
+        .layui-form-radio>i {
+            font-size: inherit!important;
+        }
+        .layui-form-radioed i::after {
+            color: #e51c23;
+            // border: .06rem solid #259b24!important;
+        }
+    }
+    // 弃权
+    .qq {
+        .layui-form-radio i {
+            width: .4rem;
+            height: .08rem;
+            background: #ccc;
+            font-size: inherit;
+        }
+        
+        .layui-form-radioed i {
+            background: #ffc107;
+        }
+    }
+}
+</style>
 <style lang="scss" scoped>
 .article-vote {
     display: flex;
@@ -400,6 +477,12 @@ export default {
 .section {
     flex: 1;
     overflow-y: scroll;
+    .title {
+        margin-top: 10px;
+        text-align: center;
+        padding: 0 .5rem;
+        font-size: .3rem;
+    }
 }
 .footer {
     width: 100%;
