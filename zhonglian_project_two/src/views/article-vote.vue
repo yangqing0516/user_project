@@ -28,7 +28,10 @@
                 <tbody>
                     <tr v-for="(item, index) in voteList" :key="index">
                         <td>{{item.bg_xh}}</td>
-                        <td>{{item.bg_mc}}</td>
+                        <td>
+                            {{item.bg_mc}}
+                            <span style="color:rgb(225, 54, 46);" @click="viewFile(item)">查看附件</span>
+                        </td>
                         <td class="zc" @click="changeVal(item,index, 1)"><input type="radio" :disabled="ytj" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
                         <td class="fd" @click="changeVal(item, index, 2)"><input type="radio" :disabled="ytj" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
                         <td class="qq" @click="changeVal(item, index, 3)"><input type="radio" :disabled="ytj" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
@@ -436,7 +439,17 @@ export default {
             // .catch(() => {
             //     // on cancel
             // })
-        }
+        },
+        // 查附件
+        viewFile(item){
+            let url = 'https://tp.cec.org.cn/jeecg-boot/sys/common/static/' + encodeURI(item.bg_wjlj)
+            this.$router.push({
+                path: '/preview-pdf',
+                query: {
+                    url
+                }
+            })
+        },
     }
 };
 </script>
