@@ -6,7 +6,14 @@
             <van-nav-bar title="附件查看" left-arrow @click-left="goBack" />
         </div>
     </div> -->
+    <!-- <div class="header">
+        <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
+    </div> -->
     <div class="header">
+        <span @click="returnBack">
+            <img src="../assets/back.png" alt="">
+        </span>
+        <span></span>
         <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
     </div>
     <div class="section">
@@ -45,6 +52,10 @@ export default {
         // 退回首页
         onBack(){
             this.$router.push('/sign-in')
+        },
+        // 返回
+        returnBack(){
+            this.$router.go(-1);
         }
     },
 };
@@ -76,6 +87,20 @@ export default {
         width: 100%;
     }
 } */
+/* .header {
+    width: 100%;
+    height: .9rem;
+    display: flex;
+    align-items: center;
+    padding:0 .3rem;
+    justify-content: space-between;
+    background: #fff;
+    button {
+        width: 1.6rem;
+        height: .6rem;
+        border-radius: .3rem;
+    }
+} */
 .header {
     width: 100%;
     height: .9rem;
@@ -88,6 +113,12 @@ export default {
         width: .41rem;
         height: .38rem;
     } */
+    span {
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
     button {
         width: 1.6rem;
         height: .6rem;

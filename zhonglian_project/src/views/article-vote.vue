@@ -401,15 +401,21 @@
                     // 用户id--
                     tpyhid: localStorage.getItem('userId')
                 }
+<<<<<<< HEAD
                 
+=======
+>>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                 this.$dialog.confirm({
                     message: '确认要全部提交吗？',
                 })
                 .then(() => {
                     voteSave(data).then(res=>{
                         if (res.data.success) {
+<<<<<<< HEAD
                             // this.$toast.success('保存成功');
                             // this.$router.push('/sign-in');
+=======
+>>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                             submitAllVote(params).then(res=>{
                                 let data = res.data;
                                 if (data.success) {
@@ -424,7 +430,18 @@
                             this.$toast.fail(res.data.message);
                         }
                     })
+<<<<<<< HEAD
                     
+=======
+                    // submitAllVote(params).then(res=>{
+                    //     let data = res.data;
+                    //     if (data.success) {
+                    //         this.$toast.success('提交成功');
+                    //         this.onaxios();
+                    //         this.$router.push('/sign-in');
+                    //     }
+                    // })
+>>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                 })
                 .catch(() => {
                     // on cancel

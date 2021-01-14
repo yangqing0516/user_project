@@ -353,12 +353,6 @@
                         }
                     })
                     this.onaxios();
-                    // this.$router.push({
-                    //     path: '/person-vote',
-                    //     query: {
-                    //         cid: nextData.id
-                    //     }
-                    // });
                 } else { 
                     // 报告类
                     this.$router.push({
@@ -371,6 +365,14 @@
             },
             // 一键提交
             oneClickSubmit(){
+<<<<<<< HEAD
+=======
+                let params = {
+                    sbm: localStorage.getItem('sbm'),
+                    tpsxid: localStorage.getItem('sx_id'),
+                    tpyhid: localStorage.getItem('userId')
+                }
+>>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                 let tpjgsArr = [];
                 this.voteList.map(item => {
                     tpjgsArr.push(item.tpjg_tpyj)
@@ -383,6 +385,7 @@
                     // 用户id
                     tpyhid: localStorage.getItem('userId')
                 }
+<<<<<<< HEAD
                 let params = {
                     sbm: localStorage.getItem('sbm'),
                     tpsxid: localStorage.getItem('sx_id'),
@@ -391,15 +394,20 @@
                 console.log('保存时参数', data)
                 console.log('提交时', params)
                 
+=======
+>>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                 this.$dialog.confirm({
                     message: '确认要全部提交吗？',
                 })
                 .then(() => {
                     saveVoteResult(data).then(res=>{
                         if (res.data.success) {
+<<<<<<< HEAD
                             // this.onaxios();
                             // this.$toast.success("保存成功");
                             // this.$router.push('/sign-in');
+=======
+>>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                             submitAllVote(params).then(res=>{
                                 let data = res.data;
                                 if (data.success) {
@@ -414,7 +422,18 @@
                             this.$toast.fail(res.data.message);
                         }
                     })
+<<<<<<< HEAD
                     
+=======
+                    // submitAllVote(params).then(res=>{
+                    //     let data = res.data;
+                    //     if (data.success) {
+                    //         this.$toast.success('提交成功');
+                    //         this.onaxios();
+                    //         this.$router.push('/sign-in');
+                    //     }
+                    // })
+>>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                 })
                 .catch(() => {})
             }
