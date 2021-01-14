@@ -264,9 +264,14 @@
                             this.ytj = true;
                             this.isNext = false;
                             this.save = false;
-                            this.isSubmited = true;
+                            // this.isSubmited = true;
                             this.submitItemFlag = true;
                             // this.onaxios();
+                            if (this.titleInfo.tpnrXh == this.dataList.length) {
+                                this.isSubmited = false;
+                            } else {
+                                this.isSubmited = true;
+                            }
                         } else {
                             this.$toast.fail(res.data.message)
                         }
@@ -365,14 +370,11 @@
             },
             // 一键提交
             oneClickSubmit(){
-<<<<<<< HEAD
-=======
                 let params = {
                     sbm: localStorage.getItem('sbm'),
                     tpsxid: localStorage.getItem('sx_id'),
                     tpyhid: localStorage.getItem('userId')
                 }
->>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                 let tpjgsArr = [];
                 this.voteList.map(item => {
                     tpjgsArr.push(item.tpjg_tpyj)
@@ -385,29 +387,12 @@
                     // 用户id
                     tpyhid: localStorage.getItem('userId')
                 }
-<<<<<<< HEAD
-                let params = {
-                    sbm: localStorage.getItem('sbm'),
-                    tpsxid: localStorage.getItem('sx_id'),
-                    tpyhid: localStorage.getItem('userId')
-                }
-                console.log('保存时参数', data)
-                console.log('提交时', params)
-                
-=======
->>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                 this.$dialog.confirm({
                     message: '确认要全部提交吗？',
                 })
                 .then(() => {
                     saveVoteResult(data).then(res=>{
                         if (res.data.success) {
-<<<<<<< HEAD
-                            // this.onaxios();
-                            // this.$toast.success("保存成功");
-                            // this.$router.push('/sign-in');
-=======
->>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                             submitAllVote(params).then(res=>{
                                 let data = res.data;
                                 if (data.success) {
@@ -422,9 +407,6 @@
                             this.$toast.fail(res.data.message);
                         }
                     })
-<<<<<<< HEAD
-                    
-=======
                     // submitAllVote(params).then(res=>{
                     //     let data = res.data;
                     //     if (data.success) {
@@ -433,7 +415,6 @@
                     //         this.$router.push('/sign-in');
                     //     }
                     // })
->>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                 })
                 .catch(() => {})
             }

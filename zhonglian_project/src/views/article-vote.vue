@@ -374,8 +374,14 @@
                             this.ytj = true;
                             this.isNext = false;
                             this.save = false;
-                            this.isSubmited = true;
                             this.submitItemFlag = true;
+                            // 判断是否是最后一项，如果是最后一项下一项隐藏，如果不是正常显示
+                            // this.isSubmited = false;
+                            if (this.titleInfo.tpnrXh == this.dataList.length) {
+                                this.isSubmited = false;
+                            } else {
+                                this.isSubmited = true;
+                            }
                         } else {
                             this.$toast.fail(res.data.message)
                         }
@@ -401,21 +407,12 @@
                     // 用户id--
                     tpyhid: localStorage.getItem('userId')
                 }
-<<<<<<< HEAD
-                
-=======
->>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                 this.$dialog.confirm({
                     message: '确认要全部提交吗？',
                 })
                 .then(() => {
                     voteSave(data).then(res=>{
                         if (res.data.success) {
-<<<<<<< HEAD
-                            // this.$toast.success('保存成功');
-                            // this.$router.push('/sign-in');
-=======
->>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                             submitAllVote(params).then(res=>{
                                 let data = res.data;
                                 if (data.success) {
@@ -430,9 +427,6 @@
                             this.$toast.fail(res.data.message);
                         }
                     })
-<<<<<<< HEAD
-                    
-=======
                     // submitAllVote(params).then(res=>{
                     //     let data = res.data;
                     //     if (data.success) {
@@ -441,7 +435,6 @@
                     //         this.$router.push('/sign-in');
                     //     }
                     // })
->>>>>>> 9ebcdd285840fda4f0bef76e610a81c7bb6cff8f
                 })
                 .catch(() => {
                     // on cancel

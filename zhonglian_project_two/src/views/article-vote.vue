@@ -350,15 +350,21 @@ export default {
             }
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定提交,提交后不可修改`
-                // message: `<span style="color:red;">已赞成${firstArr.length}</span>票<br/>反对${secondArr.length}票<br/>弃权${thirdArr.length}票<br/>是否确定提交,提交后不可修改`
             }).then(() => {
                 submitVoteContent(data).then(res=>{
                     if (res.data.success) {
                         this.ytj = true;
                         this.isNext = false;
                         this.save = false;
-                        this.isSubmited = true;
                         this.submitItemFlag = true;
+                        // 判断是否是最后一项，如果是最后一项下一项隐藏，如果不是正常显示
+                        // this.isSubmited = false;
+                        if (this.titleInfo.tpnrXh == this.dataList.length) {
+                            this.isSubmited = false;
+                        } else {
+                            this.isSubmited = true;
+                        }
+                        
                     } else {
                         this.$toast.fail(res.data.message)
                     }

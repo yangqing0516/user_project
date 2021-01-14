@@ -20,6 +20,7 @@
                         <!--  class="headTr" -->
                         <tr>
                             <th>序号</th>
+                            <th>单位</th>
                             <th>姓名</th>
                             <th>赞成</th>
                             <th>反对</th>
@@ -29,6 +30,7 @@
                     <tbody>
                         <tr v-for="(item, index) in voteList" :key="index">
                             <td>{{item.ry_xh}}</td>
+                            <td>{{item.ry_dw}}</td>
                             <td>{{item.ry_xm}}</td>
                             <td class="zc" @click="changeVal(item, index, 1)"><input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="fd" @click="changeVal(item, index, 2)"><input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
@@ -281,30 +283,31 @@
                         thirdArr.push(item)
                     }
                 })
-                // console.log('赞成人数', firstArr.length)
-                // console.log('反对人数', secondArr.length)
-                // console.log('弃权人数', thirdArr.length)
-                
                 let data = {
                     sbm: localStorage.getItem('sbm'),
                     tpjgs: tpjgsArr.join(','),
                     // 内容id
-                    tpnrid: this.voteList[0].tp_tpnr_id,
+                    tpnrid: this.$route.query.cid,
                     // 用户id
                     tpyhid: localStorage.getItem('userId')
                 }
+
+                
                 this.$dialog.confirm({
                     message: ` 已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定提交,提交后不可修改`
-                    // message: `赞成数:${firstArr.length}<br/>反对数:${secondArr.length}<br/>弃权数:${thirdArr.length}`,
-                    // message: `已赞成${firstArr.length}票<br/>反对${secondArr.length}票<br/>弃权${thirdArr.length}票<br/>是否确定提交,提交后不可修改`
                 }).then(() => {
                     submitVoteResult(data).then(res=>{
                         if (res.data.success) {
                             this.ytj = true;
                             this.isNext = false;
                             this.save = false;
-                            this.isSubmited = true;
                             this.submitItemFlag = true;
+                            // this.isSubmited = false;
+                            if (this.titleInfo.tpnrXh == this.dataList.length) {
+                                this.isSubmited = false;
+                            } else {
+                                this.isSubmited = true;
+                            }
                             // this.onaxios();
                         } else {
                             this.$toast.fail(res.data.message)
@@ -382,6 +385,7 @@
                     }
                 })
             },
+            // 下一步
             nextStep(){
                 let nextData = this.nextData[0];
                 if (nextData.tpTplxId == 2) {
