@@ -57,12 +57,12 @@ export default {
         }
     },
     mounted(){
-        // let url = window.location.href;
-        // console.log('url地址----', url)
-        // let id = url.split("sx_id=")[1];
-        // console.log('事项id-----', id)
-        // localStorage.setItem('sx_id', id)
-        localStorage.setItem('sx_id', "1333344778143465474");
+        let url = window.location.href;
+        console.log('url地址----', url)
+        let id = url.split("sx_id=")[1];
+        console.log('事项id-----', id)
+        localStorage.setItem('sx_id', id)
+        // localStorage.setItem('sx_id', "1333344778143465474");
         this.onaxios();
     },
     methods: {
@@ -77,7 +77,8 @@ export default {
                 // console.log('具体参数--',data)
                 if (data.code == 200) {
                     this.enterInfo = data.result;
-                    localStorage.setItem('endTime', data.result.tpsxJzsj.slice(0,10))
+                    localStorage.setItem('endTime', data.result.tpsxJzsj.slice(0,10));
+                    localStorage.setItem('title', data.result.tpsxMc);
                     // 模拟未开始
                     // let nowTime = '2020-1-06 13:56:07';
                     // 进行中

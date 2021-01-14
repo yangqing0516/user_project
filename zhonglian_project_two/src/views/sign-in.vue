@@ -6,7 +6,7 @@
         <div class="section">
             <div class="banner">
                 <img src="../assets/home_banner.png" alt="">
-                <h2>中电联第七次会员代表大会预备会议</h2>
+                <h2>{{title}}</h2>
                 <button v-show="isVote" @click="onSign">签到</button>
                 <button v-show="!isVote" @click="startVote">进行投票</button>
             </div>
@@ -59,13 +59,15 @@ export default {
             isSome: null,
             isVote: true,
             specialList: [],
-            tpyhQd: ""
+            tpyhQd: "",
+            title: ""
         }
     },
     watch: {},
     mounted(){
         this.isSignIn();
         this.onaxios();
+        this.title = localStorage.getItem('title')
     },
     methods: {
         isSignIn(){
