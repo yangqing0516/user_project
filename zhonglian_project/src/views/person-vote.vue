@@ -21,7 +21,7 @@
                 <ul>
                     <li v-for="(item, index) in voteList" :key="index">
                         <p>
-                            <em>{{item.ry_xh}}、{{item.ry_xm}}</em>
+                            <em>{{item.ry_xh}}、{{item.ry_xm}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{item.ry_dw}}</em>
                         </p>
                         <van-field name="radio">
                             <template #right-icon>
@@ -371,28 +371,52 @@
             },
             // 一键提交
             oneClickSubmit(){
+                let tpjgsArr = [];
+                this.voteList.map(item => {
+                    tpjgsArr.push(item.tpjg_tpyj)
+                })
+                let data = {
+                    sbm: localStorage.getItem('sbm'),
+                    tpjgs: tpjgsArr.join(','),
+                    // 内容id
+                    tpnrid: this.$route.query.cid,
+                    // 用户id
+                    tpyhid: localStorage.getItem('userId')
+                }
+                let params = {
+                    sbm: localStorage.getItem('sbm'),
+                    tpsxid: localStorage.getItem('sx_id'),
+                    tpyhid: localStorage.getItem('userId')
+                }
+                console.log('保存时参数', data)
+                console.log('提交时', params)
+                
                 this.$dialog.confirm({
-                    // title: '标题',
                     message: '确认要全部提交吗？',
                 })
                 .then(() => {
-                    let data = {
-                        sbm: localStorage.getItem('sbm'),
-                        tpsxid: localStorage.getItem('sx_id'),
-                        tpyhid: localStorage.getItem('userId')
-                    }
-                    submitAllVote(data).then(res=>{
-                        let data = res.data;
-                        if (data.success) {
-                            this.$toast.success('提交成功');
-                            this.onaxios();
-                            this.$router.push('/sign-in');
+                    saveVoteResult(data).then(res=>{
+                        if (res.data.success) {
+                            // this.onaxios();
+                            // this.$toast.success("保存成功");
+                            // this.$router.push('/sign-in');
+                            submitAllVote(params).then(res=>{
+                                let data = res.data;
+                                if (data.success) {
+                                    this.$toast.success('提交成功');
+                                    this.onaxios();
+                                    this.$router.push('/sign-in');
+                                } else {
+                                    this.$toast.fail(res.data.message);
+                                }
+                            })
+                        } else {
+                            this.$toast.fail(res.data.message);
                         }
                     })
+                    
                 })
-                .catch(() => {
-                    // on cancel
-                })
+                .catch(() => {})
             }
         }
     }
