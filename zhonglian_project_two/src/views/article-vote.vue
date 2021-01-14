@@ -3,7 +3,10 @@
     <!-- 报告类 -->
     <div class="header">
         <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
-        <van-button round block type="info" color="#E1362E" native-type="submit" :disabled="submitItemFlag" @click="onSubmit">提交该项</van-button>
+        <p style="display:flex;">
+            <van-button style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit" @click="allZc">全部赞成</van-button>
+            <van-button round block type="info" color="#E1362E" native-type="submit" :disabled="submitItemFlag" @click="onSubmit">提交该项</van-button>
+        </p>
     </div>
     <div class="section">
         <div class="layui-form">
@@ -103,6 +106,17 @@ export default {
         this.allSubmitFlag();
     },
     methods: {
+        allZc(){
+            this.$dialog.confirm({
+                message: "确定要全部赞成吗？"
+            }).then(() => {
+                this.voteList.map(item=>{
+                    item.tpjg_tpyj = '1';
+                    console.log(item)
+                })
+            })
+            .catch(()=>{})
+        },
         // 退回首页
         onBack(){
             this.$router.push('/sign-in')
@@ -248,32 +262,38 @@ export default {
                 // 内容id--tpnrbgid
                 tpnrid: this.$route.query.cid,
             }
-            voteSave(data).then(res=>{
-                if (res.data.success) {
-                    if (this.allData[2]) {
-                        if (nextData.tpTplxId == 2) {
-                            this.$router.replace({
-                                path: '/person-vote',
-                                query: {
-                                    // 下一项的内容id
-                                    cid: nextData.id
-                                }
-                            });
-                        } else {
-                            let path = this.$router.history.current.path;
-                            this.titleInfo = nextData;
-                            this.$router.replace({
-                                path,
-                                query: {
-                                    // 下一项的内容id
-                                    cid: nextData.id
-                                }
-                            })
-                            this.onaxios();
+            this.$dialog.confirm({
+                message: "是否保存？"
+            })
+            .then(()=>{
+                voteSave(data).then(res=>{
+                    if (res.data.success) {
+                        if (this.allData[2]) {
+                            if (nextData.tpTplxId == 2) {
+                                this.$router.replace({
+                                    path: '/person-vote',
+                                    query: {
+                                        // 下一项的内容id
+                                        cid: nextData.id
+                                    }
+                                });
+                            } else {
+                                let path = this.$router.history.current.path;
+                                this.titleInfo = nextData;
+                                this.$router.replace({
+                                    path,
+                                    query: {
+                                        // 下一项的内容id
+                                        cid: nextData.id
+                                    }
+                                })
+                                this.onaxios();
+                            }
                         }
                     }
-                }
+                })
             })
+            .catch(()=>{})
         },
         // 直接保存
         saveInfo(){
@@ -466,6 +486,18 @@ export default {
         padding-right: 0;
         i {
             margin: 0;
+        }
+    }
+    .layui-table {
+        thead {
+            th {
+                font-size: .14rem;
+            }
+        }
+        tbody {
+            td {
+                font-size: .14rem;
+            }
         }
     }
     // 赞成

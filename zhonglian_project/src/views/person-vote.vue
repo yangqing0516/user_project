@@ -2,7 +2,12 @@
     <div class="person-vote wrapper">
          <div class="header">
             <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
-            <van-button round block type="info" color="#E1362E" native-type="submit" :disabled="submitItemFlag" @click="onSubmit">提交该项</van-button>
+            <p style="display:flex;">
+                <van-button style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit" @click="allZc">全部赞成</van-button>
+                <van-button round block type="info" color="#E1362E" native-type="submit" :disabled="submitItemFlag" @click="onSubmit">提交该项</van-button>
+            </p>
+            <!-- <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
+            <van-button round block type="info" color="#E1362E" native-type="submit" :disabled="submitItemFlag" @click="onSubmit">提交该项</van-button> -->
         </div>
          <div class="section">
             <div class="title">
@@ -95,6 +100,17 @@
             this.allSubmitFlag();
         },
         methods: {
+            allZc(){
+                this.$dialog.confirm({
+                    message: "确定要全部赞成吗？"
+                }).then(() => {
+                    this.voteList.map(item=>{
+                        item.tpjg_tpyj = '1';
+                        console.log(item)
+                    })
+                })
+                .catch(()=>{})
+            },
             // 查看是够可以进行一键提交
             allSubmitFlag(){
                 let data = {
@@ -296,31 +312,34 @@
                     // 用户id
                     tpyhid: localStorage.getItem('userId')
                 }
-                saveVoteResult(data).then(res=>{
-                    if (res.data.success) {
-                        // 人员类
-                        if (nextData[0].tpTplxId == 2) {
-                            let path = this.$router.history.current.path;
-                            this.titleInfo = nextData[0];
-                            this.$router.replace({
-                                path,
-                                query: {
-                                    cid: nextData[0].id
-                                }
-                            });
-                            this.onaxios();
-                        } else { 
-                            // 报告类
-                            this.$router.replace({
-                                path: '/article-vote',
-                                query: {
-                                    cid: nextData[0].id
-                                }
-                            });
+                this.$dialog.confirm({
+                    message: "是否保存？"
+                }).then(()=>{
+                    saveVoteResult(data).then(res=>{
+                        if (res.data.success) {
+                            // 人员类
+                            if (nextData[0].tpTplxId == 2) {
+                                let path = this.$router.history.current.path;
+                                this.titleInfo = nextData[0];
+                                this.$router.replace({
+                                    path,
+                                    query: {
+                                        cid: nextData[0].id
+                                    }
+                                });
+                                this.onaxios();
+                            } else { 
+                                // 报告类
+                                this.$router.replace({
+                                    path: '/article-vote',
+                                    query: {
+                                        cid: nextData[0].id
+                                    }
+                                });
+                            }
                         }
-                    }
-                })
-                
+                    })
+                }).catch(()=>{})
             },
             // 保存
             saveInfo(){
