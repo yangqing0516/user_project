@@ -3,7 +3,7 @@
          <div class="header">
             <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
             <p style="display:flex;">
-                <van-button style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit" @click="allZc">全部赞成</van-button>
+                <van-button :disabled="isAllZc" style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit" @click="allZc">全部赞成</van-button>
                 <van-button round block type="info" color="#E1362E" native-type="submit" :disabled="submitItemFlag" @click="onSubmit">提交该项</van-button>
             </p>
             <!-- <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
@@ -31,7 +31,7 @@
                         </p>
                         <van-field name="radio">
                             <template #right-icon>
-                                <van-radio-group :disabled="ytj" checked-color="#E1362E" v-model="item.tpjg_tpyj" direction="horizontal">
+                                <van-radio-group @change="changeItem" :disabled="ytj" checked-color="#E1362E" v-model="item.tpjg_tpyj" direction="horizontal">
                                     <van-radio name="1">赞成</van-radio>
                                     <van-radio name="2">反对</van-radio>
                                     <van-radio name="3">弃权</van-radio>
@@ -108,22 +108,57 @@
                 // 一键提交按钮状态
                 submitAllFlag: false,
                 // 所有数据
-                allData:[]
+                allData:[],
+                // 是否全部赞成
+                isAllZc: true
             }
         },
         mounted(){
             this.endTime = localStorage.getItem('endTime')
             // this.onaxios();
             this.allSubmitFlag();
+            setTimeout(()=>{
+                let allItemFlag = this.voteList.every(item=>{
+                    return item.tpjg_tpyj == '1'
+                });
+                if (allItemFlag){
+                    this.isAllZc = true;
+                } else {
+                    this.isAllZc = false;
+                }
+            }, 500)
         },
         methods: {
+            // 改变意见
+            changeItem(){
+                let allItemFlag = this.voteList.every(item=>{
+                    return item.tpjg_tpyj == '1'
+                });
+                if (allItemFlag){
+                    this.isAllZc = true;
+                } else {
+                    this.isAllZc = false;
+                }
+            },
+            // 全部赞成
             allZc(){
+                let first = 1, firstArr = [];
+                let second = 2, secondArr = [];
+                let third = 3, thirdArr = [];
+                this.voteList.map(item=>{
+                    if (item.tpjg_tpyj == 1) {
+                        firstArr.push(item)
+                    } else if (item.tpjg_tpyj == 2){
+                        secondArr.push(item)
+                    } else if (item.tpjg_tpyj == 3){
+                        thirdArr.push(item)
+                    }
+                })
                 this.$dialog.confirm({
-                    message: "确定要全部赞成吗？"
+                    message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否全部赞成？`
                 }).then(() => {
                     this.voteList.map(item=>{
                         item.tpjg_tpyj = '1';
-                        console.log(item)
                     })
                 })
                 .catch(()=>{})
@@ -159,7 +194,7 @@
                         // 设置初始值
                         this.voteList.map(item=>{
                             if (!item.tpjg_tpyj) {
-                                item.tpjg_tpyj = '1';   
+                                item.tpjg_tpyj = '1';
                             }
                         })
                         // 判断是否显示【上一项】按钮

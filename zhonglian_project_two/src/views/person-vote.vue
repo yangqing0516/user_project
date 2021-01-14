@@ -3,7 +3,7 @@
          <div class="header">
             <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
             <p style="display:flex;">
-                <van-button style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit" @click="allZc">全部赞成</van-button>
+                <van-button :disabled="isAllZc" style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit" @click="allZc">全部赞成</van-button>
                 <van-button round block type="info" color="#E1362E" native-type="submit" :disabled="submitItemFlag" @click="onSubmit">提交该项</van-button>
             </p>
             
@@ -125,28 +125,50 @@
                 // 所有事项
                 dataList: [],
                 // 一键提交按钮状态
-                submitAllFlag: false
+                submitAllFlag: false,
+                // 是否全部赞成
+                isAllZc: true
             }
         },
         updated(){
             layui.use('form',function(){
                 var form = layui.form;
-                console.log('asasdhfksadjfhkasdjf',form)
                 form.render();
             });
         },
         mounted(){
             this.endTime = localStorage.getItem('endTime');
             this.allSubmitFlag();
+            setTimeout(()=>{
+                let allItemFlag = this.voteList.every(item=>{
+                    return item.tpjg_tpyj == '1'
+                });
+                if (allItemFlag){
+                    this.isAllZc = true;
+                } else {
+                    this.isAllZc = false;
+                }
+            }, 500)
         },
         methods: {
             allZc(){
+                let first = 1, firstArr = [];
+                let second = 2, secondArr = [];
+                let third = 3, thirdArr = [];
+                this.voteList.map(item=>{
+                    if (item.tpjg_tpyj == 1) {
+                        firstArr.push(item)
+                    } else if (item.tpjg_tpyj == 2){
+                        secondArr.push(item)
+                    } else if (item.tpjg_tpyj == 3){
+                        thirdArr.push(item)
+                    }
+                })
                 this.$dialog.confirm({
-                    message: "确定要全部赞成吗？"
+                    message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否全部赞成？`
                 }).then(() => {
                     this.voteList.map(item=>{
                         item.tpjg_tpyj = '1';
-                        console.log(item)
                     })
                 })
                 .catch(()=>{})
@@ -309,7 +331,7 @@
 
                 
                 this.$dialog.confirm({
-                    message: ` 已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定提交,提交后不可修改`
+                    message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定提交,提交后不可修改`
                 }).then(() => {
                     submitVoteResult(data).then(res=>{
                         if (res.data.success) {
@@ -332,6 +354,14 @@
             },
             changeVal(item, index, ind){
                 this.voteList[index].tpjg_tpyj = ind;
+                let allItemFlag = this.voteList.every(item=>{
+                    return item.tpjg_tpyj == '1'
+                });
+                if (allItemFlag){
+                    this.isAllZc = true;
+                } else {
+                    this.isAllZc = false;
+                }
             },
             // 保存并下一步
             saveForm(){
