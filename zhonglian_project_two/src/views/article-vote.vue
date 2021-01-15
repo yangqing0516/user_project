@@ -4,8 +4,8 @@
     <div class="header">
         <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
         <p style="display:flex;">
-            <van-button :disabled="isAllZc" style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit" @click="allZc">全部赞成</van-button>
-            <van-button round block type="info" color="#E1362E" native-type="submit" :disabled="submitItemFlag" @click="onSubmit">提交该项</van-button>
+            <van-button :disabled="isAllZc" @click="allZc" style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit">全部赞成</van-button>
+            <van-button :disabled="submitItemFlag" @click="onSubmit" round block type="info" color="#E1362E" native-type="submit">提交该项</van-button>
         </p>
     </div>
     <div class="section">
@@ -21,8 +21,8 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>序号</th>
-                        <th>表决内容</th>
+                        <th style="width:18%;">序号</th>
+                        <th style="width:30%;">表决内容</th>
                         <th>赞成</th>
                         <th>反对</th>
                         <th>弃权</th>
@@ -89,8 +89,8 @@ export default {
             submitAllFlag: false,
             // 所有数据
             allData:[],
-            // 是否全部赞成
-            isAllZc: true
+            // 全部赞成
+            isAllZc: false
         }
     },
     updated(){
@@ -101,23 +101,16 @@ export default {
     },
     mounted(){
         this.allSubmitFlag();
-        setTimeout(()=>{
-            let allItemFlag = this.voteList.every(item=>{
-                return item.tpjg_tpyj == '1'
-            });
-            if (allItemFlag){
-                this.isAllZc = true;
-            } else {
-                this.isAllZc = false;
-            }
-        }, 500)
     },
     methods: {
         allZc(){
+            let tpjgsArr = [];
             let first = 1, firstArr = [];
             let second = 2, secondArr = [];
             let third = 3, thirdArr = [];
             this.voteList.map(item=>{
+                item.tpjg_tpyj = '1';
+                tpjgsArr.push(item.tpjg_tpyj)
                 if (item.tpjg_tpyj == 1) {
                     firstArr.push(item)
                 } else if (item.tpjg_tpyj == 2){
@@ -126,14 +119,40 @@ export default {
                     thirdArr.push(item)
                 }
             })
+            let data = {
+                // 识别码
+                sbm: localStorage.getItem('sbm'),
+                // 投票结果
+                tpjgs: tpjgsArr.join(','),
+                // 内容id
+                tpnrid: this.$route.query.cid,
+                // 用户id--
+                tpyhid: localStorage.getItem('userId')
+            }
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否全部赞成？`
             }).then(() => {
-                this.voteList.map(item=>{
-                    item.tpjg_tpyj = '1';
+                submitVoteContent(data).then(res=>{
+                    if (res.data.success) {
+                        this.allSubmitFlag();
+                        this.ytj = true;
+                        this.isNext = false;
+                        this.save = false;
+                        this.submitItemFlag = true;
+                        this.isAllZc = true;
+                        // 判断是否是最后一项，如果是最后一项下一项隐藏，如果不是正常显示
+                        // this.isSubmited = false;
+                        if (this.titleInfo.tpnrXh == this.dataList.length) {
+                            this.isSubmited = false;
+                        } else {
+                            this.isSubmited = true;
+                        }
+                        
+                    } else {
+                        this.$toast.fail(res.data.message)
+                    }
                 })
-            })
-            .catch(()=>{})
+            }).catch(()=>{})
         },
         // 退回首页
         onBack(){
@@ -172,6 +191,13 @@ export default {
                     this.voteList.map(item=>{
                         if (!item.tpjg_tpyj) {
                             item.tpjg_tpyj = '1';
+                        } else {
+                            // 判断当前数据是否提交了，如果提交了，【全部赞成】禁用，反之正常显示
+                            if (item.tpyh_tpnrzt == 'Y') {
+                                this.isAllZc = true;
+                            } else {
+                                this.isAllZc = false;
+                            }
                         }
                     })
                     // 判断是否显示【上一项】按钮
@@ -186,6 +212,7 @@ export default {
                         this.radio = data.result[1][0].tpjg_tpyj;
                     }
 
+                    // 最后一条数据判断是否都提交
                     let allDataResult = this.dataList.every(item=>{
                         return item.tpyh_tpnrzt == 'Y';
                     })
@@ -262,21 +289,23 @@ export default {
         },
         changeVal(item, index, ind){
             this.voteList[index].tpjg_tpyj = ind;
-            let allItemFlag = this.voteList.every(item=>{
-                return item.tpjg_tpyj == '1'
-            });
-            if (allItemFlag){
-                this.isAllZc = true;
-            } else {
-                this.isAllZc = false;
-            }
         },
         // 保存并下一项
         saveForm(){
             let tpjgsArr = [];
+            let first = 1, firstArr = [];
+            let second = 2, secondArr = [];
+            let third = 3, thirdArr = [];
             let nextData = this.allData[2][0];
             this.voteList.map(item => {
-                tpjgsArr.push(item.tpjg_tpyj)
+                tpjgsArr.push(item.tpjg_tpyj);
+                if (item.tpjg_tpyj == 1) {
+                    firstArr.push(item)
+                } else if (item.tpjg_tpyj == 2){
+                    secondArr.push(item)
+                } else if (item.tpjg_tpyj == 3){
+                    thirdArr.push(item)
+                }
             })
             let data = {
                 // 识别码
@@ -289,7 +318,8 @@ export default {
                 tpnrid: this.$route.query.cid,
             }
             this.$dialog.confirm({
-                message: "是否保存？"
+                // message: "是否保存？"
+                message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定保存？`
             })
             .then(()=>{
                 voteSave(data).then(res=>{
@@ -399,10 +429,12 @@ export default {
             }).then(() => {
                 submitVoteContent(data).then(res=>{
                     if (res.data.success) {
+                        this.allSubmitFlag();
                         this.ytj = true;
                         this.isNext = false;
                         this.save = false;
                         this.submitItemFlag = true;
+                        this.isAllZc = true;
                         // 判断是否是最后一项，如果是最后一项下一项隐藏，如果不是正常显示
                         // this.isSubmited = false;
                         if (this.titleInfo.tpnrXh == this.dataList.length) {
@@ -506,6 +538,7 @@ export default {
 };
 </script>
 <style lang="scss">
+
 .article-vote {
     .layui-form-radio {
         margin: 0;
@@ -515,14 +548,19 @@ export default {
         }
     }
     .layui-table {
+        td {
+            padding: 0 5px!important;
+        }
         thead {
             th {
                 font-size: .14rem;
+                text-align: center;
             }
         }
         tbody {
             td {
                 font-size: .14rem;
+                text-align: center;
             }
         }
     }
@@ -549,20 +587,18 @@ export default {
         .layui-form-radio i::after {
             content: "X";
             position: absolute;
-            left: 0;
+            left: -.25rem;
             top: 0;
             font-size: 22px;
             width: .5rem;
             height: .5rem;
             color: #ccc;
-            // background: red;
         }
         .layui-form-radio>i {
             font-size: inherit!important;
         }
         .layui-form-radioed i::after {
             color: #e51c23;
-            // border: .06rem solid #259b24!important;
         }
     }
     // 弃权

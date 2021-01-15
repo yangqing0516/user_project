@@ -3,8 +3,8 @@
          <div class="header">
             <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
             <p style="display:flex;">
-                <van-button :disabled="isAllZc" style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit" @click="allZc">全部赞成</van-button>
-                <van-button round block type="info" color="#E1362E" native-type="submit" :disabled="submitItemFlag" @click="onSubmit">提交该项</van-button>
+                <van-button :disabled="isAllZc" @click="allZc" style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit">全部赞成</van-button>
+                <van-button :disabled="submitItemFlag" @click="onSubmit" round block type="info" color="#E1362E" native-type="submit">提交该项</van-button>
             </p>
             
         </div>
@@ -23,12 +23,12 @@
                     <thead>
                         <!--  class="headTr" -->
                         <tr>
-                            <th>序号</th>
-                            <th>单位</th>
+                            <th style="width:18%;">序号</th>
+                            <th style="width:22%;">单位</th>
                             <th>姓名</th>
-                            <th>赞成</th>
-                            <th>反对</th>
-                            <th>弃权</th>
+                            <th style="width:18%;">赞成</th>
+                            <th style="width:18%;">反对</th>
+                            <th style="width:18%;">弃权</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -126,8 +126,8 @@
                 dataList: [],
                 // 一键提交按钮状态
                 submitAllFlag: false,
-                // 是否全部赞成
-                isAllZc: true
+                // 全部赞成
+                isAllZc: false
             }
         },
         updated(){
@@ -139,23 +139,16 @@
         mounted(){
             this.endTime = localStorage.getItem('endTime');
             this.allSubmitFlag();
-            setTimeout(()=>{
-                let allItemFlag = this.voteList.every(item=>{
-                    return item.tpjg_tpyj == '1'
-                });
-                if (allItemFlag){
-                    this.isAllZc = true;
-                } else {
-                    this.isAllZc = false;
-                }
-            }, 500)
         },
         methods: {
             allZc(){
+                let tpjgsArr = [];
                 let first = 1, firstArr = [];
                 let second = 2, secondArr = [];
                 let third = 3, thirdArr = [];
                 this.voteList.map(item=>{
+                    item.tpjg_tpyj = '1';
+                    tpjgsArr.push(item.tpjg_tpyj)
                     if (item.tpjg_tpyj == 1) {
                         firstArr.push(item)
                     } else if (item.tpjg_tpyj == 2){
@@ -164,16 +157,38 @@
                         thirdArr.push(item)
                     }
                 })
+                let data = {
+                    sbm: localStorage.getItem('sbm'),
+                    tpjgs: tpjgsArr.join(','),
+                    // 内容id
+                    tpnrid: this.$route.query.cid,
+                    // 用户id
+                    tpyhid: localStorage.getItem('userId')
+                }
                 this.$dialog.confirm({
                     message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否全部赞成？`
                 }).then(() => {
-                    this.voteList.map(item=>{
-                        item.tpjg_tpyj = '1';
+                    submitVoteResult(data).then(res=>{
+                        if (res.data.success) {
+                            this.allSubmitFlag();
+                            this.ytj = true;
+                            this.isNext = false;
+                            this.save = false;
+                            this.submitItemFlag = true;
+                            this.isAllZc = true;
+                            if (this.titleInfo.tpnrXh == this.dataList.length) {
+                                this.isSubmited = false;
+                            } else {
+                                this.isSubmited = true;
+                            };
+                        } else {
+                            this.$toast.fail(res.data.message)
+                        }
                     })
                 })
                 .catch(()=>{})
             },
-            // 查看是够可以进行一键提交
+            // 查看是否可以进行一键提交
             allSubmitFlag(){
                 let data = {
                     sx_id: localStorage.getItem('sx_id'),
@@ -208,6 +223,12 @@
                         this.voteList.map(item=>{
                             if (!item.tpjg_tpyj) {
                                 item.tpjg_tpyj = '1';   
+                            } else {
+                                if (item.tpyh_tpnrzt == 'Y') {
+                                    this.isAllZc = true;
+                                } else {
+                                    this.isAllZc = false;
+                                }
                             }
                         })
                         if (this.titleInfo.tpnrXh != 1) {
@@ -221,7 +242,6 @@
                         let isHaveNoVote = this.dataList.some(item=>{
                             return item.tpyh_tpnrzt == null;
                         })
-                       
 
                         if(!this.nextData.length&&this.titleInfo.tpnrXh == this.dataList.length){
                             this.isSubmited = false;
@@ -249,7 +269,6 @@
                                 this.submitItemFlag = false;
                             }
                         } else {
-                             console.log('最后一条数据222')
                             this.submitAll = false;
                             // 当前项是否提交过
                             let itemFlag = data.result[1][0].tpyh_tpnrzt;
@@ -335,10 +354,12 @@
                 }).then(() => {
                     submitVoteResult(data).then(res=>{
                         if (res.data.success) {
+                            this.allSubmitFlag();
                             this.ytj = true;
                             this.isNext = false;
                             this.save = false;
                             this.submitItemFlag = true;
+                            this.isAllZc = true;
                             // this.isSubmited = false;
                             if (this.titleInfo.tpnrXh == this.dataList.length) {
                                 this.isSubmited = false;
@@ -354,22 +375,25 @@
             },
             changeVal(item, index, ind){
                 this.voteList[index].tpjg_tpyj = ind;
-                let allItemFlag = this.voteList.every(item=>{
-                    return item.tpjg_tpyj == '1'
-                });
-                if (allItemFlag){
-                    this.isAllZc = true;
-                } else {
-                    this.isAllZc = false;
-                }
             },
             // 保存并下一步
             saveForm(){
                 let nextData = this.nextData;
                 let tpjgsArr = [];
+                let first = 1, firstArr = [];
+                let second = 2, secondArr = [];
+                let third = 3, thirdArr = [];
                 this.voteList.map(item => {
-                    tpjgsArr.push(item.tpjg_tpyj)
+                    tpjgsArr.push(item.tpjg_tpyj);
+                    if (item.tpjg_tpyj == 1) {
+                        firstArr.push(item)
+                    } else if (item.tpjg_tpyj == 2){
+                        secondArr.push(item)
+                    } else if (item.tpjg_tpyj == 3){
+                        thirdArr.push(item)
+                    }
                 })
+
                 let data = {
                     // 识别码
                     sbm: localStorage.getItem('sbm'),
@@ -382,7 +406,8 @@
                     tpyhid: localStorage.getItem('userId')
                 }
                 this.$dialog.confirm({
-                    message: "是否保存？"
+                    message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定保存？`
+                    // message: "是否保存？"
                 }).then(()=>{
                     saveVoteResult(data).then(res=>{
                         if (res.data.success) {
@@ -546,11 +571,13 @@
         thead {
             th {
                 font-size: .14rem;
+                text-align: center;
             }
         }
         tbody {
             td {
                 font-size: .14rem;
+                text-align: center;
             }
         }
     }
@@ -577,20 +604,19 @@
         .layui-form-radio i::after {
             content: "X";
             position: absolute;
-            left: 0;
+            left: -.25rem;
             top: 0;
-            font-size: 22px;
+            font-size: .34rem;
             width: .5rem;
             height: .5rem;
             color: #ccc;
-            // background: red;
+            text-align: center;
         }
         .layui-form-radio>i {
             font-size: inherit!important;
         }
         .layui-form-radioed i::after {
             color: #e51c23;
-            // border: .06rem solid #259b24!important;
         }
     }
     // 弃权
