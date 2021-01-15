@@ -23,12 +23,12 @@
                     <thead>
                         <!--  class="headTr" -->
                         <tr>
-                            <th style="width:18%;">序号</th>
-                            <th style="width:22%;">单位</th>
-                            <th>姓名</th>
-                            <th style="width:18%;">赞成</th>
-                            <th style="width:18%;">反对</th>
-                            <th style="width:18%;">弃权</th>
+                            <th style="width:16%;">序号</th>
+                            <th style="width:20%;">单位cd</th>
+                            <th style="width:16%;">姓名</th>
+                            <th style="width:16%;">赞成</th>
+                            <th style="width:16%;">反对</th>
+                            <th style="width:16%;">弃权</th>
                         </tr>
                     </thead>
                     <tbody>
