@@ -21,11 +21,11 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th style="width:18%;">序号</th>
-                        <th style="width:30%;">表决内容</th>
-                        <th>赞成</th>
-                        <th>反对</th>
-                        <th>弃权</th>
+                        <th style="width:12%;">序号</th>
+                        <th style="width:49%;">表决内容</th>
+                        <th style="width:13%;">赞成</th>
+                        <th style="width:13%;">反对</th>
+                        <th style="width:13%;">弃权</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -555,6 +555,7 @@ export default {
             th {
                 font-size: .14rem;
                 text-align: center;
+                padding: 9px 0!important;
             }
         }
         tbody {

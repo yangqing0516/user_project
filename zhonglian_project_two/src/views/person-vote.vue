@@ -23,12 +23,12 @@
                     <thead>
                         <!--  class="headTr" -->
                         <tr>
-                            <th style="width:16%;">序号</th>
-                            <th style="width:20%;">单位</th>
+                            <th style="width:13%;">序号</th>
+                            <th style="width:33%;">单位</th>
                             <th style="width:16%;">姓名</th>
-                            <th style="width:16%;">赞成</th>
-                            <th style="width:16%;">反对</th>
-                            <th style="width:16%;">弃权</th>
+                            <th style="width:13%;">赞成</th>
+                            <th style="width:13%;">反对</th>
+                            <th style="width:13%;">弃权</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -572,6 +572,7 @@
             th {
                 font-size: .14rem;
                 text-align: center;
+                padding: 9px 0!important;
             }
         }
         tbody {

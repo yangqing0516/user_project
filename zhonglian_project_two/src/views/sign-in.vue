@@ -111,16 +111,18 @@ export default {
         },
         // 签到
         onSign(){
-            this.isSign = true;
             let data = {
                 yh_id: localStorage.getItem('userId')
+                // yh_id: "3345345345"
             }
             userSignIn(data).then(res=>{
-                console.log(res)
                 let data = res.data;
-                if (data.success) {
+                if (data.code == 200) {
+                    this.isSign = true;
                     this.isVote = false;
                     this.isSignIn();
+                } else {
+                    this.$toast.fail(data.message);
                 }
             })
         },
