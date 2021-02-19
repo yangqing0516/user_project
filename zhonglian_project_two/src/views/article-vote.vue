@@ -13,7 +13,7 @@
             <div class="title">{{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}</div>
             <table class="layui-table">
                 <colgroup>
-                    <col />
+                    <!-- <col /> -->
                     <col />
                     <col />
                     <col />
@@ -21,16 +21,16 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th style="width:12%;">序号</th>
-                        <th style="width:49%;">表决内容</th>
-                        <th style="width:13%;">赞成</th>
-                        <th style="width:13%;">反对</th>
-                        <th style="width:13%;">弃权</th>
+                        <!-- <th style="width:12%;">序号</th> -->
+                        <th style="width:50%;">表决内容</th>
+                        <th>赞成</th>
+                        <th>反对</th>
+                        <th>弃权</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in voteList" :key="index">
-                        <td>{{item.bg_xh}}</td>
+                        <!-- <td>{{item.bg_xh}}</td> -->
                         <td>
                             {{item.bg_mc}}
                             <span style="color:rgb(225, 54, 46);" @click="viewFile(item)">查看附件</span>
@@ -43,10 +43,10 @@
             </table>
         </div>
     </div>
-    
+
     <div class="footer">
         <van-button color="#E1362E" plain v-show="preItem" @click="preItemClick" :disabled="preItemFlag">上一项</van-button>
-        <van-button color="#E1362E" plain v-show="isSubmited" @click="nextStep">下一项</van-button> 
+        <van-button color="#E1362E" plain v-show="isSubmited" @click="nextStep">下一项</van-button>
         <van-button color="#E1362E" plain @click="saveForm" v-show="isNext">保存并下一项</van-button>
         <van-button color="#E1362E" plain @click="saveInfo" v-show="save">保存</van-button>
         <van-button round block type="info" color="#E1362E" v-show="submitAll" @click="oneClickSubmit" :disabled="submitAllFlag">一键提交</van-button>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import {  
+import {
     getContentReport,
     getEnterInfo,
     voteSave,
@@ -147,7 +147,7 @@ export default {
                         } else {
                             this.isSubmited = true;
                         }
-                        
+
                     } else {
                         this.$toast.fail(res.data.message)
                     }
@@ -203,7 +203,7 @@ export default {
                     // 判断是否显示【上一项】按钮
                     if (this.titleInfo.tpnrXh != 1) {
                         this.preItemFlag = false;
-                    } 
+                    }
                     // 获取初始值，判断是否保存过，如果没有保存过，默认为【赞成】意见
                     let yj = data.result[1][0].tpjg_tpyj;
                     if (!yj) {
@@ -442,7 +442,7 @@ export default {
                         } else {
                             this.isSubmited = true;
                         }
-                        
+
                     } else {
                         this.$toast.fail(res.data.message)
                     }
@@ -574,7 +574,7 @@ export default {
             border-radius: 50%;
             font-size: inherit;
         }
-        
+
         .layui-form-radioed i {
             border: .08rem solid #259b24!important;
         }
@@ -610,7 +610,7 @@ export default {
             background: #ccc;
             font-size: inherit;
         }
-        
+
         .layui-form-radioed i {
             background: #ffc107;
         }

@@ -11,8 +11,8 @@
          <div class="section">
             <div class="layui-form">
                 <div class="title">{{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}</div>
-                <!-- <table class="layui-table" border> -->
-                <table class="layui-table">
+                <!-- 第一种 -->
+                <!-- <table class="layui-table">
                     <colgroup>
                         <col />
                         <col />
@@ -21,11 +21,10 @@
                         <col />
                     </colgroup>
                     <thead>
-                        <!--  class="headTr" -->
                         <tr>
                             <th style="width:13%;">序号</th>
-                            <th style="width:33%;">单位</th>
-                            <th style="width:16%;">姓名</th>
+                            <th style="width:30%;">理事单位候选单位</th>
+                            <th style="width:19%;">理事候选人</th>
                             <th style="width:13%;">赞成</th>
                             <th style="width:13%;">反对</th>
                             <th style="width:13%;">弃权</th>
@@ -36,6 +35,98 @@
                             <td>{{item.ry_xh}}</td>
                             <td>{{item.ry_dw}}</td>
                             <td>{{item.ry_xm}}</td>
+                            <td class="zc" @click="changeVal(item, index, 1)"><input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
+                            <td class="fd" @click="changeVal(item, index, 2)"><input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
+                            <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
+                        </tr>
+                    </tbody>
+                </table> -->
+                <!-- 第二种 -->
+                <!-- <table class="layui-table">
+                    <colgroup>
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th style="width:13%;">序号</th>
+                            <th style="width:19%;">监事候选人</th>
+                            <th style="width:30%;">单位名称及职务</th>
+                            <th style="width:13%;">赞成</th>
+                            <th style="width:13%;">反对</th>
+                            <th style="width:13%;">弃权</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in voteList" :key="index">
+                            <td>{{item.ry_xh}}</td>
+                            <td>{{item.ry_xm}}</td>
+                            <td>{{item.ry_dw}}/{{item.ry_zw}}</td>
+                            <td class="zc" @click="changeVal(item, index, 1)"><input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
+                            <td class="fd" @click="changeVal(item, index, 2)"><input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
+                            <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
+                        </tr>
+                    </tbody>
+                </table> -->
+                <!-- 第三种 -->
+                <!-- <table class="layui-table">
+                    <colgroup>
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th style="width:13%;">序号</th>
+                            <th style="width:30%;">常务理事单位候选单位</th>
+                            <th style="width:19%;">常务理事候选人</th>
+                            <th style="width:13%;">赞成</th>
+                            <th style="width:13%;">反对</th>
+                            <th style="width:13%;">弃权</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in voteList" :key="index">
+                            <td>{{item.ry_xh}}</td>
+                            <td>{{item.ry_dw}}</td>
+                            <td>{{item.ry_xm}}</td>
+                            <td class="zc" @click="changeVal(item, index, 1)"><input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
+                            <td class="fd" @click="changeVal(item, index, 2)"><input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
+                            <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
+                        </tr>
+                    </tbody>
+                </table> -->
+                <!-- 第四种 -->
+                <table class="layui-table">
+                    <colgroup>
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th style="width:13%;">序号</th>
+                            <th style="width:13%;">候选人</th>
+                            <th style="width:18%;">所在单位名称</th>
+                            <th style="width:17%;">所在单位职务</th>
+                            <th style="width:13%;">赞成</th>
+                            <th style="width:13%;">反对</th>
+                            <th style="width:13%;">弃权</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in voteList" :key="index">
+                            <td>{{item.ry_xh}}</td>
+                            <td>{{item.ry_xm}}</td>
+                            <td>{{item.ry_dw}}</td>
+                            <td>{{item.ry_zw}}</td>
                             <td class="zc" @click="changeVal(item, index, 1)"><input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="fd" @click="changeVal(item, index, 2)"><input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
@@ -522,38 +613,38 @@
                             this.$toast.fail(res.data.message);
                         }
                     })
-                    // submitAllVote(params).then(res=>{
-                    //     let data = res.data;
-                    //     if (data.success) {
-                    //         this.$toast.success('提交成功');
-                    //         this.onaxios();
-                    //         this.$router.push('/sign-in');
-                    //     }
-                    // })
+                    /* submitAllVote(params).then(res=>{
+                        let data = res.data;
+                        if (data.success) {
+                            this.$toast.success('提交成功');
+                            this.onaxios();
+                            this.$router.push('/sign-in');
+                        }
+                    }) */
                 })
                 .catch(() => {})
-                // this.$dialog.confirm({
-                //     // title: '标题',
-                //     message: '确认要全部提交吗？',
-                // })
-                // .then(() => {
-                //     let data = {
-                //         sbm: localStorage.getItem('sbm'),
-                //         tpsxid: localStorage.getItem('sx_id'),
-                //         tpyhid: localStorage.getItem('userId')
-                //     }
-                //     submitAllVote(data).then(res=>{
-                //         let data = res.data;
-                //         if (data.success) {
-                //             this.$toast.success('提交成功');
-                //             this.onaxios();
-                //             this.$router.push('/sign-in');
-                //         }
-                //     })
-                // })
-                // .catch(() => {
-                //     // on cancel
-                // })
+                /* this.$dialog.confirm({
+                    // title: '标题',
+                    message: '确认要全部提交吗？',
+                })
+                .then(() => {
+                    let data = {
+                        sbm: localStorage.getItem('sbm'),
+                        tpsxid: localStorage.getItem('sx_id'),
+                        tpyhid: localStorage.getItem('userId')
+                    }
+                    submitAllVote(data).then(res=>{
+                        let data = res.data;
+                        if (data.success) {
+                            this.$toast.success('提交成功');
+                            this.onaxios();
+                            this.$router.push('/sign-in');
+                        }
+                    })
+                })
+                .catch(() => {
+                    // on cancel
+                }) */
             }
         }
     }
@@ -672,7 +763,6 @@
             }
         }
     }
-    
 } */
 .header {
     width: 100%;
@@ -682,10 +772,6 @@
     padding:0 .3rem;
     justify-content: space-between;
     background: #fff;
-    /* img {
-        width: .41rem;
-        height: .38rem;
-    } */
     button {
         width: 1.6rem;
         height: .6rem;

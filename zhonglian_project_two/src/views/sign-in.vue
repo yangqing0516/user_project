@@ -72,7 +72,7 @@ export default {
     methods: {
         isSignIn(){
             let data = {
-                sbm: localStorage.getItem('sbm'), 
+                sbm: localStorage.getItem('sbm'),
                 // sbm: 'DDDDD',
                 sx_id: localStorage.getItem('sx_id')
             }
@@ -145,7 +145,7 @@ export default {
                                     cid: item.id
                                 }
                             });
-                        } else { 
+                        } else {
                             this.$router.push({
                                 path: '/article-vote',
                                 query: {
@@ -174,7 +174,7 @@ export default {
                                 cid: item.id
                             }
                         });
-                    } else { 
+                    } else {
                         this.$router.push({
                             path: '/article-vote',
                             query: {
@@ -198,7 +198,7 @@ export default {
             //                 cid: item.id
             //             }
             //         });
-            //     } else { 
+            //     } else {
             //         this.$router.push({
             //             path: '/article-vote',
             //             query: {
@@ -371,7 +371,7 @@ export default {
             }
         }
     }
-    
+
 
     .footer {
         width: 100%;
@@ -406,7 +406,7 @@ export default {
         /* z-index: 9; */
 
 
-        
+
         .sign {
             width: 4.9rem;
             height: 5.31rem;
