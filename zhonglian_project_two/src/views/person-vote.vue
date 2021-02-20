@@ -22,6 +22,7 @@
                         <col />
                         <col />
                         <col />
+                        <col />
                     </colgroup>
                     <thead>
                         <tr>
@@ -52,9 +53,10 @@
                         <col />
                         <col />
                         <col />
+                        <col />
                     </colgroup>
                     <thead>
-                        <tr>
+                        <tr style="width:100%;">
                             <th style="width:13%;">序号</th>
                             <th style="width:19%;">监事候选人</th>
                             <th style="width:30%;">单位名称及职务</th>
@@ -67,7 +69,7 @@
                         <tr v-for="(item, index) in voteList" :key="index">
                             <td>{{item.ry_xh}}</td>
                             <td>{{item.ry_xm}}</td>
-                            <td>{{item.ry_dw}}/{{item.ry_zw}}</td>
+                            <td>{{item.ry_dw}}{{item.ry_zw}}</td>
                             <td class="zc" @click="changeVal(item, index, 1)"><input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="fd" @click="changeVal(item, index, 2)"><input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
@@ -77,6 +79,7 @@
                 <!-- 第三种 -->
                 <table class="layui-table" v-else-if="titleInfo.tpnrPage == 4">
                     <colgroup>
+                        <col />
                         <col />
                         <col />
                         <col />
@@ -105,8 +108,10 @@
                     </tbody>
                 </table>
                 <!-- 第四种 -->
-                <table class="layui-table" v-else-if="titleInfo.tpnrPage == 5">
+                <table class="layui-table" v-else-if="titleInfo.tpnrPage == 5" border="1">
                     <colgroup>
+                        <col />
+                        <col />
                         <col />
                         <col />
                         <col />
@@ -126,47 +131,26 @@
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in voteList" :key="index">
-                            <td>{{item.ry_xh}}</td>
-                            <td>{{item.ry_xm}}</td>
-                            <td>{{item.ry_dw}}</td>
-                            <td>{{item.ry_zw}}</td>
-                            <td class="zc" @click="changeVal(item, index, 1)"><input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
-                            <td class="fd" @click="changeVal(item, index, 2)"><input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
-                            <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
+                            <td style="text-align:left;font-weight:bold;" colspan="7" v-if="index == 0 || index == 2 || index == 4 || index == 6">
+                                {{item.table_title}}
+                            </td>
+                            <td v-else>{{item.ry_xh}}</td>
+                            <td v-if="index==0 || index==2 || index==4 || index==6?false:true">{{item.ry_xm}}</td>
+                            <td v-if="index==0 || index==2 || index==4 || index==6?false:true">{{item.ry_dw}}</td>
+                            <td v-if="index==0 || index==2 || index==4 || index==6?false:true">{{item.ry_zw}}</td>
+                            <td v-if="index==0 || index==2 || index==4 || index==6?false:true" class="zc" @click="changeVal(item, index, 1)">
+                                <input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj">
+                            </td>
+                            <td v-if="index==0 || index==2 || index==4 || index==6?false:true" class="fd" @click="changeVal(item, index, 2)">
+                                <input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj">
+                            </td>
+                            <td v-if="index==0 || index==2 || index==4 || index==6?false:true" class="qq" @click="changeVal(item, index, 3)">
+                                <input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj">
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <!-- <div class="title">
-                <h3>{{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}</h3>
-            </div>
-            <ul>
-                <li>
-                    <img src="../assets/radio.png" alt="">
-                    <span>单选</span>
-                </li>
-                <li>
-                    <span>截止时间：{{endTime}}</span>
-                </li>
-            </ul> -->
-            <!-- <div class="vote-option">
-                <ul>
-                    <li v-for="(item, index) in voteList" :key="index">
-                        <p>
-                            <em>{{item.ry_xh}}、{{item.ry_xm}}</em>
-                        </p>
-                        <van-field name="radio">
-                            <template #right-icon>
-                                <van-radio-group :disabled="ytj" checked-color="#E1362E" v-model="item.tpjg_tpyj" direction="horizontal">
-                                    <van-radio name="1">赞成</van-radio>
-                                    <van-radio name="2">反对</van-radio>
-                                    <van-radio name="3">弃权</van-radio>
-                                </van-radio-group>
-                            </template>
-                        </van-field>
-                    </li>
-                </ul>
-            </div> -->
         </div>
         <div class="footer">
             <van-button color="#E1362E" plain @click="preItemClick" v-show="preItem" :disabled="preItemFlag">上一项</van-button>
@@ -239,6 +223,7 @@ export default {
             let first = 1, firstArr = [];
             let second = 2, secondArr = [];
             let third = 3, thirdArr = [];
+            // 获取赞成、反对、弃权的票数
             this.voteList.map(item=>{
                 item.tpjg_tpyj = '1';
                 tpjgsArr.push(item.tpjg_tpyj)
@@ -302,7 +287,6 @@ export default {
             }
             getContentPerson(data).then(res=>{
                 let data = res.data;
-                let newdata = [];
                 if (data.code == 200) {
                     // 标题信息
                     this.titleInfo = data.result[0];
@@ -312,18 +296,34 @@ export default {
                     this.nextData = data.result[2];
                     // 上一项内容
                     this.preData = data.result[3];
-                    // 设置初始值
-                    this.voteList.map(item=>{
-                        if (!item.tpjg_tpyj) {
-                            item.tpjg_tpyj = '1';   
-                        } else {
-                            if (item.tpyh_tpnrzt == 'Y') {
-                                this.isAllZc = true;
+                    // 设置初始值，初始化数据
+                    if (this.titleInfo.tpnrPage == 5) {
+                        this.voteList.splice(0, 0, {
+                            table_title: "一、理事长候选名单（1人，等额选举，选1人）"
+                        })
+                        this.voteList.splice(2, 0, {
+                            table_title: "二、常务副理事长候选名单（1人，等额选举，选1人）"
+                        })
+                        this.voteList.splice(4, 0, {
+                            table_title: "三、副理事长候选名单（21人，等额选举，选21人）"
+                        })
+                        this.voteList.splice(26, 0, {
+                            table_title: "四、秘书长候选名单（1人，等额选举，选1人）"
+                        })
+                    } else {
+                        this.voteList.map(item=>{
+                            if (!item.tpjg_tpyj) {
+                                item.tpjg_tpyj = '1';   
                             } else {
-                                this.isAllZc = false;
+                                if (item.tpyh_tpnrzt == 'Y') {
+                                    this.isAllZc = true;
+                                } else {
+                                    this.isAllZc = false;
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
+                    
                     if (this.titleInfo.tpnrXh != 1) {
                         this.preItemFlag = false;
                     }
@@ -445,21 +445,25 @@ export default {
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定提交,提交后不可修改`
             }).then(() => {
+                this.$toast.loading({
+                    message: '提交中...',
+                    forbidClick: true,
+                    loadingType: 'spinner',
+                });
                 submitVoteResult(data).then(res=>{
                     if (res.data.success) {
+                        this.$toast.clear();
                         this.allSubmitFlag();
                         this.ytj = true;
                         this.isNext = false;
                         this.save = false;
                         this.submitItemFlag = true;
                         this.isAllZc = true;
-                        // this.isSubmited = false;
                         if (this.titleInfo.tpnrXh == this.dataList.length) {
                             this.isSubmited = false;
                         } else {
                             this.isSubmited = true;
                         }
-                        // this.onaxios();
                     } else {
                         this.$toast.fail(res.data.message)
                     }
@@ -502,8 +506,14 @@ export default {
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定保存？`
                 // message: "是否保存？"
             }).then(()=>{
+                this.$toast.loading({
+                    message: '保存中...',
+                    forbidClick: true,
+                    loadingType: 'spinner',
+                });
                 saveVoteResult(data).then(res=>{
                     if (res.data.success) {
+                        this.$toast.clear();
                         // 人员类
                         if (nextData[0].tpTplxId == 2) {
                             let path = this.$router.history.current.path;

@@ -326,14 +326,19 @@ export default {
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定保存？`
             })
             .then(()=>{
+                this.$toast.loading({
+                    message: '保存中...',
+                    forbidClick: true,
+                    loadingType: 'spinner',
+                });
                 voteSave(data).then(res=>{
                     if (res.data.success) {
+                        this.$toast.clear();
                         if (this.allData[2]) {
                             if (nextData.tpTplxId == 2) {
                                 this.$router.replace({
                                     path: '/person-vote',
                                     query: {
-                                        // 下一项的内容id
                                         cid: nextData.id
                                     }
                                 });
@@ -431,8 +436,14 @@ export default {
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定提交,提交后不可修改`
             }).then(() => {
+                this.$toast.loading({
+                    message: '提交中...',
+                    forbidClick: true,
+                    loadingType: 'spinner',
+                });
                 submitVoteContent(data).then(res=>{
                     if (res.data.success) {
+                        this.$toast.clear();
                         this.allSubmitFlag();
                         this.ytj = true;
                         this.isNext = false;
