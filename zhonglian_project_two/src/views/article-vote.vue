@@ -10,7 +10,11 @@
     </div>
     <div class="section">
         <div class="layui-form">
-            <div class="title">{{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}</div>
+            <div class="title">
+                {{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}
+                <!-- <p>{{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}</p> -->
+                <!-- <p>{{titleInfo.tpnr_bz}}</p> -->
+            </div>
             <table class="layui-table">
                 <colgroup>
                     <!-- <col /> -->

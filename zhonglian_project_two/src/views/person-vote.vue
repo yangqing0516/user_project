@@ -10,9 +10,12 @@
         </div>
          <div class="section">
             <div class="layui-form">
-                <div class="title">{{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}</div>
+                <div class="title">
+                    <p>{{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}</p>
+                    <p>{{titleInfo.tpnrBz}}</p>
+                </div>
                 <!-- 第一种 -->
-                <!-- <table class="layui-table">
+                <table class="layui-table" v-if="titleInfo.tpnrPage == 2">
                     <colgroup>
                         <col />
                         <col />
@@ -40,9 +43,9 @@
                             <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
                         </tr>
                     </tbody>
-                </table> -->
+                </table>
                 <!-- 第二种 -->
-                <!-- <table class="layui-table">
+                <table class="layui-table" v-else-if="titleInfo.tpnrPage == 3">
                     <colgroup>
                         <col />
                         <col />
@@ -70,9 +73,9 @@
                             <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
                         </tr>
                     </tbody>
-                </table> -->
+                </table>
                 <!-- 第三种 -->
-                <!-- <table class="layui-table">
+                <table class="layui-table" v-else-if="titleInfo.tpnrPage == 4">
                     <colgroup>
                         <col />
                         <col />
@@ -100,9 +103,9 @@
                             <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
                         </tr>
                     </tbody>
-                </table> -->
+                </table>
                 <!-- 第四种 -->
-                <table class="layui-table">
+                <table class="layui-table" v-else-if="titleInfo.tpnrPage == 5">
                     <colgroup>
                         <col />
                         <col />
@@ -176,478 +179,477 @@
 </template>
 
 <script>
+import {  
+    getContentPerson, 
+    getEnterInfo,
+    submitAllVote,
+    saveVoteResult, // 保存
+    submitVoteResult, // 提交
+    getContentStatus // 所有事项
+} from '@/api/index';
+export default {
+    name: 'person-vote',
+    data(){
+        return {
+            radio: 1,
+            endTime: "",
+            voteList: [],
+            titleInfo: {},
+            nextData: [],
+            preData:[],
+            // 提交该项投票
+            submit: true,
+            // 保存并下一项
+            isNext: true,
+            // 上一项
+            preItem: true,
+            // 上一项按钮禁用
+            preItemFlag: true,
+            // 保存
+            save: false,
+            // 下一项
+            isSubmited: false,
+            // 是否提交全部
+            submitAll: false,
+            // 当前项是否提交过
+            submitItemFlag: false,
+            // 控制选项
+            ytj: false,
+            // 所有事项
+            dataList: [],
+            // 一键提交按钮状态
+            submitAllFlag: false,
+            // 全部赞成
+            isAllZc: false
+        }
+    },
+    updated(){
+        layui.use('form',function(){
+            var form = layui.form;
+            form.render();
+        });
+    },
+    mounted(){
+        this.endTime = localStorage.getItem('endTime');
+        this.allSubmitFlag();
+    },
+    methods: {
+        allZc(){
+            let tpjgsArr = [];
+            let first = 1, firstArr = [];
+            let second = 2, secondArr = [];
+            let third = 3, thirdArr = [];
+            this.voteList.map(item=>{
+                item.tpjg_tpyj = '1';
+                tpjgsArr.push(item.tpjg_tpyj)
+                if (item.tpjg_tpyj == 1) {
+                    firstArr.push(item)
+                } else if (item.tpjg_tpyj == 2){
+                    secondArr.push(item)
+                } else if (item.tpjg_tpyj == 3){
+                    thirdArr.push(item)
+                }
+            })
+            let data = {
+                sbm: localStorage.getItem('sbm'),
+                tpjgs: tpjgsArr.join(','),
+                // 内容id
+                tpnrid: this.$route.query.cid,
+                // 用户id
+                tpyhid: localStorage.getItem('userId')
+            }
+            this.$dialog.confirm({
+                message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否全部赞成？`
+            }).then(() => {
+                submitVoteResult(data).then(res=>{
+                    if (res.data.success) {
+                        this.allSubmitFlag();
+                        this.ytj = true;
+                        this.isNext = false;
+                        this.save = false;
+                        this.submitItemFlag = true;
+                        this.isAllZc = true;
+                        if (this.titleInfo.tpnrXh == this.dataList.length) {
+                            this.isSubmited = false;
+                        } else {
+                            this.isSubmited = true;
+                        };
+                    } else {
+                        this.$toast.fail(res.data.message)
+                    }
+                })
+            })
+            .catch(()=>{})
+        },
+        // 查看是否可以进行一键提交
+        allSubmitFlag(){
+            let data = {
+                sx_id: localStorage.getItem('sx_id'),
+                yh_id: localStorage.getItem('userId')
+            }
+            getContentStatus(data).then(res=>{
+                let data = res.data;
+                if (data.success) {
+                    this.onaxios()
+                    this.dataList = data.result;
+                }
+            })
+        },
+        onaxios(){
+            let data = {
+                id: this.$route.query.cid,
+                yh_id: localStorage.getItem('userId')
+            }
+            getContentPerson(data).then(res=>{
+                let data = res.data;
+                let newdata = [];
+                if (data.code == 200) {
+                    // 标题信息
+                    this.titleInfo = data.result[0];
+                    // 列表信息
+                    this.voteList = data.result[1];
+                    // 下一项内容
+                    this.nextData = data.result[2];
+                    // 上一项内容
+                    this.preData = data.result[3];
+                    // 设置初始值
+                    this.voteList.map(item=>{
+                        if (!item.tpjg_tpyj) {
+                            item.tpjg_tpyj = '1';   
+                        } else {
+                            if (item.tpyh_tpnrzt == 'Y') {
+                                this.isAllZc = true;
+                            } else {
+                                this.isAllZc = false;
+                            }
+                        }
+                    })
+                    if (this.titleInfo.tpnrXh != 1) {
+                        this.preItemFlag = false;
+                    }
+                    // 查看所有事项是否全部提交
+                    let allDataResult = this.dataList.every(item=>{
+                        return item.tpyh_tpnrzt == 'Y';
+                    })
+                    // 查看所有事项的状态是够有【为投票的】
+                    let isHaveNoVote = this.dataList.some(item=>{
+                        return item.tpyh_tpnrzt == null;
+                    })
 
-    import {  
-        getContentPerson, 
-        getEnterInfo,
-        submitAllVote,
-        saveVoteResult, // 保存
-        submitVoteResult, // 提交
-        getContentStatus // 所有事项
-    } from '@/api/index';
-    export default {
-        name: 'person-vote',
-        data(){
-            return {
-                radio: 1,
-                endTime: "",
-                voteList: [],
-                titleInfo: {},
-                nextData: [],
-                preData:[],
-                // 提交该项投票
-                submit: true,
-                // 保存并下一项
-                isNext: true,
-                // 上一项
-                preItem: true,
-                // 上一项按钮禁用
-                preItemFlag: true,
-                // 保存
-                save: false,
-                // 下一项
-                isSubmited: false,
-                // 是否提交全部
-                submitAll: false,
-                // 当前项是否提交过
-                submitItemFlag: false,
-                // 控制选项
-                ytj: false,
-                // 所有事项
-                dataList: [],
-                // 一键提交按钮状态
-                submitAllFlag: false,
-                // 全部赞成
-                isAllZc: false
+                    if(!this.nextData.length&&this.titleInfo.tpnrXh == this.dataList.length){
+                        this.isSubmited = false;
+                        // 如果已经全部提交并且是最后一条则禁用，否则在最后一条数据显示
+                        if (allDataResult) {
+                            this.submitAll = true;
+                            this.submitAllFlag = true;
+                            this.isNext = false;
+                            this.ytj = true;
+                            this.submitItemFlag = true;
+                        } else {
+                            this.save = false;
+                            this.isNext = false;
+                            this.submitAll = true;
+                        }
+
+                        let itemFlag = data.result[1][0].tpyh_tpnrzt;
+                        if (itemFlag == 'Y') {
+                            // 选项状态
+                            this.ytj = true;
+                            this.submitItemFlag = true;
+                        } else {
+                            // this.save = true;
+                            this.ytj = false;
+                            this.submitItemFlag = false;
+                        }
+                    } else {
+                        this.submitAll = false;
+                        // 当前项是否提交过
+                        let itemFlag = data.result[1][0].tpyh_tpnrzt;
+                        if (itemFlag == 'Y') {
+                            // 保存并下一项
+                            this.isNext = false;
+                            // 提交该项
+                            this.submitItemFlag = true;
+                            // 下一项
+                            this.isSubmited = true;
+                            // 选项状态
+                            this.ytj = true;
+                            // 保存
+                            this.save = false;
+                        } else {
+                            this.save = false;
+                            this.isNext = true;
+                            this.submitItemFlag = false;
+                            this.isSubmited = false;
+                            this.ytj = false;
+                        }
+                    }
+                }
+            })
+        },
+        // 查看上一项
+        preItemClick(){
+            console.log('23232',this.preData)
+            if (this.preData[0].tpTplxId == 1) {
+                this.$router.replace({
+                    path: "/article-vote",
+                    query: {
+                        cid: this.preData[0].id
+                    }
+                })
+            } else {
+                let path = this.$router.history.current.path;
+                this.titleInfo = this.preData[0];
+                this.$router.replace({
+                    path,
+                    query: {
+                        // 下一项的内容id
+                        cid: this.preData[0].id
+                    }
+                })
+                this.onaxios();
             }
         },
-        updated(){
-            layui.use('form',function(){
-                var form = layui.form;
-                form.render();
-            });
+        // 退回首页
+        onBack(){
+            this.$router.push('/sign-in')
         },
-        mounted(){
-            this.endTime = localStorage.getItem('endTime');
-            this.allSubmitFlag();
-        },
-        methods: {
-            allZc(){
-                let tpjgsArr = [];
-                let first = 1, firstArr = [];
-                let second = 2, secondArr = [];
-                let third = 3, thirdArr = [];
-                this.voteList.map(item=>{
-                    item.tpjg_tpyj = '1';
-                    tpjgsArr.push(item.tpjg_tpyj)
-                    if (item.tpjg_tpyj == 1) {
-                        firstArr.push(item)
-                    } else if (item.tpjg_tpyj == 2){
-                        secondArr.push(item)
-                    } else if (item.tpjg_tpyj == 3){
-                        thirdArr.push(item)
-                    }
-                })
-                let data = {
-                    sbm: localStorage.getItem('sbm'),
-                    tpjgs: tpjgsArr.join(','),
-                    // 内容id
-                    tpnrid: this.$route.query.cid,
-                    // 用户id
-                    tpyhid: localStorage.getItem('userId')
+        // 提交
+        onSubmit() {
+            // console.log(this.voteList)
+            let nextData = this.nextData[0];
+            let tpjgsArr = [];
+            let first = 1, firstArr = [];
+            let second = 2, secondArr = [];
+            let third = 3, thirdArr = [];
+            this.voteList.map(item=>{
+                tpjgsArr.push(item.tpjg_tpyj);
+                if (item.tpjg_tpyj == 1) {
+                    firstArr.push(item)
+                } else if (item.tpjg_tpyj == 2){
+                    secondArr.push(item)
+                } else if (item.tpjg_tpyj == 3){
+                    thirdArr.push(item)
                 }
-                this.$dialog.confirm({
-                    message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否全部赞成？`
-                }).then(() => {
-                    submitVoteResult(data).then(res=>{
-                        if (res.data.success) {
-                            this.allSubmitFlag();
-                            this.ytj = true;
-                            this.isNext = false;
-                            this.save = false;
-                            this.submitItemFlag = true;
-                            this.isAllZc = true;
-                            if (this.titleInfo.tpnrXh == this.dataList.length) {
-                                this.isSubmited = false;
-                            } else {
-                                this.isSubmited = true;
-                            };
-                        } else {
-                            this.$toast.fail(res.data.message)
-                        }
-                    })
-                })
-                .catch(()=>{})
-            },
-            // 查看是否可以进行一键提交
-            allSubmitFlag(){
-                let data = {
-                    sx_id: localStorage.getItem('sx_id'),
-                    yh_id: localStorage.getItem('userId')
-                }
-                getContentStatus(data).then(res=>{
-                    let data = res.data;
-                    if (data.success) {
-                        this.onaxios()
-                        this.dataList = data.result;
-                    }
-                })
-            },
-            onaxios(){
-                let data = {
-                    id: this.$route.query.cid,
-                    yh_id: localStorage.getItem('userId')
-                }
-                getContentPerson(data).then(res=>{
-                    let data = res.data;
-                    let newdata = [];
-                    if (data.code == 200) {
-                        // 标题信息
-                        this.titleInfo = data.result[0];
-                        // 列表信息
-                        this.voteList = data.result[1];
-                        // 下一项内容
-                        this.nextData = data.result[2];
-                        // 上一项内容
-                        this.preData = data.result[3];
-                        // 设置初始值
-                        this.voteList.map(item=>{
-                            if (!item.tpjg_tpyj) {
-                                item.tpjg_tpyj = '1';   
-                            } else {
-                                if (item.tpyh_tpnrzt == 'Y') {
-                                    this.isAllZc = true;
-                                } else {
-                                    this.isAllZc = false;
-                                }
-                            }
-                        })
-                        if (this.titleInfo.tpnrXh != 1) {
-                            this.preItemFlag = false;
-                        }
-                        // 查看所有事项是否全部提交
-                        let allDataResult = this.dataList.every(item=>{
-                            return item.tpyh_tpnrzt == 'Y';
-                        })
-                        // 查看所有事项的状态是够有【为投票的】
-                        let isHaveNoVote = this.dataList.some(item=>{
-                            return item.tpyh_tpnrzt == null;
-                        })
+            })
+            let data = {
+                sbm: localStorage.getItem('sbm'),
+                tpjgs: tpjgsArr.join(','),
+                // 内容id
+                tpnrid: this.$route.query.cid,
+                // 用户id
+                tpyhid: localStorage.getItem('userId')
+            }
 
-                        if(!this.nextData.length&&this.titleInfo.tpnrXh == this.dataList.length){
+            
+            this.$dialog.confirm({
+                message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定提交,提交后不可修改`
+            }).then(() => {
+                submitVoteResult(data).then(res=>{
+                    if (res.data.success) {
+                        this.allSubmitFlag();
+                        this.ytj = true;
+                        this.isNext = false;
+                        this.save = false;
+                        this.submitItemFlag = true;
+                        this.isAllZc = true;
+                        // this.isSubmited = false;
+                        if (this.titleInfo.tpnrXh == this.dataList.length) {
                             this.isSubmited = false;
-                            // 如果已经全部提交并且是最后一条则禁用，否则在最后一条数据显示
-                            if (allDataResult) {
-                                this.submitAll = true;
-                                this.submitAllFlag = true;
-                                this.isNext = false;
-                                this.ytj = true;
-                                this.submitItemFlag = true;
-                            } else {
-                                this.save = false;
-                                this.isNext = false;
-                                this.submitAll = true;
-                            }
-
-                            let itemFlag = data.result[1][0].tpyh_tpnrzt;
-                            if (itemFlag == 'Y') {
-                                // 选项状态
-                                this.ytj = true;
-                                this.submitItemFlag = true;
-                            } else {
-                                // this.save = true;
-                                this.ytj = false;
-                                this.submitItemFlag = false;
-                            }
                         } else {
-                            this.submitAll = false;
-                            // 当前项是否提交过
-                            let itemFlag = data.result[1][0].tpyh_tpnrzt;
-                            if (itemFlag == 'Y') {
-                                // 保存并下一项
-                                this.isNext = false;
-                                // 提交该项
-                                this.submitItemFlag = true;
-                                // 下一项
-                                this.isSubmited = true;
-                                // 选项状态
-                                this.ytj = true;
-                                // 保存
-                                this.save = false;
-                            } else {
-                                this.save = false;
-                                this.isNext = true;
-                                this.submitItemFlag = false;
-                                this.isSubmited = false;
-                                this.ytj = false;
-                            }
+                            this.isSubmited = true;
                         }
+                        // this.onaxios();
+                    } else {
+                        this.$toast.fail(res.data.message)
                     }
                 })
-            },
-            // 查看上一项
-            preItemClick(){
-                console.log('23232',this.preData)
-                if (this.preData[0].tpTplxId == 1) {
-                    this.$router.replace({
-                        path: "/article-vote",
-                        query: {
-                            cid: this.preData[0].id
-                        }
-                    })
-                } else {
-                    let path = this.$router.history.current.path;
-                    this.titleInfo = this.preData[0];
-                    this.$router.replace({
-                        path,
-                        query: {
-                            // 下一项的内容id
-                            cid: this.preData[0].id
-                        }
-                    })
-                    this.onaxios();
+            }).catch(() => {});
+        },
+        changeVal(item, index, ind){
+            this.voteList[index].tpjg_tpyj = ind;
+        },
+        // 保存并下一步
+        saveForm(){
+            let nextData = this.nextData;
+            let tpjgsArr = [];
+            let first = 1, firstArr = [];
+            let second = 2, secondArr = [];
+            let third = 3, thirdArr = [];
+            this.voteList.map(item => {
+                tpjgsArr.push(item.tpjg_tpyj);
+                if (item.tpjg_tpyj == 1) {
+                    firstArr.push(item)
+                } else if (item.tpjg_tpyj == 2){
+                    secondArr.push(item)
+                } else if (item.tpjg_tpyj == 3){
+                    thirdArr.push(item)
                 }
-            },
-            // 退回首页
-            onBack(){
-                this.$router.push('/sign-in')
-            },
-            // 提交
-            onSubmit() {
-                // console.log(this.voteList)
-                let nextData = this.nextData[0];
-                let tpjgsArr = [];
-                let first = 1, firstArr = [];
-                let second = 2, secondArr = [];
-                let third = 3, thirdArr = [];
-                this.voteList.map(item=>{
-                    tpjgsArr.push(item.tpjg_tpyj);
-                    if (item.tpjg_tpyj == 1) {
-                        firstArr.push(item)
-                    } else if (item.tpjg_tpyj == 2){
-                        secondArr.push(item)
-                    } else if (item.tpjg_tpyj == 3){
-                        thirdArr.push(item)
-                    }
-                })
-                let data = {
-                    sbm: localStorage.getItem('sbm'),
-                    tpjgs: tpjgsArr.join(','),
-                    // 内容id
-                    tpnrid: this.$route.query.cid,
-                    // 用户id
-                    tpyhid: localStorage.getItem('userId')
-                }
+            })
 
-                
-                this.$dialog.confirm({
-                    message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定提交,提交后不可修改`
-                }).then(() => {
-                    submitVoteResult(data).then(res=>{
-                        if (res.data.success) {
-                            this.allSubmitFlag();
-                            this.ytj = true;
-                            this.isNext = false;
-                            this.save = false;
-                            this.submitItemFlag = true;
-                            this.isAllZc = true;
-                            // this.isSubmited = false;
-                            if (this.titleInfo.tpnrXh == this.dataList.length) {
-                                this.isSubmited = false;
-                            } else {
-                                this.isSubmited = true;
-                            }
-                            // this.onaxios();
-                        } else {
-                            this.$toast.fail(res.data.message)
-                        }
-                    })
-                }).catch(() => {});
-            },
-            changeVal(item, index, ind){
-                this.voteList[index].tpjg_tpyj = ind;
-            },
-            // 保存并下一步
-            saveForm(){
-                let nextData = this.nextData;
-                let tpjgsArr = [];
-                let first = 1, firstArr = [];
-                let second = 2, secondArr = [];
-                let third = 3, thirdArr = [];
-                this.voteList.map(item => {
-                    tpjgsArr.push(item.tpjg_tpyj);
-                    if (item.tpjg_tpyj == 1) {
-                        firstArr.push(item)
-                    } else if (item.tpjg_tpyj == 2){
-                        secondArr.push(item)
-                    } else if (item.tpjg_tpyj == 3){
-                        thirdArr.push(item)
-                    }
-                })
-
-                let data = {
-                    // 识别码
-                    sbm: localStorage.getItem('sbm'),
-                    // 投票意见
-                    tpjgs: tpjgsArr.join(','),
-                    // 内容id
-                    // tpnrid: this.voteList[0].tp_tpnr_id,
-                    tpnrid: this.$route.query.cid,
-                    // 用户id
-                    tpyhid: localStorage.getItem('userId')
-                }
-                this.$dialog.confirm({
-                    message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定保存？`
-                    // message: "是否保存？"
-                }).then(()=>{
-                    saveVoteResult(data).then(res=>{
-                        if (res.data.success) {
-                            // 人员类
-                            if (nextData[0].tpTplxId == 2) {
-                                let path = this.$router.history.current.path;
-                                this.titleInfo = nextData[0];
-                                this.$router.replace({
-                                    path,
-                                    query: {
-                                        cid: nextData[0].id
-                                    }
-                                });
-                                this.onaxios();
-                            } else { 
-                                // 报告类
-                                this.$router.replace({
-                                    path: '/article-vote',
-                                    query: {
-                                        cid: nextData[0].id
-                                    }
-                                });
-                            }
-                        }
-                    })
-                }).catch(()=>{})
-            },
-            // 保存
-            saveInfo(){
-                let tpjgsArr = [];
-                this.voteList.map(item => {
-                    tpjgsArr.push(item.tpjg_tpyj)
-                })
-                let data = {
-                    sbm: localStorage.getItem('sbm'),
-                    tpjgs: tpjgsArr.join(','),
-                    // 内容id
-                    tpnrid: this.$route.query.cid,
-                    // 用户id
-                    tpyhid: localStorage.getItem('userId')
-                }
+            let data = {
+                // 识别码
+                sbm: localStorage.getItem('sbm'),
+                // 投票意见
+                tpjgs: tpjgsArr.join(','),
+                // 内容id
+                // tpnrid: this.voteList[0].tp_tpnr_id,
+                tpnrid: this.$route.query.cid,
+                // 用户id
+                tpyhid: localStorage.getItem('userId')
+            }
+            this.$dialog.confirm({
+                message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定保存？`
+                // message: "是否保存？"
+            }).then(()=>{
                 saveVoteResult(data).then(res=>{
                     if (res.data.success) {
-                        this.onaxios();
-                        this.$toast.success("保存成功");
-                        this.$router.push('/sign-in');
+                        // 人员类
+                        if (nextData[0].tpTplxId == 2) {
+                            let path = this.$router.history.current.path;
+                            this.titleInfo = nextData[0];
+                            this.$router.replace({
+                                path,
+                                query: {
+                                    cid: nextData[0].id
+                                }
+                            });
+                            this.onaxios();
+                        } else { 
+                            // 报告类
+                            this.$router.replace({
+                                path: '/article-vote',
+                                query: {
+                                    cid: nextData[0].id
+                                }
+                            });
+                        }
+                    }
+                })
+            }).catch(()=>{})
+        },
+        // 保存
+        saveInfo(){
+            let tpjgsArr = [];
+            this.voteList.map(item => {
+                tpjgsArr.push(item.tpjg_tpyj)
+            })
+            let data = {
+                sbm: localStorage.getItem('sbm'),
+                tpjgs: tpjgsArr.join(','),
+                // 内容id
+                tpnrid: this.$route.query.cid,
+                // 用户id
+                tpyhid: localStorage.getItem('userId')
+            }
+            saveVoteResult(data).then(res=>{
+                if (res.data.success) {
+                    this.onaxios();
+                    this.$toast.success("保存成功");
+                    this.$router.push('/sign-in');
+                } else {
+                    this.$toast.fail(res.data.message);
+                }
+            })
+        },
+        // 下一步
+        nextStep(){
+            let nextData = this.nextData[0];
+            if (nextData.tpTplxId == 2) {
+                let path = this.$router.history.current.path;
+                this.titleInfo = nextData;
+                this.$router.push({
+                    path,
+                    query: {
+                        cid: nextData.id
+                    }
+                })
+                this.onaxios();
+            } else { 
+                // 报告类
+                this.$router.push({
+                    path: '/article-vote',
+                    query: {
+                        cid: nextData.id
+                    }
+                });
+            }
+        },
+        // 一键提交
+        oneClickSubmit(){
+            let params = {
+                sbm: localStorage.getItem('sbm'),
+                tpsxid: localStorage.getItem('sx_id'),
+                tpyhid: localStorage.getItem('userId')
+            }
+            let tpjgsArr = [];
+            this.voteList.map(item => {
+                tpjgsArr.push(item.tpjg_tpyj)
+            })
+            let data = {
+                sbm: localStorage.getItem('sbm'),
+                tpjgs: tpjgsArr.join(','),
+                // 内容id
+                tpnrid: this.$route.query.cid,
+                // 用户id
+                tpyhid: localStorage.getItem('userId')
+            }
+            this.$dialog.confirm({
+                // title: '标题',
+                message: '确认要全部提交吗？',
+            })
+            .then(() => {
+                saveVoteResult(data).then(res=>{
+                    if (res.data.success) {
+                        submitAllVote(params).then(res=>{
+                            let data = res.data;
+                            if (data.success) {
+                                this.$toast.success('提交成功');
+                                this.onaxios();
+                                this.$router.push('/sign-in');
+                            } else {
+                                this.$toast.fail(res.data.message);
+                            }
+                        })
                     } else {
                         this.$toast.fail(res.data.message);
                     }
                 })
-            },
-            // 下一步
-            nextStep(){
-                let nextData = this.nextData[0];
-                if (nextData.tpTplxId == 2) {
-                    let path = this.$router.history.current.path;
-                    this.titleInfo = nextData;
-                    this.$router.push({
-                        path,
-                        query: {
-                            cid: nextData.id
-                        }
-                    })
-                    this.onaxios();
-                } else { 
-                    // 报告类
-                    this.$router.push({
-                        path: '/article-vote',
-                        query: {
-                            cid: nextData.id
-                        }
-                    });
-                }
-            },
-            // 一键提交
-            oneClickSubmit(){
-                let params = {
+                /* submitAllVote(params).then(res=>{
+                    let data = res.data;
+                    if (data.success) {
+                        this.$toast.success('提交成功');
+                        this.onaxios();
+                        this.$router.push('/sign-in');
+                    }
+                }) */
+            })
+            .catch(() => {})
+            /* this.$dialog.confirm({
+                // title: '标题',
+                message: '确认要全部提交吗？',
+            })
+            .then(() => {
+                let data = {
                     sbm: localStorage.getItem('sbm'),
                     tpsxid: localStorage.getItem('sx_id'),
                     tpyhid: localStorage.getItem('userId')
                 }
-                let tpjgsArr = [];
-                this.voteList.map(item => {
-                    tpjgsArr.push(item.tpjg_tpyj)
-                })
-                let data = {
-                    sbm: localStorage.getItem('sbm'),
-                    tpjgs: tpjgsArr.join(','),
-                    // 内容id
-                    tpnrid: this.$route.query.cid,
-                    // 用户id
-                    tpyhid: localStorage.getItem('userId')
-                }
-                this.$dialog.confirm({
-                    // title: '标题',
-                    message: '确认要全部提交吗？',
-                })
-                .then(() => {
-                    saveVoteResult(data).then(res=>{
-                        if (res.data.success) {
-                            submitAllVote(params).then(res=>{
-                                let data = res.data;
-                                if (data.success) {
-                                    this.$toast.success('提交成功');
-                                    this.onaxios();
-                                    this.$router.push('/sign-in');
-                                } else {
-                                    this.$toast.fail(res.data.message);
-                                }
-                            })
-                        } else {
-                            this.$toast.fail(res.data.message);
-                        }
-                    })
-                    /* submitAllVote(params).then(res=>{
-                        let data = res.data;
-                        if (data.success) {
-                            this.$toast.success('提交成功');
-                            this.onaxios();
-                            this.$router.push('/sign-in');
-                        }
-                    }) */
-                })
-                .catch(() => {})
-                /* this.$dialog.confirm({
-                    // title: '标题',
-                    message: '确认要全部提交吗？',
-                })
-                .then(() => {
-                    let data = {
-                        sbm: localStorage.getItem('sbm'),
-                        tpsxid: localStorage.getItem('sx_id'),
-                        tpyhid: localStorage.getItem('userId')
+                submitAllVote(data).then(res=>{
+                    let data = res.data;
+                    if (data.success) {
+                        this.$toast.success('提交成功');
+                        this.onaxios();
+                        this.$router.push('/sign-in');
                     }
-                    submitAllVote(data).then(res=>{
-                        let data = res.data;
-                        if (data.success) {
-                            this.$toast.success('提交成功');
-                            this.onaxios();
-                            this.$router.push('/sign-in');
-                        }
-                    })
                 })
-                .catch(() => {
-                    // on cancel
-                }) */
-            }
+            })
+            .catch(() => {
+                // on cancel
+            }) */
         }
     }
+}
 </script>
 <style lang="scss">
 .person-vote {
@@ -786,7 +788,9 @@
         margin-top: 10px;
         text-align: center;
         padding: 0 .5rem;
-        font-size: .3rem;
+        p {
+            font-size: .3rem;
+        }
     }
     // .title {
     //     padding: 0 .3rem;
