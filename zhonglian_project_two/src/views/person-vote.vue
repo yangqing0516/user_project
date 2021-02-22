@@ -104,7 +104,7 @@
                     <tbody>
                         <tr v-for="(item, index) in voteList" :key="index">
                             <td>{{item.ry_xh}}</td>
-                            <td >{item.ry_dw}}</td>
+                            <td>{{item.ry_dw}}</td>
                             <!-- <td>{{item.ry_xm}}</td> -->
                             <td class="justify">
                                 <span>{{item.ry_xm}}</span>
@@ -182,6 +182,7 @@ import {
     submitVoteResult, // 提交
     getContentStatus // 所有事项
 } from '@/api/index';
+import qs from 'qs';
 export default {
     name: 'person-vote',
     data(){
@@ -257,7 +258,7 @@ export default {
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否全部赞成？`
             }).then(() => {
-                submitVoteResult(data).then(res=>{
+                submitVoteResult(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
                         this.allSubmitFlag();
                         this.ytj = true;
@@ -303,27 +304,15 @@ export default {
                     this.titleInfo = data.result[0];
                     // 列表信息
                     this.voteList = data.result[1];
+                    let newVoteList = data.result[1];
                     // 下一项内容
                     this.nextData = data.result[2];
                     // 上一项内容
                     this.preData = data.result[3];
                     // 设置初始值，初始化数据
-                    if (this.titleInfo.tpnrPage == 5) {
-                        this.voteList.splice(0, 0, {
-                            table_title: "一、理事长候选名单（1人，等额选举，选1人）"
-                        })
-                        this.voteList.splice(2, 0, {
-                            table_title: "二、常务副理事长候选名单（1人，等额选举，选1人）"
-                        })
-                        this.voteList.splice(4, 0, {
-                            table_title: "三、副理事长候选名单（21人，等额选举，选21人）"
-                        })
-                        this.voteList.splice(26, 0, {
-                            table_title: "四、秘书长候选名单（1人，等额选举，选1人）"
-                        })
-                    }
                     this.voteList.map(item=>{
-                        item.ry_xm = item.ry_xm.replace(/\s*/g,'')
+                        item.ry_xm = item.ry_xm.replace(/\s*/g,'');
+                        item.title_flag = false;
                         if (!item.tpjg_tpyj) {
                             item.tpjg_tpyj = '1';   
                         } else {
@@ -334,11 +323,38 @@ export default {
                             }
                         }
                     })
+                    if (this.titleInfo.tpnrPage == 5) {
+                        this.voteList.splice(0, 0, {
+                            table_title: "一、理事长候选名单（1人，等额选举，选1人）",
+                            title_flag: true
+                        })
+                        this.voteList.splice(2, 0, {
+                            table_title: "二、常务副理事长候选名单（1人，等额选举，选1人）",
+                            title_flag: true
+                        })
+                        this.voteList.splice(4, 0, {
+                            table_title: "三、副理事长候选名单（21人，等额选举，选21人）",
+                            title_flag: true
+                        })
+                        this.voteList.splice(26, 0, {
+                            table_title: "四、秘书长候选名单（1人，等额选举，选1人）",
+                            title_flag: true
+                        })
+                        newVoteList = this.voteList.filter((item, index)=>{
+                            return item.title_flag == false
+                        })
+
+                        console.log('新数据1',newVoteList)
+                        // this.voteList = newVoteList;
+                        // console.log('新数据',this.voteList)
+                    }
+                    
                     
                     if (this.titleInfo.tpnrXh != 1) {
                         this.preItemFlag = false;
                     }
                     // 查看所有事项是否全部提交
+                    console.log('23232323',this.dataList)
                     let allDataResult = this.dataList.every(item=>{
                         return item.tpyh_tpnrzt == 'Y';
                     })
@@ -362,12 +378,16 @@ export default {
                             this.submitAll = true;
                         }
 
-                        let itemFlag = data.result[1][0].tpyh_tpnrzt;
+                        // let itemFlag = data.result[1][0].tpyh_tpnrzt;
+                        let itemFlag = newVoteList[0].tpyh_tpnrzt;
+                        console.log('itemFlag=', data)
                         if (itemFlag == 'Y') {
+                            console.log('11111')
                             // 选项状态
                             this.ytj = true;
                             this.submitItemFlag = true;
                         } else {
+                            console.log('00000')
                             // this.save = true;
                             this.ytj = false;
                             this.submitItemFlag = false;
@@ -433,8 +453,15 @@ export default {
             let first = 1, firstArr = [];
             let second = 2, secondArr = [];
             let third = 3, thirdArr = [];
+            
             this.voteList.map(item=>{
-                tpjgsArr.push(item.tpjg_tpyj);
+                if(this.titleInfo.tpnrPage == 5){
+                    if (item.title_flag == false) {
+                        tpjgsArr.push(item.tpjg_tpyj);
+                    }
+                } else {
+                    tpjgsArr.push(item.tpjg_tpyj);
+                }
                 if (item.tpjg_tpyj == 1) {
                     firstArr.push(item)
                 } else if (item.tpjg_tpyj == 2){
@@ -451,7 +478,6 @@ export default {
                 // 用户id
                 tpyhid: sessionStorage.getItem('userId')
             }
-
             
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定提交,提交后不可修改`
@@ -461,7 +487,7 @@ export default {
                     forbidClick: true,
                     loadingType: 'spinner',
                 });
-                submitVoteResult(data).then(res=>{
+                submitVoteResult(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
                         this.$toast.clear();
                         this.allSubmitFlag();
@@ -513,16 +539,16 @@ export default {
                 // 用户id
                 tpyhid: sessionStorage.getItem('userId')
             }
+            
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定保存？`
-                // message: "是否保存？"
             }).then(()=>{
                 this.$toast.loading({
                     message: '保存中...',
                     forbidClick: true,
                     loadingType: 'spinner',
                 });
-                saveVoteResult(data).then(res=>{
+                saveVoteResult(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
                         this.$toast.clear();
                         // 人员类
@@ -563,7 +589,7 @@ export default {
                 // 用户id
                 tpyhid: sessionStorage.getItem('userId')
             }
-            saveVoteResult(data).then(res=>{
+            saveVoteResult(qs.stringify(data)).then(res=>{
                 if (res.data.success) {
                     this.onaxios();
                     this.$toast.success("保存成功");
@@ -604,9 +630,18 @@ export default {
                 tpyhid: sessionStorage.getItem('userId')
             }
             let tpjgsArr = [];
-            this.voteList.map(item => {
-                tpjgsArr.push(item.tpjg_tpyj)
-            })
+            if(this.titleInfo.tpnrPage == 5){
+                this.voteList.map(item=>{
+                    if (item.title_flag == false) {
+                        tpjgsArr.push(item.tpjg_tpyj);
+                    }
+                })
+            } else {
+                this.voteList.map(item => {
+                    tpjgsArr.push(item.tpjg_tpyj);
+                })
+            }
+            
             let data = {
                 sbm: sessionStorage.getItem('sbm'),
                 tpjgs: tpjgsArr.join(','),
@@ -615,12 +650,13 @@ export default {
                 // 用户id
                 tpyhid: sessionStorage.getItem('userId')
             }
+            
+
             this.$dialog.confirm({
-                // title: '标题',
                 message: '确认要全部提交吗？',
             })
             .then(() => {
-                saveVoteResult(data).then(res=>{
+                saveVoteResult(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
                         submitAllVote(params).then(res=>{
                             let data = res.data;
@@ -636,38 +672,8 @@ export default {
                         this.$toast.fail(res.data.message);
                     }
                 })
-                /* submitAllVote(params).then(res=>{
-                    let data = res.data;
-                    if (data.success) {
-                        this.$toast.success('提交成功');
-                        this.onaxios();
-                        this.$router.push('/sign-in');
-                    }
-                }) */
             })
             .catch(() => {})
-            /* this.$dialog.confirm({
-                // title: '标题',
-                message: '确认要全部提交吗？',
-            })
-            .then(() => {
-                let data = {
-                    sbm: sessionStorage.getItem('sbm'),
-                    tpsxid: sessionStorage.getItem('sx_id'),
-                    tpyhid: sessionStorage.getItem('userId')
-                }
-                submitAllVote(data).then(res=>{
-                    let data = res.data;
-                    if (data.success) {
-                        this.$toast.success('提交成功');
-                        this.onaxios();
-                        this.$router.push('/sign-in');
-                    }
-                })
-            })
-            .catch(() => {
-                // on cancel
-            }) */
         }
     }
 }
@@ -676,7 +682,7 @@ export default {
 .justify {
     /* line-height: 100%; */
     span {
-        width: 1rem;
+        width: .75rem;
         display: inline-block;
         text-align: justify;
         text-align-last: justify;

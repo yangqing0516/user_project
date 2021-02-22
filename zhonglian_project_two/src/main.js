@@ -15,6 +15,8 @@ Vue.prototype.$axios = axios;
 import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant);
+import qs from 'qs';
+Vue.prototype.$qs = axios;
 /* eslint-disable no-new */
 new Vue({
     el: '#app',

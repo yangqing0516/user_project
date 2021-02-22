@@ -85,38 +85,38 @@ export function mobileVerification(params) {
 
 
 //10、保存投票结果(人员类)
-export function saveVoteResult(params) {
+export function saveVoteResult(data) {
     return request({
         url: '/tp/tpTpjgRy/tpnrrybc',
         method: 'post',
-        params
+        data
     })
 }
 
 // 11、提交投票结果(人员类)
-export function submitVoteResult(params) {
+export function submitVoteResult(data) {
     return request({
         url: '/tp/tpTpjgRy/tpnrrytj',
         method: 'post',
-        params
+        data
     })
 }
 
 // 12、保存投票内容(报告类)
-export function voteSave(params) {
+export function voteSave(data) {
     return request({
         url: '/tp/tpTpjgBg/tpnrbgbc',
         method: 'post',
-        params
+        data
     })
 }
 
 // 13、提交投票内容(报告类)
-export function submitVoteContent(params) {
+export function submitVoteContent(data) {
     return request({
         url: '/tp/tpTpjgBg/tpnrbgtj',
         method: 'post',
-        params
+        data
     })
 }
 

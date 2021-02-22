@@ -67,6 +67,7 @@ import {
     getContentStatus,
     submitAllVote,
 } from '@/api/index';
+import qs from 'qs';
 export default {
     data () {
         return {
@@ -136,7 +137,7 @@ export default {
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否全部赞成？`
             }).then(() => {
-                submitVoteContent(data).then(res=>{
+                submitVoteContent(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
                         this.allSubmitFlag();
                         this.ytj = true;
@@ -331,7 +332,7 @@ export default {
                     forbidClick: true,
                     loadingType: 'spinner',
                 });
-                voteSave(data).then(res=>{
+                voteSave(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
                         this.$toast.clear();
                         if (this.allData[2]) {
@@ -374,7 +375,7 @@ export default {
                 // 用户id--
                 tpyhid: sessionStorage.getItem('userId')
             }
-            voteSave(data).then(res=>{
+            voteSave(qs.stringify(data)).then(res=>{
                 if (res.data.success) {
                     this.$toast.success('保存成功');
                     this.$router.push('/sign-in');
@@ -441,7 +442,7 @@ export default {
                     forbidClick: true,
                     loadingType: 'spinner',
                 });
-                submitVoteContent(data).then(res=>{
+                submitVoteContent(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
                         this.$toast.clear();
                         this.allSubmitFlag();
@@ -457,7 +458,6 @@ export default {
                         } else {
                             this.isSubmited = true;
                         }
-
                     } else {
                         this.$toast.fail(res.data.message)
                     }
@@ -488,7 +488,7 @@ export default {
                 message: '确认要全部提交吗？',
             })
             .then(() => {
-                voteSave(data).then(res=>{
+                voteSave(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
                         submitAllVote(params).then(res=>{
                             let data = res.data;
