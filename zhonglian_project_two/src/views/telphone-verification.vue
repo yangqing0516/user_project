@@ -108,8 +108,8 @@ export default {
     methods: {
         onaxios(){
             let data = {
-                sbm: localStorage.getItem('sbm'),
-                sx_id: localStorage.getItem('sx_id'),
+                sbm: sessionStorage.getItem('sbm'),
+                sx_id: sessionStorage.getItem('sx_id'),
             }
             userList(data).then(res=>{
                 let data = res.data;
@@ -123,12 +123,12 @@ export default {
             let data = {
                 SJH: this.telphone,
                 YZM: this.verCode,
-                sx_id: localStorage.getItem('sx_id')
+                sx_id: sessionStorage.getItem('sx_id')
             }
             mobileVerification(data).then(res=>{
                 let result = res.data;
                 if (result.success) {
-                    localStorage.setItem('userId', result.result.id);
+                    sessionStorage.setItem('userId', result.result.id);
                     this.$router.push({
                         path:'/sign-in'
                     });

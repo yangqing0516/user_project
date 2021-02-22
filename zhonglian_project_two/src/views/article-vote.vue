@@ -125,13 +125,13 @@ export default {
             })
             let data = {
                 // 识别码
-                sbm: localStorage.getItem('sbm'),
+                sbm: sessionStorage.getItem('sbm'),
                 // 投票结果
                 tpjgs: tpjgsArr.join(','),
                 // 内容id
                 tpnrid: this.$route.query.cid,
                 // 用户id--
-                tpyhid: localStorage.getItem('userId')
+                tpyhid: sessionStorage.getItem('userId')
             }
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否全部赞成？`
@@ -165,8 +165,8 @@ export default {
         // 查看是够可以进行一键提交
         allSubmitFlag(){
             let data = {
-                sx_id: localStorage.getItem('sx_id'),
-                yh_id: localStorage.getItem('userId')
+                sx_id: sessionStorage.getItem('sx_id'),
+                yh_id: sessionStorage.getItem('userId')
             }
             getContentStatus(data).then(res=>{
                 let data = res.data;
@@ -180,7 +180,7 @@ export default {
         onaxios(){
             let data = {
                 id: this.$route.query.cid,
-                yh_id: localStorage.getItem('userId')
+                yh_id: sessionStorage.getItem('userId')
             }
             let isSet = null;
             getContentReport(data).then(res=>{
@@ -313,9 +313,9 @@ export default {
             })
             let data = {
                 // 识别码
-                sbm: localStorage.getItem('sbm'),
+                sbm: sessionStorage.getItem('sbm'),
                 // 用户id
-                tpyhid: localStorage.getItem('userId'),
+                tpyhid: sessionStorage.getItem('userId'),
                 // 投票结果
                 tpjgs: tpjgsArr.join(','),
                 // 内容id--tpnrbgid
@@ -367,12 +367,12 @@ export default {
                 tpjgsArr.push(item.tpjg_tpyj)
             })
             let data = {
-                sbm: localStorage.getItem('sbm'),
+                sbm: sessionStorage.getItem('sbm'),
                 tpjgs: tpjgsArr.join(','),
                 // 内容id
                 tpnrid: this.$route.query.cid,
                 // 用户id--
-                tpyhid: localStorage.getItem('userId')
+                tpyhid: sessionStorage.getItem('userId')
             }
             voteSave(data).then(res=>{
                 if (res.data.success) {
@@ -425,13 +425,13 @@ export default {
             })
             let data = {
                 // 识别码
-                sbm: localStorage.getItem('sbm'),
+                sbm: sessionStorage.getItem('sbm'),
                 // 投票结果
                 tpjgs: tpjgsArr.join(','),
                 // 内容id
                 tpnrid: this.$route.query.cid,
                 // 用户id--
-                tpyhid: localStorage.getItem('userId')
+                tpyhid: sessionStorage.getItem('userId')
             }
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定提交,提交后不可修改`
@@ -467,21 +467,21 @@ export default {
         // 一键提交
         oneClickSubmit(){
             let params = {
-                sbm: localStorage.getItem('sbm'),
-                tpsxid: localStorage.getItem('sx_id'),
-                tpyhid: localStorage.getItem('userId')
+                sbm: sessionStorage.getItem('sbm'),
+                tpsxid: sessionStorage.getItem('sx_id'),
+                tpyhid: sessionStorage.getItem('userId')
             }
             let tpjgsArr = [];
             this.voteList.map(item => {
                 tpjgsArr.push(item.tpjg_tpyj)
             })
             let data = {
-                sbm: localStorage.getItem('sbm'),
+                sbm: sessionStorage.getItem('sbm'),
                 tpjgs: tpjgsArr.join(','),
                 // 内容id
                 tpnrid: this.$route.query.cid,
                 // 用户id--
-                tpyhid: localStorage.getItem('userId')
+                tpyhid: sessionStorage.getItem('userId')
             }
             this.$dialog.confirm({
                 // title: '标题',
@@ -522,9 +522,9 @@ export default {
             // })
             // .then(() => {
             //     let data = {
-            //         sbm: localStorage.getItem('sbm'),
-            //         tpsxid: localStorage.getItem('sx_id'),
-            //         tpyhid: localStorage.getItem('userId')
+            //         sbm: sessionStorage.getItem('sbm'),
+            //         tpsxid: sessionStorage.getItem('sx_id'),
+            //         tpyhid: sessionStorage.getItem('userId')
             //     }
             //     submitAllVote(data).then(res=>{
             //         let data = res.data;

@@ -38,7 +38,9 @@
                         <tr v-for="(item, index) in voteList" :key="index">
                             <td>{{item.ry_xh}}</td>
                             <td>{{item.ry_dw}}</td>
-                            <td>{{item.ry_xm}}</td>
+                            <td class="justify">
+                                <span>{{item.ry_xm}}</span>
+                            </td>
                             <td class="zc" @click="changeVal(item, index, 1)"><input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="fd" @click="changeVal(item, index, 2)"><input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
@@ -68,8 +70,11 @@
                     <tbody>
                         <tr v-for="(item, index) in voteList" :key="index">
                             <td>{{item.ry_xh}}</td>
-                            <td>{{item.ry_xm}}</td>
-                            <td>{{item.ry_dw}}{{item.ry_zw}}</td>
+                            <!-- <td>{{item.ry_xm}}</td> -->
+                            <td class="justify">
+                                <span>{{item.ry_xm}}</span>
+                            </td>
+                            <td>{{item.ry_dw}}({{item.ry_zw}})</td>
                             <td class="zc" @click="changeVal(item, index, 1)"><input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="fd" @click="changeVal(item, index, 2)"><input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
@@ -99,8 +104,11 @@
                     <tbody>
                         <tr v-for="(item, index) in voteList" :key="index">
                             <td>{{item.ry_xh}}</td>
-                            <td>{{item.ry_dw}}</td>
-                            <td>{{item.ry_xm}}</td>
+                            <td >{item.ry_dw}}</td>
+                            <!-- <td>{{item.ry_xm}}</td> -->
+                            <td class="justify">
+                                <span>{{item.ry_xm}}</span>
+                            </td>
                             <td class="zc" @click="changeVal(item, index, 1)"><input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="fd" @click="changeVal(item, index, 2)"><input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
@@ -131,20 +139,23 @@
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in voteList" :key="index">
-                            <td style="text-align:left;font-weight:bold;" colspan="7" v-if="index == 0 || index == 2 || index == 4 || index == 6">
+                            <td style="text-align:left;font-weight:bold;" colspan="7" v-if="index == 0 || index == 2 || index == 4 || index == 26">
                                 {{item.table_title}}
                             </td>
                             <td v-else>{{item.ry_xh}}</td>
-                            <td v-if="index==0 || index==2 || index==4 || index==6?false:true">{{item.ry_xm}}</td>
-                            <td v-if="index==0 || index==2 || index==4 || index==6?false:true">{{item.ry_dw}}</td>
-                            <td v-if="index==0 || index==2 || index==4 || index==6?false:true">{{item.ry_zw}}</td>
-                            <td v-if="index==0 || index==2 || index==4 || index==6?false:true" class="zc" @click="changeVal(item, index, 1)">
+                            <!-- <td v-if="index==0 || index==2 || index==4 || index==26?false:true">{{item.ry_xm}}</td> -->
+                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="justify">
+                                <span>{{item.ry_xm}}</span>
+                            </td>
+                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true">{{item.ry_dw}}</td>
+                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true">{{item.ry_zw}}</td>
+                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="zc" @click="changeVal(item, index, 1)">
                                 <input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj">
                             </td>
-                            <td v-if="index==0 || index==2 || index==4 || index==6?false:true" class="fd" @click="changeVal(item, index, 2)">
+                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="fd" @click="changeVal(item, index, 2)">
                                 <input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj">
                             </td>
-                            <td v-if="index==0 || index==2 || index==4 || index==6?false:true" class="qq" @click="changeVal(item, index, 3)">
+                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="qq" @click="changeVal(item, index, 3)">
                                 <input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj">
                             </td>
                         </tr>
@@ -214,7 +225,7 @@ export default {
         });
     },
     mounted(){
-        this.endTime = localStorage.getItem('endTime');
+        this.endTime = sessionStorage.getItem('endTime');
         this.allSubmitFlag();
     },
     methods: {
@@ -236,12 +247,12 @@ export default {
                 }
             })
             let data = {
-                sbm: localStorage.getItem('sbm'),
+                sbm: sessionStorage.getItem('sbm'),
                 tpjgs: tpjgsArr.join(','),
                 // 内容id
                 tpnrid: this.$route.query.cid,
                 // 用户id
-                tpyhid: localStorage.getItem('userId')
+                tpyhid: sessionStorage.getItem('userId')
             }
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否全部赞成？`
@@ -269,8 +280,8 @@ export default {
         // 查看是否可以进行一键提交
         allSubmitFlag(){
             let data = {
-                sx_id: localStorage.getItem('sx_id'),
-                yh_id: localStorage.getItem('userId')
+                sx_id: sessionStorage.getItem('sx_id'),
+                yh_id: sessionStorage.getItem('userId')
             }
             getContentStatus(data).then(res=>{
                 let data = res.data;
@@ -283,7 +294,7 @@ export default {
         onaxios(){
             let data = {
                 id: this.$route.query.cid,
-                yh_id: localStorage.getItem('userId')
+                yh_id: sessionStorage.getItem('userId')
             }
             getContentPerson(data).then(res=>{
                 let data = res.data;
@@ -310,19 +321,19 @@ export default {
                         this.voteList.splice(26, 0, {
                             table_title: "四、秘书长候选名单（1人，等额选举，选1人）"
                         })
-                    } else {
-                        this.voteList.map(item=>{
-                            if (!item.tpjg_tpyj) {
-                                item.tpjg_tpyj = '1';   
-                            } else {
-                                if (item.tpyh_tpnrzt == 'Y') {
-                                    this.isAllZc = true;
-                                } else {
-                                    this.isAllZc = false;
-                                }
-                            }
-                        })
                     }
+                    this.voteList.map(item=>{
+                        item.ry_xm = item.ry_xm.replace(/\s*/g,'')
+                        if (!item.tpjg_tpyj) {
+                            item.tpjg_tpyj = '1';   
+                        } else {
+                            if (item.tpyh_tpnrzt == 'Y') {
+                                this.isAllZc = true;
+                            } else {
+                                this.isAllZc = false;
+                            }
+                        }
+                    })
                     
                     if (this.titleInfo.tpnrXh != 1) {
                         this.preItemFlag = false;
@@ -433,12 +444,12 @@ export default {
                 }
             })
             let data = {
-                sbm: localStorage.getItem('sbm'),
+                sbm: sessionStorage.getItem('sbm'),
                 tpjgs: tpjgsArr.join(','),
                 // 内容id
                 tpnrid: this.$route.query.cid,
                 // 用户id
-                tpyhid: localStorage.getItem('userId')
+                tpyhid: sessionStorage.getItem('userId')
             }
 
             
@@ -493,14 +504,14 @@ export default {
 
             let data = {
                 // 识别码
-                sbm: localStorage.getItem('sbm'),
+                sbm: sessionStorage.getItem('sbm'),
                 // 投票意见
                 tpjgs: tpjgsArr.join(','),
                 // 内容id
                 // tpnrid: this.voteList[0].tp_tpnr_id,
                 tpnrid: this.$route.query.cid,
                 // 用户id
-                tpyhid: localStorage.getItem('userId')
+                tpyhid: sessionStorage.getItem('userId')
             }
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定保存？`
@@ -545,12 +556,12 @@ export default {
                 tpjgsArr.push(item.tpjg_tpyj)
             })
             let data = {
-                sbm: localStorage.getItem('sbm'),
+                sbm: sessionStorage.getItem('sbm'),
                 tpjgs: tpjgsArr.join(','),
                 // 内容id
                 tpnrid: this.$route.query.cid,
                 // 用户id
-                tpyhid: localStorage.getItem('userId')
+                tpyhid: sessionStorage.getItem('userId')
             }
             saveVoteResult(data).then(res=>{
                 if (res.data.success) {
@@ -588,21 +599,21 @@ export default {
         // 一键提交
         oneClickSubmit(){
             let params = {
-                sbm: localStorage.getItem('sbm'),
-                tpsxid: localStorage.getItem('sx_id'),
-                tpyhid: localStorage.getItem('userId')
+                sbm: sessionStorage.getItem('sbm'),
+                tpsxid: sessionStorage.getItem('sx_id'),
+                tpyhid: sessionStorage.getItem('userId')
             }
             let tpjgsArr = [];
             this.voteList.map(item => {
                 tpjgsArr.push(item.tpjg_tpyj)
             })
             let data = {
-                sbm: localStorage.getItem('sbm'),
+                sbm: sessionStorage.getItem('sbm'),
                 tpjgs: tpjgsArr.join(','),
                 // 内容id
                 tpnrid: this.$route.query.cid,
                 // 用户id
-                tpyhid: localStorage.getItem('userId')
+                tpyhid: sessionStorage.getItem('userId')
             }
             this.$dialog.confirm({
                 // title: '标题',
@@ -641,9 +652,9 @@ export default {
             })
             .then(() => {
                 let data = {
-                    sbm: localStorage.getItem('sbm'),
-                    tpsxid: localStorage.getItem('sx_id'),
-                    tpyhid: localStorage.getItem('userId')
+                    sbm: sessionStorage.getItem('sbm'),
+                    tpsxid: sessionStorage.getItem('sx_id'),
+                    tpyhid: sessionStorage.getItem('userId')
                 }
                 submitAllVote(data).then(res=>{
                     let data = res.data;
@@ -662,6 +673,15 @@ export default {
 }
 </script>
 <style lang="scss">
+.justify {
+    /* line-height: 100%; */
+    span {
+        width: 1rem;
+        display: inline-block;
+        text-align: justify;
+        text-align-last: justify;
+    }
+}
 .person-vote {
     .layui-form-radio {
         margin: 0;

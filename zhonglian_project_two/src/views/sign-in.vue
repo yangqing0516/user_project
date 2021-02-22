@@ -67,14 +67,14 @@ export default {
     mounted(){
         this.isSignIn();
         this.onaxios();
-        this.title = localStorage.getItem('title')
+        this.title = sessionStorage.getItem('title')
     },
     methods: {
         isSignIn(){
             let data = {
-                sbm: localStorage.getItem('sbm'),
+                sbm: sessionStorage.getItem('sbm'),
                 // sbm: 'DDDDD',
-                sx_id: localStorage.getItem('sx_id')
+                sx_id: sessionStorage.getItem('sx_id')
             }
             userList(data).then(res=>{
                 let data = res.data;
@@ -90,8 +90,8 @@ export default {
         },
         onaxios(){
             let data = {
-                sx_id: localStorage.getItem('sx_id'),
-                yh_id: localStorage.getItem('userId')
+                sx_id: sessionStorage.getItem('sx_id'),
+                yh_id: sessionStorage.getItem('userId')
             }
             getContentStatus(data).then(res=>{
                 let data = res.data;
@@ -112,7 +112,7 @@ export default {
         // 签到
         onSign(){
             let data = {
-                yh_id: localStorage.getItem('userId')
+                yh_id: sessionStorage.getItem('userId')
                 // yh_id: "3345345345"
             }
             userSignIn(data).then(res=>{
@@ -221,9 +221,9 @@ export default {
             })
             .then(() => {
                 let data = {
-                    sbm: localStorage.getItem('sbm'),
-                    tpsxid: localStorage.getItem('sx_id'),
-                    tpyhid: localStorage.getItem('userId')
+                    sbm: sessionStorage.getItem('sbm'),
+                    tpsxid: sessionStorage.getItem('sx_id'),
+                    tpyhid: sessionStorage.getItem('userId')
                 }
                 submitAllVote(data).then(res=>{
                     let data = res.data;
@@ -246,9 +246,9 @@ export default {
                     path: '/person-vote',
                     query: {
                         cid: tp_tpnr_id,
-                        userId: localStorage.getItem('userId'),
-                        sbm: localStorage.getItem('sbm'),
-                        sx_id: localStorage.getItem('sx_id')
+                        userId: sessionStorage.getItem('userId'),
+                        sbm: sessionStorage.getItem('sbm'),
+                        sx_id: sessionStorage.getItem('sx_id')
                     }
                 });
             } else { // 报告类
@@ -256,9 +256,9 @@ export default {
                     path: '/article-vote',
                     query: {
                         cid: tp_tpnr_id,
-                        userId: localStorage.getItem('userId'),
-                        sbm: localStorage.getItem('sbm'),
-                        sx_id: localStorage.getItem('sx_id')
+                        userId: sessionStorage.getItem('userId'),
+                        sbm: sessionStorage.getItem('sbm'),
+                        sx_id: sessionStorage.getItem('sx_id')
                     }
                 });
             }

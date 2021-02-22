@@ -92,14 +92,14 @@ export default {
             if (regResult) {
                 let data = {
                     sbm: this.code,
-                    sx_id: localStorage.getItem('sx_id'),
+                    sx_id: sessionStorage.getItem('sx_id'),
                 }
                 // this.$toast.fail(res.data.message);
                 userList(data).then(res=>{
                     let data = res.data;
                     if (data.success) {
-                        localStorage.setItem('userId', data.result.id);
-                        localStorage.setItem('sbm', data.result.tpyhSbm);
+                        sessionStorage.setItem('userId', data.result.id);
+                        sessionStorage.setItem('sbm', data.result.tpyhSbm);
                         this.$router.push("/sign-in")
                     } else {
                         this.$toast.fail(data.message);
@@ -110,14 +110,14 @@ export default {
         // onSubmit(values) {
         //     let data = {
         //         sbm: this.code,
-        //         sx_id: localStorage.getItem('sx_id'),
+        //         sx_id: sessionStorage.getItem('sx_id'),
         //     }
         //     userList(data).then(res=>{
         //         let data = res.data;
         //         if (data.code == 200) {
         //             if (data.success) {
-        //                 localStorage.setItem('userId', data.result.id);
-        //                 localStorage.setItem('sbm', data.result.tpyhSbm)
+        //                 sessionStorage.setItem('userId', data.result.id);
+        //                 sessionStorage.setItem('sbm', data.result.tpyhSbm)
         //                 this.$router.push("/sign-in")
         //             }
         //         }
