@@ -37,7 +37,7 @@
                         <!-- <td>{{item.bg_xh}}</td> -->
                         <td>
                             {{item.bg_mc}}
-                            <span style="color:rgb(225, 54, 46);" @click="viewFile(item)">查看附件</span>
+                            <span style="color:rgb(225, 54, 46);display:block;" @click="viewFile(item)">查看附件</span>
                         </td>
                         <td class="zc" @click="changeVal(item, index, 1)"><input type="radio" :disabled="ytj" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
                         <td class="fd" @click="changeVal(item, index, 2)"><input type="radio" :disabled="ytj" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>

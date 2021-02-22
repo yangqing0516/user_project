@@ -11,7 +11,8 @@
          <div class="section">
             <div class="layui-form">
                 <div class="title">
-                    <p>{{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}</p>
+                    <p>{{titleInfo.tpnrXh}}、{{title}}</p>
+                    <p>{{titleInfo.tpnrMc}}</p>
                     <p>{{titleInfo.tpnrBz}}</p>
                 </div>
                 <!-- 第一种 -->
@@ -216,7 +217,9 @@ export default {
             // 一键提交按钮状态
             submitAllFlag: false,
             // 全部赞成
-            isAllZc: false
+            isAllZc: false,
+            // 内容名称
+            title: sessionStorage.getItem('title')
         }
     },
     updated(){

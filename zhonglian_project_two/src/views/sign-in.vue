@@ -84,6 +84,8 @@ export default {
                     // 判断是否签到过
                     if(data.result.tpyhQd == 'Y'){
                        this.isVote = false;
+                    } else {
+                        this.isSign = true;
                     }
                 }
             })
@@ -216,7 +218,6 @@ export default {
         // 一键提交
         onSubmit(){
             this.$dialog.confirm({
-                // title: '标题',
                 message: '确认要全部提交吗？',
             })
             .then(() => {
