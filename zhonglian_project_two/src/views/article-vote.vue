@@ -159,10 +159,16 @@ export default {
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确认提交，提交后不可修改？`
             }).then(() => {
+                this.$toast.loading({
+                    message: '提交中...',
+                    forbidClick: true,
+                    loadingType: 'spinner',
+                });
                 voteSave(qs.stringify(params)).then(res=>{
                     if (res.data.success) {
                         submitVoteContent(qs.stringify(data)).then(res=>{
                             if (res.data.success) {
+                                this.$toast.clear();
                                 this.allSubmitFlag();
                                 this.ytj = true;
                                 this.isNext = false;
@@ -307,7 +313,7 @@ export default {
                 });
                 voteSave(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
-                        submitAllVote(qs.stringify(params)).then(res=>{
+                        submitVoteContent(qs.stringify(params)).then(res=>{
                             let data = res.data;
                             if (data.success) {
                                 this.$toast.clear();
@@ -369,7 +375,7 @@ export default {
             .then(() => {
                 voteSave(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
-                        submitAllVote(qs.stringify(params)).then(res=>{
+                        submitAllVote(params).then(res=>{
                             let data = res.data;
                             if (data.success) {
                                 this.$toast.success('提交成功');

@@ -280,10 +280,16 @@ export default {
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确认提交，提交后不可修改？`
             }).then(() => {
+                this.$toast.loading({
+                    message: '提交中...',
+                    forbidClick: true,
+                    loadingType: 'spinner',
+                });
                 saveVoteResult(qs.stringify(params)).then(res=>{
                     if (res.data.success) {
                         submitVoteResult(qs.stringify(data)).then(res=>{
                             if (res.data.success) {
+                                this.$toast.clear();
                                 this.allSubmitFlag();
                                 this.ytj = true;
                                 this.isNext = false;
@@ -372,11 +378,6 @@ export default {
         }, 
         // 一键提交（保存+提交接口）
         oneClickSubmit(){
-            let params = {
-                sbm: sessionStorage.getItem('sbm'),
-                tpsxid: sessionStorage.getItem('sx_id'),
-                tpyhid: sessionStorage.getItem('userId')
-            }
             let tpjgsArr = [];
             if(this.titleInfo.tpnrPage == 5){
                 this.voteList.map(item=>{
@@ -389,13 +390,19 @@ export default {
                     tpjgsArr.push(item.tpjg_tpyj);
                 })
             }
-            
+            // 保存的参数
             let data = {
                 sbm: sessionStorage.getItem('sbm'),
                 tpjgs: tpjgsArr.join(','),
                 // 内容id
                 tpnrid: this.$route.query.cid,
                 // 用户id
+                tpyhid: sessionStorage.getItem('userId')
+            }
+            // 一键提交的参数
+            let params = {
+                sbm: sessionStorage.getItem('sbm'),
+                tpsxid: sessionStorage.getItem('sx_id'),
                 tpyhid: sessionStorage.getItem('userId')
             }
             
@@ -406,7 +413,7 @@ export default {
             .then(() => {
                 saveVoteResult(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
-                        submitAllVote(qs.stringify(params)).then(res=>{
+                        submitAllVote(params).then(res=>{
                             let data = res.data;
                             if (data.success) {
                                 this.$toast.success('提交成功');
@@ -452,6 +459,18 @@ export default {
                 // 用户id
                 tpyhid: sessionStorage.getItem('userId')
             }
+
+            let params = {
+                // 识别码
+                sbm: sessionStorage.getItem('sbm'),
+                // 投票意见
+                tpjgs: tpjgsArr.join(','),
+                // 内容id
+                // tpnrid: this.voteList[0].tp_tpnr_id,
+                tpnrid: this.$route.query.cid,
+                // 用户id
+                tpyhid: sessionStorage.getItem('userId')
+            }
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定保存？`
             }).then(()=>{
@@ -462,12 +481,9 @@ export default {
                 });
                 saveVoteResult(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
-                        submitAllVote(qs.stringify(data)).then(res=>{
+                        submitVoteResult(qs.stringify(data)).then(res=>{
                             let data = res.data;
                             if (data.success) {
-                                // this.$toast.success('提交成功');
-                                // this.onaxios();
-                                // this.$router.push('/sign-in');
                                 this.$toast.clear();
                                 // 人员类
                                 if (nextData[0].tpTplxId == 2) {
