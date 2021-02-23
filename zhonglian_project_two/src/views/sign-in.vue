@@ -1,32 +1,42 @@
 <template>
     <div class="sign-in wrapper">
-        <!-- <div class="header" @click="onBack">
-            <img src="../assets/home.png" alt="">
-        </div> -->
         <div class="section">
             <div class="banner">
-                <img src="../assets/home_banner.png" alt="">
+                <img src="../assets/home_banner.jpg" alt="">
                 <h2>{{title}}</h2>
-                <button v-show="isVote" @click="onSign">签到</button>
-                <button v-show="!isVote" @click="startVote">进行投票</button>
+                <!-- <span v-show="isSome">投票完成</span>
+                <span v-show="!isSome">投票中</span> -->
+                <button v-show="isSome">投票完成</button>
+                <button v-show="!isSome">投票中</button>
             </div>
             <div class="special-list">
-                <ul>
+                <ul v-if="tpyhQd=='Y'">
                     <li v-for="(item, index) in specialList" :key="index" @click="onStartVote(item, index)">
                         <h3>{{index+1}}、{{item.tpnr_mc}}</h3>
                         <div class="status" :class="item.tpyh_tpnrzt==null?'no_vote':item.tpyh_tpnrzt=='N'?'no_submit':'submited'">
-                            <!-- <button>{{item.tpyh_tpnrzt=='Y'?'已提交':item.tpyh_tpnrzt=='N'?'未提交':'未投票'}}</button> -->
                             <button v-if="item.tpyh_tpnrzt=='Y'">已提交</button>
                             <button v-else-if="item.tpyh_tpnrzt=='N'">未提交</button>
                             <button v-else>未投票</button>
                         </div>
                     </li>
                 </ul>
+                <button @click="onSign" v-else style="
+                margin-top:3rem;
+                margin-left: calc(50% - 1rem);
+                width: 2rem;
+                height: 0.6rem;
+                text-align: center;
+                line-height: .6rem;
+                background: #FFFFFF;
+                box-shadow: 0rem 0.02rem 0.13rem 0rem #FE7962;
+                border-radius: 1rem;
+                color: #FE5337;
+                font-size: .28rem;">签到</button>
             </div>
         </div>
-        <div class="footer">
+        <!-- <div class="footer">
             <van-button :disabled="isSome" color="#E1362E" round type="info" @click="onSubmit">一键提交</van-button>
-        </div>
+        </div> -->
         <!-- 签到弹框 -->
         <div class="sign-dialog" v-show="isSign">
             <div class="sign">
@@ -56,7 +66,7 @@ export default {
         return {
             isSign: false,
             isDisabled: true,
-            isSome: null,
+            isSome: false,
             isVote: true,
             specialList: [],
             tpyhQd: "",
@@ -73,20 +83,16 @@ export default {
         isSignIn(){
             let data = {
                 sbm: sessionStorage.getItem('sbm'),
-                // sbm: 'DDDDD',
                 sx_id: sessionStorage.getItem('sx_id')
             }
             userList(data).then(res=>{
                 let data = res.data;
-                    console.log('data', data)
                 if (data.success) {
                     this.tpyhQd = data.result.tpyhQd;
                     // 判断是否签到过
-                    if(data.result.tpyhQd == 'Y'){
-                       this.isVote = false;
-                    } else {
-                        this.isSign = true;
-                    }
+                    // if(data.result.tpyhQd == 'Y'){
+                    //    this.isVote = false;
+                    // }
                 }
             })
         },
@@ -99,15 +105,15 @@ export default {
                 let data = res.data;
                 if (data.code == 200) {
                     this.specialList = data.result;
-                    this.isSome = this.specialList.some(item=>{
-                        return item.tpyh_tpnrzt == null;
+                    this.isSome = this.specialList.every(item=>{
+                        return item.tpyh_tpnrzt == 'Y';
                     })
-                    let isAllSubmit = this.specialList.every(item=>{
-                        return item.tpyh_tpnrzt == 'Y'
-                    })
-                    if (isAllSubmit) {
-                        this.isSome = true;
-                    }
+                    // let isAllSubmit = this.specialList.every(item=>{
+                    //     return item.tpyh_tpnrzt == 'Y'
+                    // })
+                    // if (isAllSubmit) {
+                    //     this.isSome = true;
+                    // }
                 }
             })
         },
@@ -115,7 +121,6 @@ export default {
         onSign(){
             let data = {
                 yh_id: sessionStorage.getItem('userId')
-                // yh_id: "3345345345"
             }
             userSignIn(data).then(res=>{
                 let data = res.data;
@@ -134,7 +139,6 @@ export default {
         },
         // 列表点击进行投票
         onStartVote(item, nowIndex){
-            // tp_tplx_id 2-->人员类  1-->报告类
             // 人员类
             if (nowIndex!=0) {
                 if (this.specialList[nowIndex-1].tpyh_tpnrzt!=null) {
@@ -191,29 +195,6 @@ export default {
                     }).then(() => {});
                 }
             }
-            // if (this.tpyhQd == 'Y') {
-            //     // cid  内容id
-            //     if (item.tp_tplx_id == 2) {
-            //         this.$router.push({
-            //             path: '/person-vote',
-            //             query: {
-            //                 cid: item.id
-            //             }
-            //         });
-            //     } else {
-            //         this.$router.push({
-            //             path: '/article-vote',
-            //             query: {
-            //                 cid: item.id
-            //             }
-            //         });
-            //     }
-            // } else {
-            //     this.$dialog.alert({
-            //         message: '请您先签到',
-            //         theme: 'round-button',
-            //     }).then(() => {});
-            // }
         },
         // 一键提交
         onSubmit(){
@@ -295,23 +276,31 @@ export default {
             position: relative;
             img {
                 width: 100%;
-                height: 2.97rem;
+                /* height: 2.97rem; */
             }
             h2 {
+                text-align: center;
                 position: absolute;
-                right: .47rem;
-                top: .5rem;
-                width: 3.8rem;
-                height: 1.08rem;
+                padding: 0 .47rem;
+                width: 100%;
+                top: .7rem;
                 font-size: 0.38rem;
                 font-weight: 500;
                 color: #FFFFFF;
                 line-height: 0.54rem;
             }
+            span {
+                position: absolute;
+                right: .47rem;
+                bottom: .2rem;
+                color: #fff;
+                font-size: 0.28rem;
+                font-weight: 500;
+            }
             button {
                 position: absolute;
-                right: 2.27rem;
-                top: 1.97rem;
+                right: .47rem;
+                bottom: .2rem;
                 width: 2rem;
                 height: 0.6rem;
                 text-align: center;
