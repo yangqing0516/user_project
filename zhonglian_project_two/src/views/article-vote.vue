@@ -7,7 +7,7 @@
             <!-- 全部赞成 -->
             <van-button @click="allZc" :disabled="isAllZc" style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit">全部赞成</van-button>
             <!-- 提交该项 -->
-            <van-button @click="onSubmit" :disabled="submitItemFlag" round block type="info" color="#E1362E" native-type="submit">提交该项</van-button>
+            <!-- <van-button @click="onSubmit" :disabled="submitItemFlag" round block type="info" color="#E1362E" native-type="submit">提交该项</van-button> -->
         </p>
     </div>
     <div class="section">
@@ -60,7 +60,7 @@
         <!-- 保存 -->
         <van-button @click="saveInfo" v-show="save" color="#E1362E" plain>保存</van-button>
         <!-- 一键提交 -->
-        <van-button @click="oneClickSubmit" v-show="submitAll" :disabled="submitAllFlag" round block type="info" color="#E1362E">一键提交</van-button>
+        <van-button @click="oneClickSubmit" v-show="submitAll" :disabled="submitAllFlag" round block type="info" color="#E1362E">提交</van-button>
     </div>
   </div>
 </template>
@@ -191,7 +191,7 @@ export default {
             }).catch(()=>{})
         },
         // 提交该项（保存+提交接口）
-        onSubmit(){
+        /* onSubmit(){
             let tpjgsArr = [];
             let first = 1, firstArr = [];
             let second = 2, secondArr = [];
@@ -261,7 +261,7 @@ export default {
                     }
                 })
             }).catch(() => {});
-        },
+        }, */
         // 提交并下一项（保存+提交接口）
         saveForm(){
             let tpjgsArr = [];
@@ -364,18 +364,18 @@ export default {
                 tpyhid: sessionStorage.getItem('userId')
             }
             // 提交接口数据
-            let params = {
-                sbm: sessionStorage.getItem('sbm'),
-                tpsxid: sessionStorage.getItem('sx_id'),
-                tpyhid: sessionStorage.getItem('userId')
-            }
+            // let params = {
+            //     sbm: sessionStorage.getItem('sbm'),
+            //     tpsxid: sessionStorage.getItem('sx_id'),
+            //     tpyhid: sessionStorage.getItem('userId')
+            // }
             this.$dialog.confirm({
                 message: '确认要全部提交吗？',
             })
             .then(() => {
                 voteSave(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
-                        submitAllVote(params).then(res=>{
+                        submitAllVote(qs.stringify(data)).then(res=>{
                             let data = res.data;
                             if (data.success) {
                                 this.$toast.success('提交成功');

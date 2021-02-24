@@ -57,11 +57,11 @@ export default {
         }
     },
     mounted(){
-        let url = window.location.href;
-        let id = url.split("sx_id=")[1];
-        sessionStorage.setItem('sx_id', id)
+        // let url = window.location.href;
+        // let id = url.split("sx_id=")[1];
+        // sessionStorage.setItem('sx_id', id)
         
-        // sessionStorage.setItem('sx_id', "1333344778143465474");
+        sessionStorage.setItem('sx_id', "1333344778143465474");
         // sessionStorage.setItem('sx_id', "1349524855791767553");
         this.onaxios();
     },

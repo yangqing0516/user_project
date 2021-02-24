@@ -6,7 +6,7 @@
                 <!-- 全部赞成 -->
                 <van-button @click="allZc" :disabled="isAllZc" style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit">全部赞成</van-button>
                 <!-- 提交该项 -->
-                <van-button @click="onSubmit" :disabled="submitItemFlag" round block type="info" color="#E1362E" native-type="submit">提交该项</van-button>
+                <!-- <van-button @click="onSubmit" :disabled="submitItemFlag" round block type="info" color="#E1362E" native-type="submit">提交该项</van-button> -->
             </p>
         </div>
          <div class="section">
@@ -173,7 +173,7 @@
             <!-- 提交并下一项 -->
             <van-button @click="saveForm" v-show="isNext" color="#E1362E" plain>提交并下一项</van-button>
             <!-- 一键提交 -->
-            <van-button @click="oneClickSubmit" v-show="submitAll" :disabled="submitAllFlag" round block type="info" color="#E1362E">一键提交</van-button>
+            <van-button @click="oneClickSubmit" v-show="submitAll" :disabled="submitAllFlag" round block type="info" color="#E1362E">提交</van-button>
             <!-- 保存 -->
             <van-button @click="saveInfo" v-show="save" color="#E1362E" plain>保存</van-button>
         </div>
@@ -311,7 +311,7 @@ export default {
             .catch(()=>{})
         },
         // 提交该项（保存+提交接口）
-        onSubmit() {
+        /* onSubmit() {
             // console.log(this.voteList)
             let nextData = this.nextData[0];
             let tpjgsArr = [];
@@ -375,7 +375,7 @@ export default {
                     }
                 })
             }).catch(() => {});
-        }, 
+        }, */ 
         // 一键提交（保存+提交接口）
         oneClickSubmit(){
             let tpjgsArr = [];
@@ -400,11 +400,11 @@ export default {
                 tpyhid: sessionStorage.getItem('userId')
             }
             // 一键提交的参数
-            let params = {
-                sbm: sessionStorage.getItem('sbm'),
-                tpsxid: sessionStorage.getItem('sx_id'),
-                tpyhid: sessionStorage.getItem('userId')
-            }
+            // let params = {
+            //     sbm: sessionStorage.getItem('sbm'),
+            //     tpsxid: sessionStorage.getItem('sx_id'),
+            //     tpyhid: sessionStorage.getItem('userId')
+            // }
             
 
             this.$dialog.confirm({
@@ -413,7 +413,7 @@ export default {
             .then(() => {
                 saveVoteResult(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
-                        submitAllVote(params).then(res=>{
+                        submitVoteResult(qs.stringify(data)).then(res=>{
                             let data = res.data;
                             if (data.success) {
                                 this.$toast.success('提交成功');
