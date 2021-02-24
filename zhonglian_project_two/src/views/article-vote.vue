@@ -60,7 +60,7 @@
         <!-- 保存 -->
         <van-button @click="saveInfo" v-show="save" color="#E1362E" plain>保存</van-button>
         <!-- 一键提交 -->
-        <van-button @click="oneClickSubmit" v-show="submitAll" :disabled="submitAllFlag" round block type="info" color="#E1362E">提交</van-button>
+        <!-- <van-button @click="oneClickSubmit" v-show="submitAll" :disabled="submitAllFlag" round block type="info" color="#E1362E">提交</van-button> -->
     </div>
   </div>
 </template>
@@ -68,7 +68,6 @@
 <script>
 import {
     getContentReport,
-    getEnterInfo,
     voteSave,
     submitVoteContent,
     getContentStatus,
@@ -302,7 +301,6 @@ export default {
                 tpyhid: sessionStorage.getItem('userId')
             }
             this.$dialog.confirm({
-                // message: "是否保存？"
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确认提交，提交后不可修改？`
             })
             .then(()=>{
@@ -342,7 +340,6 @@ export default {
                                 this.$toast.fail(res.data.message);
                             }
                         })
-                        
                     }
                 })
             })
@@ -375,7 +372,7 @@ export default {
             .then(() => {
                 voteSave(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
-                        submitAllVote(qs.stringify(data)).then(res=>{
+                        submitVoteContent(qs.stringify(data)).then(res=>{
                             let data = res.data;
                             if (data.success) {
                                 this.$toast.success('提交成功');
@@ -425,6 +422,7 @@ export default {
                     this.voteList = data.result[1];
                     this.preData = data.result[3];
                     this.nextData = data.result[2];
+                    
                     // 设置初始值
                     this.voteList.map(item=>{
                         if (!item.tpjg_tpyj) {
@@ -454,49 +452,68 @@ export default {
                     let allDataResult = this.dataList.every(item=>{
                         return item.tpyh_tpnrzt == 'Y';
                     })
-                    if(!this.nextData.length&&this.titleInfo.tpnrXh == this.dataList.length){
-                        this.isSubmited = false;
-                        // 如果已经全部提交并且是最后一条则隐藏，否则在最后一条数据显示
-                        if (allDataResult) {
+                    // 判断投票事项是否关闭
+                    if (this.titleInfo.tpnrFlag == 'N') {
+                        if(!this.nextData.length&&this.titleInfo.tpnrXh == this.dataList.length){ 
+                            this.isNext = false;
                             this.submitAll = true;
                             this.submitAllFlag = true;
-                            this.isNext = false;
-                            this.ytj = true;
-                            this.submitItemFlag = true;
+                            this.isAllZc = true;
                         } else {
-                            this.save = true;
                             this.isNext = false;
-                            this.submitAll = true;
-                        }
-                        let itemFlag = data.result[1][0].tpyh_tpnrzt;
-                        if (itemFlag == 'Y') {
-                            // 选项状态
-                            this.ytj = true;
-                            this.submitItemFlag = true;
-                        } else {
-                            this.ytj = false;
-                            this.submitItemFlag = false;
-                        }
-                    } else {
-                        this.submitAll = false;
-                        // 当前项是否提交过
-                        let itemFlag = data.result[1][0].tpyh_tpnrzt;
-                        if (itemFlag == 'Y') {
-                            // 保存并下一项
-                            this.isNext = false;
-                            // 提交该项
-                            this.submitItemFlag = true;
-                            // 下一项
                             this.isSubmited = true;
-                            // 选项状态
-                            this.ytj = true;
-                            // this.save = true;
-                        } else {
-                            this.isNext = true;
-                            this.submitItemFlag = false;
+                            this.isAllZc = true;
+                        }
+                        this.$toast({
+                            type: "fail",
+                            message: "投票功能已关闭！当前禁止投票！",
+                            duration: "1000"
+                        })
+                    } else {
+                        if(!this.nextData.length&&this.titleInfo.tpnrXh == this.dataList.length){
                             this.isSubmited = false;
-                            this.ytj = false;
-                            this.save = false;
+                            // 如果已经全部提交并且是最后一条则隐藏，否则在最后一条数据显示
+                            if (allDataResult) {
+                                this.submitAll = true;
+                                this.submitAllFlag = true;
+                                this.isNext = false;
+                                this.ytj = true;
+                                this.submitItemFlag = true;
+                            } else {
+                                this.save = true;
+                                this.isNext = false;
+                                this.submitAll = true;
+                            }
+                            let itemFlag = data.result[1][0].tpyh_tpnrzt;
+                            if (itemFlag == 'Y') {
+                                // 选项状态
+                                this.ytj = true;
+                                this.submitItemFlag = true;
+                            } else {
+                                this.ytj = false;
+                                this.submitItemFlag = false;
+                            }
+                        } else {
+                            this.submitAll = false;
+                            // 当前项是否提交过
+                            let itemFlag = data.result[1][0].tpyh_tpnrzt;
+                            if (itemFlag == 'Y') {
+                                // 保存并下一项
+                                this.isNext = false;
+                                // 提交该项
+                                this.submitItemFlag = true;
+                                // 下一项
+                                this.isSubmited = true;
+                                // 选项状态
+                                this.ytj = true;
+                                // this.save = true;
+                            } else {
+                                this.isNext = true;
+                                this.submitItemFlag = false;
+                                this.isSubmited = false;
+                                this.ytj = false;
+                                this.save = false;
+                            }
                         }
                     }
                 }
