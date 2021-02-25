@@ -14,6 +14,7 @@ Vue.prototype.$axios = axios;
 // 引入vant公共样式
 import Vant from 'vant';
 import 'vant/lib/index.css';
+// import '@/styles/index.less';
 Vue.use(Vant);
 import qs from 'qs';
 Vue.prototype.$qs = axios;

@@ -4,10 +4,10 @@
             <div class="banner">
                 <img src="../assets/home_banner.jpg" alt="">
                 <h2>{{title}}</h2>
-                <!-- <span v-show="isSome">投票完成</span>
-                <span v-show="!isSome">投票中</span> -->
-                <button v-show="isSome">投票完成</button>
-                <button v-show="!isSome">投票中</button>
+                <div v-if="tpyhQd=='Y'">
+                    <button v-show="isSome">投票完成</button>
+                    <button v-show="!isSome">投票中</button>
+                </div>
             </div>
             <div class="special-list">
                 <ul v-if="tpyhQd=='Y'">
@@ -20,23 +20,17 @@
                         </div>
                     </li>
                 </ul>
-                <button @click="onSign" v-else style="
-                margin-top:3rem;
-                margin-left: calc(50% - 1rem);
-                width: 2rem;
-                height: 0.6rem;
-                text-align: center;
-                line-height: .6rem;
-                background: #FFFFFF;
-                box-shadow: 0rem 0.02rem 0.13rem 0rem #FE7962;
-                border-radius: 1rem;
-                color: #FE5337;
-                font-size: .28rem;">签到</button>
+                <div v-else class="signBtn">
+                    <h2 class="tip">参加本次会议，请先点击签到按钮</h2>
+                    <button class="sign" @click="onSign">签到</button>
+                </div>
+                
             </div>
         </div>
-        <!-- <div class="footer">
-            <van-button :disabled="isSome" color="#E1362E" round type="info" @click="onSubmit">一键提交</van-button>
-        </div> -->
+        <div class="footer">
+            <img src="../assets/footer_bg.png" alt="">
+            <!-- <van-button :disabled="isSome" color="#E1362E" round type="info" @click="onSubmit">一键提交</van-button> -->
+        </div>
         <!-- 签到弹框 -->
         <div class="sign-dialog" v-show="isSign">
             <div class="sign">
@@ -137,9 +131,8 @@ export default {
         cancelSign(){
             this.isSign = false;
         },
-        // 列表点击进行投票
-        onStartVote(item, nowIndex){
-            // 人员类
+        // 公共方法
+        commonVote(item, nowIndex){
             if (nowIndex!=0) {
                 if (this.specialList[nowIndex-1].tpyh_tpnrzt!=null) {
                     if (this.tpyhQd == 'Y') {
@@ -196,6 +189,25 @@ export default {
                 }
             }
         },
+        // 列表点击进行投票
+        onStartVote(item, nowIndex){
+            // 人员类
+            if (item.tpyh_tpnrzt == 'Y') {
+                this.$toast({
+                    message: "该项投票已提交",
+                    duration: "1000",
+                    onOpened: ()=>{
+                        console.log('sdfdsfsdf')
+                    },
+                    onClose: ()=>{
+                        this.commonVote(item, nowIndex);
+                        console.log(2424234234)
+                    }
+                })
+            } else {
+                this.commonVote(item, nowIndex);
+            }
+        },
         // 一键提交
         onSubmit(){
             this.$dialog.confirm({
@@ -250,25 +262,36 @@ export default {
 </script>
 
 <style lang="scss" scope>
+.signBtn {
+    margin-top: 3rem;
+    .tip {
+        font-size: 0.34rem;
+        font-weight: 400;
+        color: #555555;
+        line-height: 0.42rem;
+        text-align: center;
+        margin-bottom: .4rem;
+    }
+    .sign {
+        position: relative;
+        left: 50%;
+        margin-left: -2.94rem;
+        width: 5.88rem;
+        height: 0.84rem;
+        background: #E1362E;
+        border-radius: 0.4rem;
+        font-size: 0.36rem;
+        color: #FFFFFF;
+        font-weight: 500;
+    }
+}
+
 .sign-in {
     width: 100%;
     height: 100%;
     background: #F6F6F6;
     display: flex;
     flex-direction: column;
-    /* .header {
-        width: 100%;
-        height: .9rem;
-        display: flex;
-        align-items: center;
-        padding-left: .3rem;
-        justify-content: flex-start;
-        background: #fff;
-        img {
-            width: .41rem;
-            height: .38rem;
-        }
-    } */
     .section {
         overflow-y: scroll;
         flex: 1;
@@ -276,7 +299,6 @@ export default {
             position: relative;
             img {
                 width: 100%;
-                /* height: 2.97rem; */
             }
             h2 {
                 text-align: center;
@@ -365,13 +387,17 @@ export default {
 
     .footer {
         width: 100%;
-        height: 1.3rem;
         background: #FFFFFF;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 0 .5rem;
-        button {
+        img {
+            width: 100%;
+            height: auto;
+        }
+        /* padding: 0 .5rem; */
+        
+        /* button {
             width: 100%;
             height: 0.8rem;
             border-radius: 0.4rem;
@@ -381,7 +407,7 @@ export default {
                 font-weight: 400;
                 color: #FFFFFF;
             }
-        }
+        } */
     }
 
 
