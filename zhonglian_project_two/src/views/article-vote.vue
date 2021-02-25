@@ -2,10 +2,11 @@
   <div class="article-vote wrapper">
     <!-- 报告类 -->
     <div class="header">
-        <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
-        <p style="display:flex;">
+        <!-- <van-button color="#E1362E" plain @click="onBack">返回首页</van-button> -->
+            <span></span>
+            <p style="display:flex;">
             <!-- 全部赞成 -->
-            <van-button @click="allZc" :disabled="isAllZc" style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit">全部赞成</van-button>
+            <van-button @click="allZc" :disabled="isAllZc" style="margin-right:.2rem;width:2.3rem;" round block type="info" color="#E1362E" native-type="submit">全部赞成</van-button>
             <!-- 提交该项 -->
             <!-- <van-button @click="onSubmit" :disabled="submitItemFlag" round block type="info" color="#E1362E" native-type="submit">提交该项</van-button> -->
         </p>
@@ -30,7 +31,7 @@
                 <thead>
                     <tr>
                         <!-- <th style="width:12%;">序号</th> -->
-                        <th style="width:50%;">表决内容</th>
+                        <th style="width:55%;">表决内容</th>
                         <th>赞成</th>
                         <th>反对</th>
                         <th>弃权</th>
@@ -54,14 +55,15 @@
 
     <div class="footer">
         <!-- 上一项 -->
-        <van-button @click="preItemClick" v-show="preItem" :disabled="preItemFlag" color="#E1362E" plain>上一项</van-button>
+        <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
+        <!-- <van-button @click="preItemClick" v-show="preItem" :disabled="preItemFlag" color="#E1362E" plain>上一项</van-button> -->
         <!-- 下一项 -->
         <van-button @click="nextStep" v-show="isSubmited" color="#E1362E" plain>下一项</van-button>
-        <!-- 提交并下一项 -->
-        <van-button @click="saveForm" v-show="isNext" color="#E1362E" plain>提交并下一项</van-button>
+        <!-- 提交 -->
+        <van-button @click="saveForm" v-show="isNext" color="#E1362E" plain>提交</van-button>
         <!-- 保存 -->
         <van-button @click="saveInfo" v-show="save" color="#E1362E" plain>保存</van-button>
-        <!-- 一键提交 -->
+        <!-- 最后一项提交 -->
         <van-button @click="oneClickSubmit" v-show="submitAll" :disabled="submitAllFlag" round block type="info" color="#E1362E">提交</van-button>
     </div>
   </div>
@@ -676,7 +678,8 @@ export default {
             th {
                 font-size: .14rem;
                 text-align: center;
-                padding: 9px 0!important;
+                padding: 0!important;
+                /* line-height: 1; */
             }
         }
         tbody {

@@ -1,10 +1,11 @@
 <template>
     <div class="person-vote wrapper">
          <div class="header">
-            <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
+            <!-- <van-button color="#E1362E" plain @click="onBack">返回首页</van-button> -->
+            <span></span>
             <p style="display:flex;">
                 <!-- 全部赞成 -->
-                <van-button @click="allZc" :disabled="isAllZc" style="margin-right:.2rem;" round block type="info" color="#E1362E" native-type="submit">全部赞成</van-button>
+                <van-button @click="allZc" :disabled="isAllZc" style="margin-right:.2rem;width:2.3rem;" round block type="info" color="#E1362E" native-type="submit">全部赞成</van-button>
                 <!-- 提交该项 -->
                 <!-- <van-button @click="onSubmit" :disabled="submitItemFlag" round block type="info" color="#E1362E" native-type="submit">提交该项</van-button> -->
             </p>
@@ -28,8 +29,8 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th style="width:13%;">序号</th>
-                            <th style="width:30%;">理事单位候选单位</th>
+                            <th style="width:10%;">序号</th>
+                            <th style="width:33%;">理事单位候选单位</th>
                             <th style="width:19%;">理事候选人</th>
                             <th style="width:13%;">赞成</th>
                             <th style="width:13%;">反对</th>
@@ -61,9 +62,9 @@
                     </colgroup>
                     <thead>
                         <tr style="width:100%;">
-                            <th style="width:13%;">序号</th>
+                            <th style="width:10%;">序号</th>
                             <th style="width:19%;">监事候选人</th>
-                            <th style="width:30%;">单位名称及职务</th>
+                            <th style="width:33%;">单位名称及职务</th>
                             <th style="width:13%;">赞成</th>
                             <th style="width:13%;">反对</th>
                             <th style="width:13%;">弃权</th>
@@ -95,8 +96,8 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th style="width:13%;">序号</th>
-                            <th style="width:30%;">常务理事单位候选单位</th>
+                            <th style="width:10%;">序号</th>
+                            <th style="width:33%;">常务理事单位候选单位</th>
                             <th style="width:19%;">常务理事候选人</th>
                             <th style="width:13%;">赞成</th>
                             <th style="width:13%;">反对</th>
@@ -130,9 +131,9 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th style="width:13%;">序号</th>
+                            <th style="width:10%;">序号</th>
                             <th style="width:13%;">候选人</th>
-                            <th style="width:18%;">所在单位名称</th>
+                            <th style="width:21%;">所在单位名称</th>
                             <th style="width:17%;">所在单位职务</th>
                             <th style="width:13%;">赞成</th>
                             <th style="width:13%;">反对</th>
@@ -167,12 +168,13 @@
         </div>
         <div class="footer">
             <!-- 上一项 -->
-            <van-button @click="preItemClick" v-show="preItem" :disabled="preItemFlag" color="#E1362E" plain>上一项</van-button>
+            <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
+            <!-- <van-button @click="preItemClick" v-show="preItem" :disabled="preItemFlag" color="#E1362E" plain>上一项</van-button> -->
             <!-- 下一项 -->
             <van-button @click="nextStep" v-show="isSubmited" color="#E1362E" plain>下一项</van-button>
-            <!-- 提交并下一项 -->
-            <van-button @click="saveForm" v-show="isNext" color="#E1362E" plain>提交并下一项</van-button>
-            <!-- 一键提交 -->
+            <!-- 提交 -->
+            <van-button @click="saveForm" v-show="isNext" color="#E1362E" plain>提交</van-button>
+            <!-- 最后一项提交 -->
             <van-button @click="oneClickSubmit" v-show="submitAll" :disabled="submitAllFlag" round block type="info" color="#E1362E">提交</van-button>
             <!-- 保存 -->
             <van-button @click="saveInfo" v-show="save" color="#E1362E" plain>保存</van-button>
@@ -239,7 +241,6 @@ export default {
     methods: {
         // 全部赞成（保存+提交接口）
         allZc(){
-            console.log('最后一条数据',this.nextData)
             let tpjgsArr = [];
             let first = 1, firstArr = [];
             let second = 2, secondArr = [];
@@ -248,9 +249,11 @@ export default {
             this.voteList.map(item=>{
                 if(this.titleInfo.tpnrPage == 5){
                     if (item.title_flag == false) {
+                        item.tpjg_tpyj = '1';
                         tpjgsArr.push(item.tpjg_tpyj);
                     }
                 } else {
+                    item.tpjg_tpyj = '1';
                     tpjgsArr.push(item.tpjg_tpyj);
                 }
                 if (item.tpjg_tpyj == 1) {
@@ -835,7 +838,8 @@ export default {
             th {
                 font-size: .14rem;
                 text-align: center;
-                padding: 9px 0!important;
+                padding: 0!important;
+                /* line-height: 1; */
             }
         }
         tbody {

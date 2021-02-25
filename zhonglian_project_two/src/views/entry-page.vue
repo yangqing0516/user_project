@@ -3,11 +3,12 @@
     <div class="entry-page wrapper">
         <div class="top-content">
             <img class="home-logo" src="../assets/home_logo.png" alt="">
-            <div class="title">中电联在线投票管理系统</div>
+            <!-- <div class="title">中电联在线投票管理系统</div> -->
             <!-- <h2>中电联第七次会员代表大会预备会议</h2>
             <p>中电联第七次会员代表大会预备会议中电联第七次会员代表大会预备会议中电联第七次会员代表大会</p> -->
             <h2>{{enterInfo.tpsxMc}}</h2>
-            <p>{{enterInfo.tpsxBz}}</p>
+            <p>在线投票管理系统</p>
+            <!-- <p>{{enterInfo.tpsxBz}}</p> -->
         </div>
         <div class="bottom-content">
             <div class="vote-time">投票时间：{{enterInfo.tpsxKssj&&enterInfo.tpsxKssj.slice(0,10)}}至{{enterInfo.tpsxJzsj&&enterInfo.tpsxJzsj.slice(0,10)}}</div>
@@ -62,6 +63,7 @@ export default {
         sessionStorage.setItem('sx_id', id)
         
         // sessionStorage.setItem('sx_id', "1333344778143465474");
+        // 有理事会
         // sessionStorage.setItem('sx_id', "1349524855791767553");
         this.onaxios();
     },
@@ -141,7 +143,7 @@ export default {
                 text-align: center;
             }
             h2 {
-                font-size: 0.36rem;
+                font-size: 0.4rem;
                 font-weight: 500;
                 color: #E1362E;
                 line-height: 0.29rem;
@@ -155,7 +157,7 @@ export default {
                 margin-top: .3rem;
                 margin: .3rem auto 0;
                 color: #333333;
-                font-size: 0.24rem;
+                font-size: 0.36rem;
                 line-height: 0.36rem;
                 font-weight: 400;
             }

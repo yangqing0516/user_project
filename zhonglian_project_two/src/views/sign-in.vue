@@ -21,7 +21,7 @@
                     </li>
                 </ul>
                 <div v-else class="signBtn">
-                    <h2 class="tip">参加本次会议，请先点击签到按钮</h2>
+                    <h2 class="tip">欢迎{{tpyhDw}}单位代表参会</h2>
                     <button class="sign" @click="onSign">签到</button>
                 </div>
                 
@@ -64,7 +64,8 @@ export default {
             isVote: true,
             specialList: [],
             tpyhQd: "",
-            title: ""
+            title: "",
+            tpyhDw: ""
         }
     },
     watch: {},
@@ -83,6 +84,7 @@ export default {
                 let data = res.data;
                 if (data.success) {
                     this.tpyhQd = data.result.tpyhQd;
+                    this.tpyhDw = data.result.tpyhDw;
                     // 判断是否签到过
                     // if(data.result.tpyhQd == 'Y'){
                     //    this.isVote = false;

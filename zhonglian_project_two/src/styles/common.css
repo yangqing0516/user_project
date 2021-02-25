@@ -304,12 +304,11 @@ html {
 @media screen and (min-width: 2160px) {
 
 	html {
-
 		font-size: 50px;
-
 	}
 }
 
 .layui-table td{
-    padding: 5px!important;
+    padding: 0px!important;
+    line-height: 1.4!important;
 }
