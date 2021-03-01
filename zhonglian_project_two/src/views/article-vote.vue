@@ -31,7 +31,7 @@
                 <thead>
                     <tr>
                         <!-- <th style="width:12%;">序号</th> -->
-                        <th style="width:55%;">表决内容</th>
+                        <th style="width:55%;">表决事项</th>
                         <th>赞成</th>
                         <th>反对</th>
                         <th>弃权</th>

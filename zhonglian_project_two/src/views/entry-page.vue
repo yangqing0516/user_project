@@ -7,7 +7,7 @@
             <!-- <h2>中电联第七次会员代表大会预备会议</h2>
             <p>中电联第七次会员代表大会预备会议中电联第七次会员代表大会预备会议中电联第七次会员代表大会</p> -->
             <h2>{{enterInfo.tpsxMc}}</h2>
-            <p>在线投票管理系统</p>
+            <p>在线投票系统</p>
             <!-- <p>{{enterInfo.tpsxBz}}</p> -->
         </div>
         <div class="bottom-content">
@@ -64,7 +64,7 @@ export default {
         
         // sessionStorage.setItem('sx_id', "1333344778143465474");
         // 有理事会
-        // sessionStorage.setItem('sx_id', "1349524855791767553");
+        sessionStorage.setItem('sx_id', "1349524855791767553");
         this.onaxios();
     },
     methods: {

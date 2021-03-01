@@ -129,9 +129,8 @@ export default {
                 let result = res.data;
                 if (result.success) {
                     sessionStorage.setItem('userId', result.result.id);
-                    this.$router.push({
-                        path:'/sign-in'
-                    });
+                    sessionStorage.setItem('sbm', result.result.tpyhSbm);
+                    this.$router.push("/sign-in");
                 } else {
                     this.$toast.fail(result.message);
                 }

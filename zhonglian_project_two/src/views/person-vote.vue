@@ -30,7 +30,8 @@
                     <thead>
                         <tr>
                             <th style="width:10%;">序号</th>
-                            <th style="width:33%;">理事单位候选单位</th>
+                            <!-- <th style="width:33%;">理事单位候选单位</th> -->
+                            <th style="width:33%;">候选理事单位</th>
                             <th style="width:19%;">理事候选人</th>
                             <th style="width:13%;">赞成</th>
                             <th style="width:13%;">反对</th>
@@ -64,7 +65,7 @@
                         <tr style="width:100%;">
                             <th style="width:10%;">序号</th>
                             <th style="width:19%;">监事候选人</th>
-                            <th style="width:33%;">单位名称及职务</th>
+                            <th style="width:33%;">所在单位及职务</th>
                             <th style="width:13%;">赞成</th>
                             <th style="width:13%;">反对</th>
                             <th style="width:13%;">弃权</th>
@@ -97,7 +98,8 @@
                     <thead>
                         <tr>
                             <th style="width:10%;">序号</th>
-                            <th style="width:33%;">常务理事单位候选单位</th>
+                            <!-- <th style="width:33%;">常务理事单位候选单位</th> -->
+                            <th style="width:33%;">候选常务理事单位</th>
                             <th style="width:19%;">常务理事候选人</th>
                             <th style="width:13%;">赞成</th>
                             <th style="width:13%;">反对</th>
@@ -132,9 +134,11 @@
                     <thead>
                         <tr>
                             <th style="width:10%;">序号</th>
-                            <th style="width:13%;">候选人</th>
-                            <th style="width:21%;">所在单位名称</th>
-                            <th style="width:17%;">所在单位职务</th>
+                            <!-- <th style="width:26%;" colspan="2">候选人</th>
+                            <th style="width:25%;" colspan="2">所在单位名称及职务</th> -->
+                            <th style="width:16%;">候选人</th>
+                            <th style="width:18%;">所在单位名称</th>
+                            <th style="width:18%;">所在单位职务</th>
                             <th style="width:13%;">赞成</th>
                             <th style="width:13%;">反对</th>
                             <th style="width:13%;">弃权</th>
@@ -142,11 +146,14 @@
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in voteList" :key="index">
-                            <td style="text-align:left;font-weight:bold;" colspan="7" v-if="index == 0 || index == 2 || index == 4 || index == 26">
+                            <td class="td_title" style="text-align:left;font-weight:bold;line-height: 18px!important;" colspan="7" v-if="index == 0 || index == 2 || index == 4 || index == 26">
                                 {{item.table_title}}
                             </td>
                             <td v-else>{{item.ry_xh}}</td>
                             <!-- <td v-if="index==0 || index==2 || index==4 || index==26?false:true">{{item.ry_xm}}</td> -->
+                            <!-- <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="justify">
+                                <span>{{item.ry_nrzw}}候选人</span>
+                            </td> -->
                             <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="justify">
                                 <span>{{item.ry_xm}}</span>
                             </td>
