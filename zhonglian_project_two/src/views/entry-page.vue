@@ -64,7 +64,7 @@ export default {
         
         // sessionStorage.setItem('sx_id', "1333344778143465474");
         // 有理事会
-        sessionStorage.setItem('sx_id', "1349524855791767553");
+        // sessionStorage.setItem('sx_id', "1349524855791767553");
         this.onaxios();
     },
     methods: {

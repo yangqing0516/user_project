@@ -78,7 +78,7 @@
                             <td class="justify">
                                 <span>{{item.ry_xm}}</span>
                             </td>
-                            <td>{{item.ry_dw}}({{item.ry_zw}})</td>
+                            <td>{{item.ry_dw}}<br/>{{item.ry_zw}}</td>
                             <td class="zc" @click="changeVal(item, index, 1)"><input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="fd" @click="changeVal(item, index, 2)"><input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
@@ -135,7 +135,7 @@
                         <tr>
                             <th style="width:10%;">序号</th>
                             <th style="width:13%;">候选人</th>
-                            <th style="width:38%;">所在单位名称及职务</th>
+                            <th style="width:38%;">所在单位及职务</th>
                             <!-- <th style="width:16%;">候选人</th>
                             <th style="width:18%;">所在单位名称</th>
                             <th style="width:18%;">所在单位职务</th> -->
@@ -150,27 +150,26 @@
                                 {{item.table_title}}
                             </td>
                             <td v-else>{{item.ry_xh}}</td> -->
-                            <td>{{item.ry_xh}}</td>
                             <!-- <td v-if="index==0 || index==2 || index==4 || index==26?false:true">{{item.ry_xm}}</td> -->
                             <!-- <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="justify">
                                 <span>{{item.ry_nrzw}}候选人</span>
                             </td> -->
-                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="justify">
+                            <td>{{item.ry_xh}}</td>
+                            <td class="justify">
                                 <span>{{item.ry_xm}}</span>
                             </td>
-                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true">
+                            <td>
                                 <span>{{item.ry_dw}}</span>
                                 <br/>
                                 <span>{{item.ry_zw}}</span>
                             </td>
-                            <!-- <td v-if="index==0 || index==2 || index==4 || index==26?false:true">{{item.ry_zw}}</td> -->
-                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="zc" @click="changeVal(item, index, 1)">
+                            <td class="zc" @click="changeVal(item, index, 1)">
                                 <input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj">
                             </td>
-                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="fd" @click="changeVal(item, index, 2)">
+                            <td class="fd" @click="changeVal(item, index, 2)">
                                 <input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj">
                             </td>
-                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="qq" @click="changeVal(item, index, 3)">
+                            <td class="qq" @click="changeVal(item, index, 3)">
                                 <input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj">
                             </td>
                         </tr>
@@ -259,15 +258,8 @@ export default {
             let third = 3, thirdArr = [];
             // 获取赞成、反对、弃权的票数
             this.voteList.map(item=>{
-                if(this.titleInfo.tpnrPage == 5){
-                    if (item.title_flag == false) {
-                        item.tpjg_tpyj = '1';
-                        tpjgsArr.push(item.tpjg_tpyj);
-                    }
-                } else {
-                    item.tpjg_tpyj = '1';
-                    tpjgsArr.push(item.tpjg_tpyj);
-                }
+                item.tpjg_tpyj = '1';
+                tpjgsArr.push(item.tpjg_tpyj);
                 if (item.tpjg_tpyj == 1) {
                     firstArr.push(item)
                 } else if (item.tpjg_tpyj == 2){
@@ -285,19 +277,6 @@ export default {
                 // 用户id
                 tpyhid: sessionStorage.getItem('userId')
             }
-            // 保存接口参数
-            let params = {
-                // 识别码
-                sbm: sessionStorage.getItem('sbm'),
-                // 投票意见
-                tpjgs: tpjgsArr.join(','),
-                // 内容id
-                tpnrid: this.$route.query.cid,
-                // 用户id
-                tpyhid: sessionStorage.getItem('userId')
-            }
-            
-            
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确认提交，提交后不可修改？`
             }).then(() => {
@@ -308,7 +287,7 @@ export default {
                     loadingType: 'spinner',
                     duration: 0
                 })
-                saveVoteResult(qs.stringify(params)).then(res=>{
+                saveVoteResult(qs.stringify(data)).then(res=>{
                     if (res.data.success) {
                         submitVoteResult(qs.stringify(data)).then(res=>{
                             if (res.data.success) {
@@ -427,9 +406,7 @@ export default {
         // 一键提交（保存+提交接口）
         oneClickSubmit(){
             let tpjgsArr = [];
-            let first = 1, firstArr = [];
-            let second = 2, secondArr = [];
-            let third = 3, thirdArr = [];
+            let firstArr = [], secondArr = [], thirdArr = [];
             /* if(this.titleInfo.tpnrPage == 5){
                 this.voteList.map(item=>{
                     if (item.title_flag == false) {
@@ -442,13 +419,14 @@ export default {
                 })
             } */
             this.voteList.map(item=>{
-                if(this.titleInfo.tpnrPage == 5){
-                    if (item.title_flag == false) {
-                        tpjgsArr.push(item.tpjg_tpyj);
-                    }
-                } else {
-                    tpjgsArr.push(item.tpjg_tpyj);
-                }
+                // if(this.titleInfo.tpnrPage == 5){
+                //     if (item.title_flag == false) {
+                //         tpjgsArr.push(item.tpjg_tpyj);
+                //     }
+                // } else {
+                //     tpjgsArr.push(item.tpjg_tpyj);
+                // }
+                tpjgsArr.push(item.tpjg_tpyj);
                 if (item.tpjg_tpyj == 1) {
                     firstArr.push(item)
                 } else if (item.tpjg_tpyj == 2){
@@ -466,6 +444,7 @@ export default {
                 // 用户id
                 tpyhid: sessionStorage.getItem('userId')
             }
+            console.log('afasdfasdfjasdfj',data)
             // 一键提交的参数
             // let params = {
             //     sbm: sessionStorage.getItem('sbm'),
@@ -505,12 +484,9 @@ export default {
         },
         // 提交并下一项（保存+提交接口）
         saveForm(){
-            let that = this;
             let nextData = this.nextData;
             let tpjgsArr = [];
-            let first = 1, firstArr = [];
-            let second = 2, secondArr = [];
-            let third = 3, thirdArr = [];
+            let firstArr = [], secondArr = [],  thirdArr = [];
             this.voteList.map(item => {
                 tpjgsArr.push(item.tpjg_tpyj);
                 if (item.tpjg_tpyj == 1) {
@@ -534,18 +510,6 @@ export default {
                 tpyhid: sessionStorage.getItem('userId')
             }
 
-            let params = {
-                // 识别码
-                sbm: sessionStorage.getItem('sbm'),
-                // 投票意见
-                tpjgs: tpjgsArr.join(','),
-                // 内容id
-                // tpnrid: this.voteList[0].tp_tpnr_id,
-                tpnrid: this.$route.query.cid,
-                // 用户id
-                tpyhid: sessionStorage.getItem('userId')
-            }
-            
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定提交,提交后不可修改？`
             }).then(()=>{
@@ -636,29 +600,6 @@ export default {
                             }
                         }
                     })
-                    // if (this.titleInfo.tpnrPage == 5) {
-                    //     this.voteList.splice(0, 0, {
-                    //         table_title: "一、理事长候选名单（1人，等额选举，选1人）",
-                    //         title_flag: true
-                    //     })
-                    //     this.voteList.splice(2, 0, {
-                    //         table_title: "二、常务副理事长候选名单（1人，等额选举，选1人）",
-                    //         title_flag: true
-                    //     })
-                    //     this.voteList.splice(4, 0, {
-                    //         table_title: "三、副理事长候选名单（21人，等额选举，选21人）",
-                    //         title_flag: true
-                    //     })
-                    //     this.voteList.splice(26, 0, {
-                    //         table_title: "四、秘书长候选名单（1人，等额选举，选1人）",
-                    //         title_flag: true
-                    //     })
-                    //     newVoteList = this.voteList.filter((item, index)=>{
-                    //         return item.title_flag == false
-                    //     })
-
-                    // }
-                    
                     
                     if (this.titleInfo.tpnrXh != 1) {
                         this.preItemFlag = false;
@@ -686,7 +627,6 @@ export default {
                             this.isAllZc = true;
                         }
                     } else {
-                        console.log('投票中')
                         if(!this.nextData.length&&this.titleInfo.tpnrXh == this.dataList.length){
                             this.isSubmited = false;
                             // 如果已经全部提交并且是最后一条则禁用，否则在最后一条数据显示
