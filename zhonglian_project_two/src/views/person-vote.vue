@@ -134,11 +134,11 @@
                     <thead>
                         <tr>
                             <th style="width:10%;">序号</th>
-                            <!-- <th style="width:26%;" colspan="2">候选人</th>
-                            <th style="width:25%;" colspan="2">所在单位名称及职务</th> -->
-                            <th style="width:16%;">候选人</th>
+                            <th style="width:13%;">候选人</th>
+                            <th style="width:38%;">所在单位名称及职务</th>
+                            <!-- <th style="width:16%;">候选人</th>
                             <th style="width:18%;">所在单位名称</th>
-                            <th style="width:18%;">所在单位职务</th>
+                            <th style="width:18%;">所在单位职务</th> -->
                             <th style="width:13%;">赞成</th>
                             <th style="width:13%;">反对</th>
                             <th style="width:13%;">弃权</th>
@@ -146,10 +146,11 @@
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in voteList" :key="index">
-                            <td class="td_title" style="text-align:left;font-weight:bold;line-height: 18px!important;" colspan="7" v-if="index == 0 || index == 2 || index == 4 || index == 26">
+                            <!-- <td class="td_title" style="text-align:left;font-weight:bold;line-height: 18px!important;" colspan="7" v-if="index == 0 || index == 2 || index == 4 || index == 26">
                                 {{item.table_title}}
                             </td>
-                            <td v-else>{{item.ry_xh}}</td>
+                            <td v-else>{{item.ry_xh}}</td> -->
+                            <td>{{item.ry_xh}}</td>
                             <!-- <td v-if="index==0 || index==2 || index==4 || index==26?false:true">{{item.ry_xm}}</td> -->
                             <!-- <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="justify">
                                 <span>{{item.ry_nrzw}}候选人</span>
@@ -157,8 +158,12 @@
                             <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="justify">
                                 <span>{{item.ry_xm}}</span>
                             </td>
-                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true">{{item.ry_dw}}</td>
-                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true">{{item.ry_zw}}</td>
+                            <td v-if="index==0 || index==2 || index==4 || index==26?false:true">
+                                <span>{{item.ry_dw}}</span>
+                                <br/>
+                                <span>{{item.ry_zw}}</span>
+                            </td>
+                            <!-- <td v-if="index==0 || index==2 || index==4 || index==26?false:true">{{item.ry_zw}}</td> -->
                             <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="zc" @click="changeVal(item, index, 1)">
                                 <input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj">
                             </td>
@@ -631,31 +636,28 @@ export default {
                             }
                         }
                     })
-                    if (this.titleInfo.tpnrPage == 5) {
-                        this.voteList.splice(0, 0, {
-                            table_title: "一、理事长候选名单（1人，等额选举，选1人）",
-                            title_flag: true
-                        })
-                        this.voteList.splice(2, 0, {
-                            table_title: "二、常务副理事长候选名单（1人，等额选举，选1人）",
-                            title_flag: true
-                        })
-                        this.voteList.splice(4, 0, {
-                            table_title: "三、副理事长候选名单（21人，等额选举，选21人）",
-                            title_flag: true
-                        })
-                        this.voteList.splice(26, 0, {
-                            table_title: "四、秘书长候选名单（1人，等额选举，选1人）",
-                            title_flag: true
-                        })
-                        newVoteList = this.voteList.filter((item, index)=>{
-                            return item.title_flag == false
-                        })
+                    // if (this.titleInfo.tpnrPage == 5) {
+                    //     this.voteList.splice(0, 0, {
+                    //         table_title: "一、理事长候选名单（1人，等额选举，选1人）",
+                    //         title_flag: true
+                    //     })
+                    //     this.voteList.splice(2, 0, {
+                    //         table_title: "二、常务副理事长候选名单（1人，等额选举，选1人）",
+                    //         title_flag: true
+                    //     })
+                    //     this.voteList.splice(4, 0, {
+                    //         table_title: "三、副理事长候选名单（21人，等额选举，选21人）",
+                    //         title_flag: true
+                    //     })
+                    //     this.voteList.splice(26, 0, {
+                    //         table_title: "四、秘书长候选名单（1人，等额选举，选1人）",
+                    //         title_flag: true
+                    //     })
+                    //     newVoteList = this.voteList.filter((item, index)=>{
+                    //         return item.title_flag == false
+                    //     })
 
-                        // console.log('新数据1',newVoteList)
-                        // this.voteList = newVoteList;
-                        // console.log('新数据',this.voteList)
-                    }
+                    // }
                     
                     
                     if (this.titleInfo.tpnrXh != 1) {
