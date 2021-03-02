@@ -121,7 +121,7 @@
                     </tbody>
                 </table>
                 <!-- 第四种 -->
-                <table class="layui-table" v-else-if="titleInfo.tpnrPage == 5" border="1">
+                <table class="layui-table active_table" v-else-if="titleInfo.tpnrPage == 5" border="1">
                     <colgroup>
                         <col />
                         <col />
@@ -134,14 +134,14 @@
                     <thead>
                         <tr>
                             <th style="width:10%;">序号</th>
-                            <th style="width:13%;">候选人</th>
-                            <th style="width:38%;">所在单位及职务</th>
+                            <th style="width:27%;">候选人</th>
+                            <th style="width:30%;">所在单位及职务</th>
                             <!-- <th style="width:16%;">候选人</th>
                             <th style="width:18%;">所在单位名称</th>
                             <th style="width:18%;">所在单位职务</th> -->
-                            <th style="width:13%;">赞成</th>
-                            <th style="width:13%;">反对</th>
-                            <th style="width:13%;">弃权</th>
+                            <th style="width:11%;">赞成</th>
+                            <th style="width:11%;">反对</th>
+                            <th style="width:11%;">弃权</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -155,13 +155,16 @@
                                 <span>{{item.ry_nrzw}}候选人</span>
                             </td> -->
                             <td>{{item.ry_xh}}</td>
-                            <td class="justify">
-                                <span>{{item.ry_xm}}</span>
+                            <td class="justify" style="text-align: left;">
+                                {{item.ry_xm}}
+                                <!-- <span>{{item.ry_xm}}</span> -->
                             </td>
-                            <td>
-                                <span>{{item.ry_dw}}</span>
+                            <td style="text-align:left;">
+                                {{item.ry_dw}}
+                                <!-- <span>{{item.ry_dw}}</span> -->
                                 <br/>
-                                <span>{{item.ry_zw}}</span>
+                                {{item.ry_zw}}
+                                <!-- <span>{{item.ry_zw}}</span> -->
                             </td>
                             <td class="zc" @click="changeVal(item, index, 1)">
                                 <input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj">
@@ -588,7 +591,7 @@ export default {
                     this.preData = data.result[3];
                     // 设置初始值，初始化数据
                     this.voteList.map(item=>{
-                        item.ry_xm = item.ry_xm.replace(/\s*/g,'');
+                        // item.ry_xm = item.ry_xm.replace(/\s*/g,'');
                         item.title_flag = false;
                         if (!item.tpjg_tpyj) {
                             item.tpjg_tpyj = '1';   
