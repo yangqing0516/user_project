@@ -197,7 +197,7 @@
 </template>
 
 <script>
-import {  
+import {
     getContentPerson,
     saveVoteResult, // 保存
     submitVoteResult, // 提交
@@ -290,8 +290,8 @@ export default {
                     loadingType: 'spinner',
                     duration: 0
                 })
-                saveVoteResult(qs.stringify(data)).then(res=>{
-                    if (res.data.success) {
+                // saveVoteResult(qs.stringify(data)).then(res=>{
+                //     if (res.data.success) {
                         submitVoteResult(qs.stringify(data)).then(res=>{
                             if (res.data.success) {
                                 this.$toast.clear();
@@ -333,8 +333,8 @@ export default {
                                 this.$toast.fail(res.data.message)
                             }
                         })
-                    }
-                })
+                //     }
+                // })
             })
             .catch(()=>{})
         },
@@ -346,7 +346,7 @@ export default {
             let first = 1, firstArr = [];
             let second = 2, secondArr = [];
             let third = 3, thirdArr = [];
-            
+
             this.voteList.map(item=>{
                 if(this.titleInfo.tpnrPage == 5){
                     if (item.title_flag == false) {
@@ -371,7 +371,7 @@ export default {
                 // 用户id
                 tpyhid: sessionStorage.getItem('userId')
             }
-            
+
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确定提交,提交后不可修改`
             }).then(() => {
@@ -405,7 +405,7 @@ export default {
                     }
                 })
             }).catch(() => {});
-        }, */ 
+        }, */
         // 一键提交（保存+提交接口）
         oneClickSubmit(){
             let tpjgsArr = [];
@@ -465,8 +465,8 @@ export default {
                     loadingType: 'spinner',
                     duration: 0
                 })
-                saveVoteResult(qs.stringify(data)).then(res=>{
-                    if (res.data.success) {
+                // saveVoteResult(qs.stringify(data)).then(res=>{
+                //     if (res.data.success) {
                         submitVoteResult(qs.stringify(data)).then(res=>{
                             let data = res.data;
                             if (data.success) {
@@ -478,10 +478,10 @@ export default {
                                 this.$toast.fail(res.data.message);
                             }
                         })
-                    } else {
-                        this.$toast.fail(res.data.message);
-                    }
-                })
+                //     } else {
+                //         this.$toast.fail(res.data.message);
+                //     }
+                // })
             })
             .catch(() => {})
         },
@@ -523,8 +523,8 @@ export default {
                     loadingType: 'spinner',
                     duration: 0
                 })
-                saveVoteResult(qs.stringify(data)).then(res=>{
-                    if (res.data.success) {
+                // saveVoteResult(qs.stringify(data)).then(res=>{
+                //     if (res.data.success) {
                         submitVoteResult(qs.stringify(data)).then(res=>{
                             let data = res.data;
                             if (data.success) {
@@ -540,7 +540,7 @@ export default {
                                         }
                                     });
                                     this.onaxios();
-                                } else { 
+                                } else {
                                     // 报告类
                                     this.$router.replace({
                                         path: '/article-vote',
@@ -553,8 +553,8 @@ export default {
                                 this.$toast.fail(res.data.message);
                             }
                         })
-                    }
-                })
+                //     }
+                // })
             }).catch(()=>{})
         },
         // 查看是否可以进行一键提交
@@ -594,7 +594,7 @@ export default {
                         // item.ry_xm = item.ry_xm.replace(/\s*/g,'');
                         item.title_flag = false;
                         if (!item.tpjg_tpyj) {
-                            item.tpjg_tpyj = '1';   
+                            item.tpjg_tpyj = '1';
                         } else {
                             if (item.tpyh_tpnrzt == 'Y') {
                                 this.isAllZc = true;
@@ -603,7 +603,7 @@ export default {
                             }
                         }
                     })
-                    
+
                     if (this.titleInfo.tpnrXh != 1) {
                         this.preItemFlag = false;
                     }
@@ -619,7 +619,7 @@ export default {
                             message: "投票功能已关闭！当前禁止投票！",
                             duration: "1000"
                         })
-                        if(!this.nextData.length&&this.titleInfo.tpnrXh == this.dataList.length){ 
+                        if(!this.nextData.length&&this.titleInfo.tpnrXh == this.dataList.length){
                             this.isNext = false;
                             this.submitAll = true;
                             this.submitAllFlag = true;
@@ -644,7 +644,7 @@ export default {
                                 this.isNext = false;
                                 this.submitAll = true;
                             }
-                            
+
                             // let itemFlag = data.result[1][0].tpyh_tpnrzt;
                             let itemFlag = newVoteList[0].tpyh_tpnrzt;
                             if (itemFlag == 'Y') {
@@ -751,7 +751,7 @@ export default {
                     }
                 })
                 this.onaxios();
-            } else { 
+            } else {
                 // 报告类
                 this.$router.push({
                     path: '/article-vote',
@@ -810,7 +810,7 @@ export default {
             border-radius: 50%;
             font-size: inherit;
         }
-        
+
         .layui-form-radioed i {
             border: .08rem solid #259b24!important;
         }
@@ -847,7 +847,7 @@ export default {
             background: #ccc;
             font-size: inherit;
         }
-        
+
         .layui-form-radioed i {
             background: #ffc107;
         }

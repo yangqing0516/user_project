@@ -1,72 +1,72 @@
 <template>
-  <div class="article-vote wrapper">
-    <!-- 报告类 -->
-    <div class="header">
-        <!-- <van-button color="#E1362E" plain @click="onBack">返回首页</van-button> -->
-            <span></span>
-            <p style="display:flex;">
-            <!-- 全部赞成 -->
-            <van-button @click="allZc" :disabled="isAllZc" style="margin-right:.2rem;width:2.3rem;" round block type="info" color="#E1362E" native-type="submit">全部赞成</van-button>
-            <!-- 提交该项 -->
-            <!-- <van-button @click="onSubmit" :disabled="submitItemFlag" round block type="info" color="#E1362E" native-type="submit">提交该项</van-button> -->
-        </p>
-    </div>
-    <div class="section">
-        <div class="layui-form">
-            <div class="title">
-                <p>{{titleInfo.tpnrXh}}、{{title}}</p>
-                <p>{{titleInfo.tpnrMc}}</p>
-                <!-- {{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}} -->
-                <!-- <p>{{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}</p> -->
-                <!-- <p>{{titleInfo.tpnr_bz}}</p> -->
-            </div>
-            <table class="layui-table">
-                <colgroup>
-                    <!-- <col /> -->
-                    <col />
-                    <!-- <col /> -->
-                    <col />
-                    <col />
-                </colgroup>
-                <thead>
-                    <tr>
-                        <!-- <th style="width:12%;">序号</th> -->
-                        <th style="width:55%;">表决事项</th>
-                        <th>赞成</th>
-                        <th>反对</th>
-                        <th>弃权</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(item, index) in voteList" :key="index">
-                        <!-- <td>{{item.bg_xh}}</td> -->
-                        <td>
-                            {{item.bg_mc}}
-                            <span style="color:rgb(225, 54, 46);display:block;" @click="viewFile(item)">查看附件</span>
-                        </td>
-                        <td class="zc" @click="changeVal(item, index, 1)"><input type="radio" :disabled="ytj" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
-                        <td class="fd" @click="changeVal(item, index, 2)"><input type="radio" :disabled="ytj" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
-                        <td class="qq" @click="changeVal(item, index, 3)"><input type="radio" :disabled="ytj" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+      <div class="article-vote wrapper">
+          <!-- 报告类 -->
+          <div class="header">
+              <!-- <van-button color="#E1362E" plain @click="onBack">返回首页</van-button> -->
+              <span></span>
+              <p style="display:flex;">
+              <!-- 全部赞成 -->
+              <van-button @click="allZc" :disabled="isAllZc" style="margin-right:.2rem;width:2.3rem;" round block type="info" color="#E1362E" native-type="submit">全部赞成</van-button>
+              <!-- 提交该项 -->
+              <!-- <van-button @click="onSubmit" :disabled="submitItemFlag" round block type="info" color="#E1362E" native-type="submit">提交该项</van-button> -->
+              </p>
+          </div>
+          <div class="section">
+              <div class="layui-form">
+                  <div class="title">
+                      <p>{{titleInfo.tpnrXh}}、{{title}}</p>
+                      <p>{{titleInfo.tpnrMc}}</p>
+                      <!-- {{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}} -->
+                      <!-- <p>{{titleInfo.tpnrXh}}、{{titleInfo.tpnrMc}}</p> -->
+                      <!-- <p>{{titleInfo.tpnr_bz}}</p> -->
+                  </div>
+                  <table class="layui-table">
+                      <colgroup>
+                          <!-- <col /> -->
+                          <col />
+                          <!-- <col /> -->
+                          <col />
+                          <col />
+                      </colgroup>
+                      <thead>
+                          <tr>
+                              <!-- <th style="width:12%;">序号</th> -->
+                              <th style="width:55%;">表决事项</th>
+                              <th>赞成</th>
+                              <th>反对</th>
+                              <th>弃权</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr v-for="(item, index) in voteList" :key="index">
+                              <!-- <td>{{item.bg_xh}}</td> -->
+                              <td>
+                                  {{item.bg_mc}}
+                                  <span style="color:rgb(225, 54, 46);display:block;" @click="viewFile(item)">查看附件</span>
+                              </td>
+                              <td class="zc" @click="changeVal(item, index, 1)"><input type="radio" :disabled="ytj" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
+                              <td class="fd" @click="changeVal(item, index, 2)"><input type="radio" :disabled="ytj" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
+                              <td class="qq" @click="changeVal(item, index, 3)"><input type="radio" :disabled="ytj" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
 
-    <div class="footer">
-        <!-- 上一项 -->
-        <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
-        <!-- <van-button @click="preItemClick" v-show="preItem" :disabled="preItemFlag" color="#E1362E" plain>上一项</van-button> -->
-        <!-- 下一项 -->
-        <van-button @click="nextStep" v-show="isSubmited" color="#E1362E" plain>下一项</van-button>
-        <!-- 提交 -->
-        <van-button @click="saveForm" v-show="isNext" color="#E1362E" plain>提交</van-button>
-        <!-- 保存 -->
-        <van-button @click="saveInfo" v-show="save" color="#E1362E" plain>保存</van-button>
-        <!-- 最后一项提交 -->
-        <van-button @click="oneClickSubmit" v-show="submitAll" :disabled="submitAllFlag" round block type="info" color="#E1362E">提交</van-button>
-    </div>
-  </div>
+          <div class="footer">
+              <!-- 上一项 -->
+              <van-button color="#E1362E" plain @click="onBack">返回首页</van-button>
+              <!-- <van-button @click="preItemClick" v-show="preItem" :disabled="preItemFlag" color="#E1362E" plain>上一项</van-button> -->
+              <!-- 下一项 -->
+              <van-button @click="nextStep" v-show="isSubmited" color="#E1362E" plain>下一项</van-button>
+              <!-- 提交 -->
+              <van-button @click="saveForm" v-show="isNext" color="#E1362E" plain>提交</van-button>
+              <!-- 保存 -->
+              <van-button @click="saveInfo" v-show="save" color="#E1362E" plain>保存</van-button>
+              <!-- 最后一项提交 -->
+              <van-button @click="oneClickSubmit" v-show="submitAll" :disabled="submitAllFlag" round block type="info" color="#E1362E">提交</van-button>
+          </div>
+      </div>
 </template>
 
 <script>
@@ -160,7 +160,7 @@ export default {
                 // 用户id--
                 tpyhid: sessionStorage.getItem('userId')
             }
-            
+
             this.$dialog.confirm({
                 message: `已赞成<span style="color: rgb(225, 54, 46);font-size: 14px;">${firstArr.length}</span>票<br/>反对<span style="color: rgb(225, 54, 46);font-size: 14px;">${secondArr.length}</span>票<br/>弃权<span style="color: rgb(225, 54, 46);font-size: 14px;">${thirdArr.length}</span>票<br/>是否确认提交，提交后不可修改？`
             }).then(() => {
@@ -171,8 +171,8 @@ export default {
                     loadingType: 'spinner',
                     duration: 0
                 })
-                voteSave(qs.stringify(params)).then(res=>{
-                    if (res.data.success) {
+                // voteSave(qs.stringify(params)).then(res=>{
+                //     if (res.data.success) {
                         submitVoteContent(qs.stringify(data)).then(res=>{
                             if (res.data.success) {
                                 this.$toast.clear();
@@ -216,8 +216,8 @@ export default {
                                 this.$toast.fail(res.data.message)
                             }
                         })
-                    }
-                })
+                //     }
+                // })
             }).catch(()=>{})
         },
         // 提交该项（保存+提交接口）
@@ -344,8 +344,8 @@ export default {
                     loadingType: 'spinner',
                     duration: 0
                 })
-                voteSave(qs.stringify(data)).then(res=>{
-                    if (res.data.success) {
+                // voteSave(qs.stringify(data)).then(res=>{
+                //     if (res.data.success) {
                         submitVoteContent(qs.stringify(params)).then(res=>{
                             let data = res.data;
                             if (data.success) {
@@ -375,8 +375,8 @@ export default {
                                 this.$toast.fail(res.data.message);
                             }
                         })
-                    }
-                })
+                //     }
+                // })
             })
             .catch(()=>{})
         },
@@ -422,8 +422,8 @@ export default {
                     loadingType: 'spinner',
                     duration: 0
                 })
-                voteSave(qs.stringify(data)).then(res=>{
-                    if (res.data.success) {
+                // voteSave(qs.stringify(data)).then(res=>{
+                //     if (res.data.success) {
                         submitVoteContent(qs.stringify(data)).then(res=>{
                             let data = res.data;
                             if (data.success) {
@@ -435,10 +435,10 @@ export default {
                                 this.$toast.fail(res.data.message);
                             }
                         })
-                    } else {
-                        this.$toast.fail(res.data.message);
-                    }
-                })
+                //     } else {
+                //         this.$toast.fail(res.data.message);
+                //     }
+                // })
             })
             .catch(() => {})
         },
@@ -475,7 +475,7 @@ export default {
                     this.voteList = data.result[1];
                     this.preData = data.result[3];
                     this.nextData = data.result[2];
-                    
+
                     // 设置初始值
                     this.voteList.map(item=>{
                         if (!item.tpjg_tpyj) {
@@ -507,7 +507,7 @@ export default {
                     })
                     // 判断投票事项是否关闭
                     if (this.titleInfo.tpnrFlag == 'N') {
-                        if(!this.nextData.length&&this.titleInfo.tpnrXh == this.dataList.length){ 
+                        if(!this.nextData.length&&this.titleInfo.tpnrXh == this.dataList.length){
                             this.isNext = false;
                             this.submitAll = true;
                             this.submitAllFlag = true;

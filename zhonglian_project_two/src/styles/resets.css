@@ -203,9 +203,9 @@ html {
 
 body {
   /* font-family: Arial, "Microsoft Yahei", "Helvetica Neue", Helvetica, sans-serif; */
-    font-family: PingFang SC;
-  color: #333;
-  font-size: .28em;
+      font-family: PingFang SC;
+      color: #333;
+      font-size: .28em;
   /* line-height: 1; */
   -webkit-text-size-adjust: none;
 }

@@ -21,10 +21,10 @@
                     </li>
                 </ul>
                 <div v-else class="signBtn">
-                    <h2 class="tip">欢迎{{tpyhDw}}单位代表参会</h2>
+                    <h2 class="tip">欢迎{{tpyhDw}}代表参会</h2>
                     <button class="sign" @click="onSign">签到</button>
                 </div>
-                
+
             </div>
         </div>
         <div class="footer">
@@ -398,7 +398,7 @@ export default {
             height: auto;
         }
         /* padding: 0 .5rem; */
-        
+
         /* button {
             width: 100%;
             height: 0.8rem;
