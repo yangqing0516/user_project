@@ -121,7 +121,7 @@
                     </tbody>
                 </table>
                 <!-- 第四种 -->
-                <table class="layui-table active_table" v-else-if="titleInfo.tpnrPage == 5" border="1">
+                <table class="layui-table active_table" v-else-if="titleInfo.tpnrPage == 5">
                     <colgroup>
                         <col />
                         <col />
@@ -134,37 +134,32 @@
                     <thead>
                         <tr>
                             <th style="width:10%;">序号</th>
+                            <th style="width:30%;" colspan="2">候选人</th>
+                            <th style="width:30%;">所在单位及职务</th>
+                            <th style="width:10%;">赞成</th>
+                            <th style="width:10%;">反对</th>
+                            <th style="width:10%;">弃权</th>
+                            <!-- <th style="width:10%;">序号</th>
                             <th style="width:27%;">候选人</th>
                             <th style="width:30%;">所在单位及职务</th>
-                            <!-- <th style="width:16%;">候选人</th>
-                            <th style="width:18%;">所在单位名称</th>
-                            <th style="width:18%;">所在单位职务</th> -->
                             <th style="width:11%;">赞成</th>
                             <th style="width:11%;">反对</th>
-                            <th style="width:11%;">弃权</th>
+                            <th style="width:11%;">弃权</th> -->
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in voteList" :key="index">
-                            <!-- <td class="td_title" style="text-align:left;font-weight:bold;line-height: 18px!important;" colspan="7" v-if="index == 0 || index == 2 || index == 4 || index == 26">
-                                {{item.table_title}}
-                            </td>
-                            <td v-else>{{item.ry_xh}}</td> -->
-                            <!-- <td v-if="index==0 || index==2 || index==4 || index==26?false:true">{{item.ry_xm}}</td> -->
-                            <!-- <td v-if="index==0 || index==2 || index==4 || index==26?false:true" class="justify">
-                                <span>{{item.ry_nrzw}}候选人</span>
-                            </td> -->
                             <td>{{item.ry_xh}}</td>
+                            <td class="justify rightLineNo" style="text-align: left;border-right: 1px solid transparent;">
+                                {{item.ry_nrzw}}
+                            </td>
                             <td class="justify" style="text-align: left;">
                                 {{item.ry_xm}}
-                                <!-- <span>{{item.ry_xm}}</span> -->
                             </td>
                             <td style="text-align:left;">
                                 {{item.ry_dw}}
-                                <!-- <span>{{item.ry_dw}}</span> -->
                                 <br/>
                                 {{item.ry_zw}}
-                                <!-- <span>{{item.ry_zw}}</span> -->
                             </td>
                             <td class="zc" @click="changeVal(item, index, 1)">
                                 <input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj">
