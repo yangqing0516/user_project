@@ -99,12 +99,7 @@ export default {
                 let data = res.data;
                 if (data.code == 200) {
                     this.specialList = data.result;
-                    console.log('awrawrqwerqwe',this.specialList)
-                    let newList = this.specialList.filter(item=>{
-                        return item.tpnr_flag == 'Y';
-                    })
-                    console.log('新数据',newList)
-                    this.isSome = newList.every(item=>{
+                    this.isSome = this.specialList.every(item=>{
                         return item.tpyh_tpnrzt == 'Y';
                     })
                 }
@@ -132,25 +127,10 @@ export default {
         },
         // 公共方法
         commonVote(item, nowIndex){
-            if (nowIndex != 0) {
-                if (this.specialList[nowIndex-1].tpnr_flag == 'N') {
-                    if (item.tp_tplx_id == 2) {
-                        this.$router.push({
-                            path: '/person-vote',
-                            query: {
-                                cid: item.id
-                            }
-                        });
-                    } else {
-                        this.$router.push({
-                            path: '/article-vote',
-                            query: {
-                                cid: item.id
-                            }
-                        });
-                    }
-                } else {
-                    if (this.specialList[nowIndex-1].tpyh_tpnrzt!=null) {
+            if (nowIndex!=0) {
+                if (this.specialList[nowIndex-1].tpyh_tpnrzt!=null) {
+                    if (this.tpyhQd == 'Y') {
+                        // cid  内容id
                         if (item.tp_tplx_id == 2) {
                             this.$router.push({
                                 path: '/person-vote',
@@ -168,27 +148,38 @@ export default {
                         }
                     } else {
                         this.$dialog.alert({
-                            message: '请按序号依次进行投票',
+                            message: '请您先签到',
                             theme: 'round-button',
                         }).then(() => {});
                     }
-                }
-                
-            } else {
-                if (item.tp_tplx_id == 2) {
-                    this.$router.push({
-                        path: '/person-vote',
-                        query: {
-                            cid: item.id
-                        }
-                    });
                 } else {
-                    this.$router.push({
-                        path: '/article-vote',
-                        query: {
-                            cid: item.id
-                        }
-                    });
+                    this.$dialog.alert({
+                        message: '请按序号依次进行投票',
+                        theme: 'round-button',
+                    }).then(() => {});
+                }
+            } else {
+                if (this.tpyhQd == 'Y') {
+                    if (item.tp_tplx_id == 2) {
+                        this.$router.push({
+                            path: '/person-vote',
+                            query: {
+                                cid: item.id
+                            }
+                        });
+                    } else {
+                        this.$router.push({
+                            path: '/article-vote',
+                            query: {
+                                cid: item.id
+                            }
+                        });
+                    }
+                } else {
+                    this.$dialog.alert({
+                        message: '请您先签到',
+                        theme: 'round-button',
+                    }).then(() => {});
                 }
             }
             

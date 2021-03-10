@@ -500,9 +500,12 @@ export default {
                     } else {
                         this.radio = data.result[1][0].tpjg_tpyj;
                     }
+                    let newList = this.dataList.filter((item)=>{
+                        return item.tpnr_flag == 'Y'
+                    })
 
                     // 最后一条数据判断是否都提交
-                    let allDataResult = this.dataList.every(item=>{
+                    let allDataResult = newList.every(item=>{
                         return item.tpyh_tpnrzt == 'Y';
                     })
                     // 判断投票事项是否关闭

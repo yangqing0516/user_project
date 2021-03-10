@@ -442,7 +442,6 @@ export default {
                 // 用户id
                 tpyhid: sessionStorage.getItem('userId')
             }
-            console.log('afasdfasdfjasdfj',data)
             // 一键提交的参数
             // let params = {
             //     sbm: sessionStorage.getItem('sbm'),
@@ -586,7 +585,6 @@ export default {
                     this.preData = data.result[3];
                     // 设置初始值，初始化数据
                     this.voteList.map(item=>{
-                        // item.ry_xm = item.ry_xm.replace(/\s*/g,'');
                         item.title_flag = false;
                         if (!item.tpjg_tpyj) {
                             item.tpjg_tpyj = '1';
@@ -603,7 +601,12 @@ export default {
                         this.preItemFlag = false;
                     }
                     // 查看所有事项是否全部提交
-                    let allDataResult = this.dataList.every(item=>{
+                    console.log('所有事项',this.dataList)
+                    let newList = this.dataList.filter((item)=>{
+                        return item.tpnr_flag == 'Y'
+                    })
+                    console.log('新数据',newList)
+                    let allDataResult = newList.every(item=>{
                         return item.tpyh_tpnrzt == 'Y';
                     })
 
