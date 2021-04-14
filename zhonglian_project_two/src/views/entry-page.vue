@@ -61,7 +61,7 @@ export default {
         let url = window.location.href;
         let id = url.split("sx_id=")[1];
         sessionStorage.setItem('sx_id', id);
-
+        // 会员代表大会
         // sessionStorage.setItem('sx_id', "1333344778143465474");
         // 有理事会
         // sessionStorage.setItem('sx_id', "1349524855791767553");

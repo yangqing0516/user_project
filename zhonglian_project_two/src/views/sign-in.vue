@@ -30,6 +30,7 @@
             </div>
         </div>
         <div class="footer">
+            <span @click="explain">《操作说明》</span>
             <img src="../assets/footer_bg.png" alt="">
             <!-- <van-button :disabled="isSome" color="#E1362E" round type="info" @click="onSubmit">一键提交</van-button> -->
         </div>
@@ -50,6 +51,86 @@
                 </div>
             </div>
         </div>
+        <!-- 理事会说明 -->
+        <van-overlay :show="lshFlag">
+            <div class="lshBox">
+                <div class="close">
+                    <img src="../assets/cancel.png" alt="" @click="lshFlag=false">
+                </div>
+                <div class="content">
+                    <h2>中电联第七届理事会第一次会议网络投票操作说明</h2>
+                    <div class="cont">
+                        <span>一、扫码验证</span>
+                        <p>
+                            <b>（一）请打开微信或者支付宝使用“扫一扫”功能扫描下方二维码。</b>
+                            <img src="../assets/lshQrcode.png" alt="">
+                        </p>
+                        <p>
+                            <b>（二）扫码后可进入“中电联第七次会员代表大会在线投票系统”界面，点击“立即进入”按钮后进行投票用户验证，验证方式包括“手机号验证”和“投票识别码验证”两种，可选择任意一种方式进行验证，验证通过后进入签到页面。</b>
+                        </p>
+                        <span>二、签到</span>
+                        <p>
+                            <b>进入签到页面，请核对单位信息，核对无误后点击“签到”按钮进行签到，如超出“签到”时间，“签到”通道将会关闭，未签到用户将不能进行签到以及后续的投票工作。</b>
+                        </p>
+                        <span>三、投票</span>
+                        <p>
+                            <b>（一）投票用户签到后可以看到投票内容列表，每项投票内容后面都标记有投票状态（未投票、已投票、投票结束）。本次会议投票一项表决事项、二项选举事项：</b>
+                            <br/>
+                            1.章程及会费管理办法表决。<br/>
+                            2.第七届理事会理事单位及理事选举、第七届监事会监事选举。
+                        </p>
+                        <p>
+                            <b>
+                                （二）首先点击“章程及会费管理办法表决”即可进入投票表决页面，投票意见默认为<em>“赞成：Ο”</em>，如有其他意见可点击相应图标<em>“反对：×，弃权：–”，</em>选择完毕后点击“提交”按钮投票，也可点击“全部赞成”按钮直接投票，点击“提交”后，出现二次确认健，确认提交成功后，将显示“提交成功”字样，提交后不能修改。<br/>上一表决（选举）事项提交后，可点击“下一项”按钮继续进行下一项投票，或者点击“返回首页”按钮可返回到投票内容列表页面。
+                            </b>
+                            <b>（三）请各位代表依次按列表顺序完成所有三项投票内容的投票，如某一项投票内容已超出投票时间，系统将会关闭该项投票，该项投票内容状态显示“投票结束”，未投票的代表将不能再对该事项进行投票，但仍可进行下一项投票。</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </van-overlay>
+        
+        <!-- 会员代表大会说明 -->
+        <van-overlay :show="hyFlag">
+            <div class="hyBox">
+                <div class="close">
+                    <img src="../assets/cancel.png" alt="" @click="hyFlag=false">
+                </div>
+                <div class="content">
+                    <h2>中电联第七次会员代表大会网络投票操作说明</h2>
+                    <div class="cont">
+                        <span>一、扫码验证</span>
+                        <p>
+                            <b>（一）请打开微信或者支付宝使用“扫一扫”功能扫描下方二维码。</b>
+                            <img src="../assets/hyQrcode.png" alt="">
+                        </p>
+                        <p>
+                            <b>（二）扫码后可进入“中电联第七届理事会第一次会议在线投票系统”界面，点击“立即进入”按钮后进行投票用户验证，验证方式包括“手机号验证”和“投票识别码验证”两种，可选择任意一种方式进行验证，验证通过后进入签到页面。</b>
+                        </p>
+                        <span>二、签到</span>
+                        <p>
+                            <b>进入签到页面，请核对单位信息，核对无误后点击“签到”按钮进行签到，如超出签到时间，签到通道将会关闭，未签到用户将不能进行签到以及后续的投票工作。</b>
+                        </p>
+                        <span>三、投票</span>
+                        <p>
+                            <b>（一）投票用户签到后可以看到投票内容列表，每项投票内容后面都标记有投票状态（未投票、已投票、投票结束）。</b>
+                            <br/>
+                            本次会议包括二项选举事项：
+                            <br/>
+                            1.常务理事单位及常务理事选举。<br/>
+                            2.理事会负责人选举。
+                        </p>
+                        <p>
+                            <b>
+                                （二）首先点击“常务理事单位及常务理事选举”即可进入投票表决页面，投票意见默认为<em>“赞成：Ο”</em>，如有其他意见可点击相应图标<em>“反对：×，弃权：–”，</em>选择完毕后点击“提交”按钮投票，也可点击“全部赞成”按钮直接投票，点击“提交”后，出现二次确认健，确认提交成功后，将显示“提交成功”字样，提交后不能修改。<br/>上一表决（选举）事项提交后，可点击“下一项”按钮继续进行下一项投票，或者点击“返回首页”按钮可返回到投票内容列表页面。
+                            <br/>
+                            </b>
+                            <b>（三）请各位代表依次按列表顺序完成所有二项投票内容的投票，如某一项投票内容已超出投票时间，系统将会关闭该项投票，该项投票内容状态显示“投票结束”，未投票的代表将不能再对该事项进行投票，但仍可进行下一项投票。</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </van-overlay>
     </div>
 </template>
 
@@ -64,19 +145,34 @@ export default {
             isDisabled: true,
             isSome: false,
             isVote: true,
+            lshFlag: false,
+            hyFlag: false,
             specialList: [],
             tpyhQd: "",
             title: "",
-            tpyhDw: ""
+            tpyhDw: "",
+            explainObj: "中电联第七届理事会第一次会议网络投票操作说明",
+            sx_id: sessionStorage.getItem('sx_id')
         }
     },
     watch: {},
     mounted(){
         this.isSignIn();
         this.onaxios();
-        this.title = sessionStorage.getItem('title')
+        this.title = sessionStorage.getItem('title');
+        console.log('事项id',this.sx_id)
     },
     methods: {
+        // 查看操作说明
+        explain(){
+            if (this.sx_id == "1333344778143465474") {
+                console.log('会员代表大会')
+                this.hyFlag = true;
+            } else {
+                console.log('理事会')
+                this.lshFlag = true;
+            }
+        },
         isSignIn(){
             let data = {
                 sbm: sessionStorage.getItem('sbm'),
@@ -99,11 +195,11 @@ export default {
                 let data = res.data;
                 if (data.code == 200) {
                     this.specialList = data.result;
-                    console.log('awrawrqwerqwe',this.specialList)
+                    // console.log('awrawrqwerqwe',this.specialList)
                     let newList = this.specialList.filter(item=>{
                         return item.tpnr_flag == 'Y';
                     })
-                    console.log('新数据',newList)
+                    // console.log('新数据',newList)
                     this.isSome = newList.every(item=>{
                         return item.tpyh_tpnrzt == 'Y';
                     })
@@ -391,10 +487,19 @@ export default {
 
     .footer {
         width: 100%;
-        background: #FFFFFF;
+        // height: 24px ;
+        // background: #FFFFFF;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        // background: url(../assets/footer_bg.png) no-repeat;
+        // background-size: 100%;
+        span {
+            color: #0f83b1;
+            font-size: .28rem;
+            margin-bottom: .2rem;
+        }
         img {
             width: 100%;
             height: auto;
@@ -499,6 +604,70 @@ export default {
             img {
                 width: .54rem;
                 height: .54rem;
+            }
+        }
+    }
+}
+.hyBox, .lshBox {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    .close {
+        position: absolute;
+        right: .4rem;
+        top: .4rem;
+        img {
+            width: 0.54rem;
+            height: 0.54rem;
+        }
+    }
+    .content {
+        padding: 0 .2rem .2rem;
+        width: 5rem;
+        height: 6rem;
+        background: #fff;
+        border-radius: .3rem;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 9;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        h2 {
+            padding: .3rem .4rem;
+            text-align: center;
+            font-size: .34rem;
+            font-weight: bold;
+            color: #111111;
+        }
+        .cont {
+            flex: 1;
+            overflow: hidden;
+            overflow-y: scroll;
+            display: flex;
+            flex-direction: column;
+            span {
+                color: #000;
+                font-size: .26rem;
+            }
+            p {
+                b {
+                    display: inline-block;
+                    font-size: .24rem;
+                    // text-indent: 2em;
+                    em {
+                        font-weight: bolder;
+                    }
+                }
+                img {
+                    width: 3rem;
+                    height: 3rem;
+                    margin: .2rem auto;
+                    display: block;
+                }
             }
         }
     }
