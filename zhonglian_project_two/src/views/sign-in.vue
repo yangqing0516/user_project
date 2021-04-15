@@ -52,7 +52,7 @@
             </div>
         </div>
         <!-- 理事会说明 -->
-        <van-overlay :show="lshFlag">
+        <van-overlay :lock-scroll="false" :show="lshFlag">
             <div class="lshBox">
                 <div class="close">
                     <img src="../assets/cancel.png" alt="" @click="lshFlag=false">
@@ -91,7 +91,7 @@
         </van-overlay>
         
         <!-- 会员代表大会说明 -->
-        <van-overlay :show="hyFlag">
+        <van-overlay :lock-scroll="false" :show="hyFlag">
             <div class="hyBox">
                 <div class="close">
                     <img src="../assets/cancel.png" alt="" @click="hyFlag=false">
@@ -623,8 +623,8 @@ export default {
     }
     .content {
         padding: 0 .2rem .2rem;
-        width: 5rem;
-        height: 6rem;
+        width: 80%;
+        height: 70%;
         background: #fff;
         border-radius: .3rem;
         position: fixed;
@@ -638,6 +638,8 @@ export default {
         flex-direction: column;
         h2 {
             padding: .3rem .4rem;
+            /* margin-top: .3rem; */
+            /* height: 1rem; */
             text-align: center;
             font-size: .34rem;
             font-weight: bold;
@@ -645,8 +647,9 @@ export default {
         }
         .cont {
             flex: 1;
+            /* background: pink; */
             overflow: hidden;
-            overflow-y: scroll;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             span {
