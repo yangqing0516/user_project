@@ -78,12 +78,7 @@
                             <td class="justify">
                                 <span>{{item.ry_xm}}</span>
                             </td>
-                            <!-- <td>{{item.ry_dw}}<br/>{{item.ry_zw}}</td> -->
-                            <td>
-                                <p>{{item.ry_dw}}</p>
-                                <p>{{item.ry_zc}}</p>
-                                <p>{{item.ry_zw}}</p>
-                            </td>
+                            <td>{{item.ry_dw}}<br/>{{item.ry_zw}}</td>
                             <td class="zc" @click="changeVal(item, index, 1)"><input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="fd" @click="changeVal(item, index, 2)"><input :disabled="ytj" type="radio" :name="item.id" value="2" title="" v-model="item.tpjg_tpyj"></td>
                             <td class="qq" @click="changeVal(item, index, 3)"><input :disabled="ytj" type="radio" :name="item.id" value="3" title="" v-model="item.tpjg_tpyj"></td>
@@ -162,14 +157,11 @@
                                 {{item.ry_xm}}
                             </td>
                             <td style="text-align:left;">
-                                <!-- {{item.ry_dw}}
+                                {{item.ry_dw}}
+                                <!-- <br/>
+                                {{item.ry_zc}} -->
                                 <br/>
-                                {{item.ry_zc}}
-                                <br/>
-                                {{item.ry_zw}} -->
-                                <p>{{item.ry_dw}}</p>
-                                <p>{{item.ry_zc}}</p>
-                                <p>{{item.ry_zw}}</p>
+                                {{item.ry_zw}}
                             </td>
                             <td class="zc" @click="changeVal(item, index, 1)">
                                 <input :disabled="ytj" type="radio" :name="item.id" value="1" title="" v-model="item.tpjg_tpyj">
@@ -806,10 +798,6 @@ export default {
             td {
                 font-size: .14rem;
                 text-align: center;
-                p {
-                    font-size: .14rem;
-                    /* text-align: center; */
-                }
             }
         }
     }
